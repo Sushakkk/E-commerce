@@ -6,7 +6,7 @@ import styles from './Filters.module.scss';
 
 const Filters: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<Option | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Option | null>(null);  // Выбираем одну категорию
 
   const handleCategoryChange = (category: Option) => {
     setSelectedCategory(category);
@@ -28,9 +28,9 @@ const Filters: React.FC = () => {
             { key: '1', value: 'Furniture' },
             { key: '2', value: 'Electronics' },
           ]}
-          value={selectedCategory ? [selectedCategory] : []}  // Передаем массив с выбранной категорией
-          onChange={handleCategoryChange}  // Обрабатываем изменение категории
-          getTitle={(value) => value.length ? value[0].value : 'Select category'}  // Отображаем только выбранную категорию
+          value={selectedCategory} 
+          onChange={handleCategoryChange}  
+          getTitle={(value) => value ? value.value : 'Filter'}  
         />
       </div>
     </div>
