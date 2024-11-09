@@ -1,44 +1,34 @@
+// stores/FilterStore/FilterStore.ts
 import { makeAutoObservable } from 'mobx';
 import axios from 'axios';
-import ProductStore from 'stores/ProductStore/ProductStore';  // Импортируем ProductStore
 
 class FilterStore {
-  categories: { key: string, value: string }[] = [];
   searchQuery: string = '';
   selectedCategory: string | null = null;
+  categories: { id: string; name: string }[] = [];
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  // Устанавливаем строку поиска
-  setSearchQuery(query: string) {
-    this.searchQuery = query;
-    this.fetchProducts();  // После изменения запроса ищем продукты
-  }
-
-  // Устанавливаем выбранную категорию
-  setSelectedCategory(category: string | null) {
-    this.selectedCategory = category;
-    this.fetchProducts();  // После изменения категории ищем продукты
-  }
-
-  // Загружаем категории
-  async fetchCategories() {
+  // Загрузка категорий
+  fetchCategories = async () => {
     try {
       const response = await axios.get('https://api.escuelajs.co/api/v1/categories');
-      this.categories = response.data.map((category: { id: string; name: string }) => ({
-        key: category.id,
-        value: category.name,
-      }));
-    } catch (error) {
-      console.error('Ошибка при загрузке категорий', error);
+      this.categories = response.data;
+    } catch (e) {
+      console.error('Failed to fetch categories');
     }
+  };
+
+  // Установка поискового запроса
+  setSearchQuery(query: string) {
+    this.searchQuery = query;
   }
 
-  // Перезапрашиваем продукты с новыми фильтрами
-  fetchProducts() {
-    ProductStore.fetchProducts(this.searchQuery, this.selectedCategory);  // Передаем параметры в ProductStore
+  // Установка выбранной категории
+  setSelectedCategory(category: string | null) {
+    this.selectedCategory = category;
   }
 }
 

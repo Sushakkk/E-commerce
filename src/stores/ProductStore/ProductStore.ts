@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import axios from 'axios';
 import { ProductI } from 'modules/types';
+import FilterStore from 'stores/FilterStore/FilterStore';
 
 class ProductStore {
   products: ProductI[] = [];
@@ -14,16 +15,19 @@ class ProductStore {
     makeAutoObservable(this);
   }
 
-  fetchProducts = async (searchQuery: string, category: string | null) => {
+  // Загрузка товаров на основе фильтров
+  fetchProducts = async () => {
     this.loading = true;
     this.error = null;
+    const { searchQuery, selectedCategory } = FilterStore;
+
     try {
       const response = await axios.get('https://api.escuelajs.co/api/v1/products', {
         params: {
           offset: (this.currentPage - 1) * this.productsPerPage,
           limit: this.productsPerPage,
           search: searchQuery,
-          category: category,
+          category: selectedCategory,
         },
       });
       this.products = response.data;

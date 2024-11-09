@@ -4,7 +4,6 @@ import Input from '../Input/Input';
 import Text from '../Text/Text'; 
 import ArrowDownIcon from '../icons/ArrowDownIcon';
 
-
 export type Option = {
   key: string;
   value: string;
@@ -14,7 +13,7 @@ export type MultiDropdownProps = {
   className?: string;
   options: Option[];
   value: Option[];
-  onChange: (value: Option[]) => void;
+  onChange: (value: Option) => void;  // Передаем только одну категорию
   disabled?: boolean;
   getTitle: (value: Option[]) => string;
 };
@@ -33,9 +32,6 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   const [filteredOptions, setFilteredOptions] = useState(options);
 
   const handleInputChange = (inputValue: string) => {
-    if (value.length) {
-      return;
-    }
     setCurrentInput(inputValue);
     const newFilteredOptions = options.filter((option) =>
       option.value.toLowerCase().startsWith(inputValue.toLowerCase())
@@ -44,12 +40,8 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   };
 
   const handleOptionClick = (option: Option) => {
-    const optionIndex = value.findIndex((item) => item.key === option.key);
-    if (optionIndex !== -1) {
-      onChange(value.slice(0, optionIndex).concat(value.slice(optionIndex + 1)));
-      return;
-    }
-    onChange([...value, option]);
+    onChange(option);  // Выбираем только одну категорию
+    setIsOpen(false);   // Закрываем выпадающий список
   };
 
   const handleClickOutside = (e: MouseEvent) => {
@@ -88,7 +80,9 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
               onClick={() => handleOptionClick(option)}
               data-testid={option.key}
             >
-              <Text className={styles.multiDropdown__optionText}>{option.value}</Text>
+              <Text className={styles.multiDropdown__optionText}>
+                {option.value}
+              </Text>
             </div>
           ))}
         </div>
