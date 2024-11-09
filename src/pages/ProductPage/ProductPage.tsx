@@ -5,10 +5,7 @@ import { observer } from 'mobx-react-lite';
 import Loader from 'components/Loader';
 import PaginationIcon from 'components/PaginationIcon/PaginationIcon';
 import Text from 'components/Text/Text';
-
-
 import RelatedProducts from './components/RelatedProducts';
-
 import styles from './ProductPage.module.scss';
 import ImageSlider from './components/ImageSlider.tsx';
 import ProductDetails from './components/ProductDetails/ProductDetails.tsx';
@@ -53,8 +50,8 @@ const ProductPage: React.FC = observer(() => {
 
         <div className={styles.product__content}>
           <div className={styles.product__wrapper}>
-            <ImageSlider product={product} />
-            <ProductDetails product={product} />
+            <ImageSlider />
+            <ProductDetails  />
           </div>
           <RelatedProducts />
         </div>

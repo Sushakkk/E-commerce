@@ -1,15 +1,22 @@
 
 import React, { useState } from 'react';
-import { ProductI } from 'modules/types'; 
+
 import styles from './ImageSlider.module.scss'; 
 import PaginationIcon from 'components/PaginationIcon/PaginationIcon';
+import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore';
+import { observer } from 'mobx-react-lite';
 
-interface ImageSliderProps {
-  product: ProductI;
-}
 
-const ImageSlider: React.FC<ImageSliderProps> = ({ product }) => {
+
+const ImageSlider: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const { product } = ProductDetailsStore;
+
+ 
+  if (!product) {
+    return <div>Загрузка...</div>;
+  }
 
   const isFirstImage = currentImageIndex === 0;
   const isLastImage = currentImageIndex === product.images.length - 1;
@@ -33,14 +40,13 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ product }) => {
         className={`${styles.slider__button} ${styles['slider__button-left']} ${isFirstImage ? styles['slider__button-disabled'] : ''}`}
         disabled={isFirstImage}
       >
-        <PaginationIcon direction="left" strokeWidth='3' color="base" />
+        <PaginationIcon direction="left" strokeWidth="3" color="base" />
       </button>
 
       <img
         src={product.images[currentImageIndex]}
         alt={product.title}
         className={styles.slider__image}
-
       />
 
       <button
@@ -48,10 +54,11 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ product }) => {
         className={`${styles.slider__button} ${styles['slider__button-right']} ${isLastImage ? styles['slider__button-disabled'] : ''}`}
         disabled={isLastImage}
       >
-        <PaginationIcon direction="right" strokeWidth='3' color="base" />
+        <PaginationIcon direction="right" strokeWidth="3" color="base" />
       </button>
     </div>
   );
 };
 
-export default ImageSlider;
+
+export default observer(ImageSlider);

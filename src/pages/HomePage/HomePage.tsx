@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-
-
 import Loader from 'components/Loader';
 import Text from 'components/Text/Text';
 import styles from './HomePage.module.scss';
@@ -13,12 +11,11 @@ import FilterStore from 'stores/FilterStore/FilterStore';
 
 const HomePage: React.FC = observer(() => {
   const { loading, error, totalProducts, currentPage } = ProductStore;
-  const { searchQuery, selectedCategory } = FilterStore; // Берем фильтры из FilterStore
+  const {selectedCategory } = FilterStore; 
 
-  // Загрузка продуктов при изменении страницы или фильтров
   useEffect(() => {
 
-    ProductStore.fetchProducts(searchQuery, selectedCategory?.key); 
+    ProductStore.fetchProducts( '', selectedCategory?.key); 
   }, [currentPage, selectedCategory]); 
   
 

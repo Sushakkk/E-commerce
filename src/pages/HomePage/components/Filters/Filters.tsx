@@ -5,7 +5,7 @@ import MultiDropdown, { Option } from 'components/MultiDropdown';
 import { observer } from 'mobx-react-lite';
 import styles from './Filters.module.scss';
 import FilterStore from 'stores/FilterStore/FilterStore';
-import ProductStore from 'stores/ProductStore/ProductStore'; // Для загрузки продуктов
+import ProductStore from 'stores/ProductStore/ProductStore'; 
 
 const Filters: React.FC = () => {
   
@@ -15,18 +15,14 @@ const Filters: React.FC = () => {
   };
 
   const handleSearchSubmit = () => {
-    ProductStore.fetchProducts(FilterStore.searchQuery, FilterStore.selectedCategory?.key); // Загружаем продукты с учетом фильтров
+    ProductStore.fetchProducts(FilterStore.searchQuery, FilterStore.selectedCategory?.key);
   };
 
-  
-
-  // Обработчик изменения выбранной категории
   const handleCategoryChange = (category: Option) => {
     FilterStore.setSelectedCategory(category);
   };
 
   useEffect(() => {
-    // Загружаем категории при монтировании компонента
     FilterStore.fetchCategories();
   }, []);
 

@@ -2,28 +2,29 @@ import React from 'react';
 import Text from 'components/Text/Text';
 import Button from 'components/Button';
 import styles from './ProductDetails.module.scss';
-import { ProductI } from 'modules/types';
+import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore';
 
-interface ProductDetailsProps {
-    product: ProductI;
-}
 
-const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
-    const { title, description, price } = product;
+const ProductDetails: React.FC = () => {
+    const {product} = ProductDetailsStore;
+
+    if (!product) {
+        return <div>Товар не найден</div>;
+      }
 
     return (
         <div className={styles['product__text-container']}>
             <div className={styles.product__text_title}>
                 <Text view="title" weight="bold">
-                    {title}
+                    {product.title}
                 </Text>
                 <Text view="p-20" color="secondary">
-                    {description}
+                    {product.description}
                 </Text>
             </div>
             <div className={styles.product__price}>
                 <Text view="title" className="page-title-price" weight="bold">
-                    ${price}
+                    ${product.price}
                 </Text>
                 <div className={styles.product__buttons}>
                     <Button className={styles["buy-now-button"]}>Buy Now</Button>

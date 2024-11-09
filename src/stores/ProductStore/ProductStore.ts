@@ -1,6 +1,7 @@
 import { action, makeAutoObservable } from 'mobx';
 import axios from 'axios';
 import { ProductI } from 'modules/types';
+import { NavigateFunction } from 'react-router-dom';
 
 
 class ProductStore {
@@ -18,6 +19,10 @@ class ProductStore {
       setCurrentPage: action,
     });
   }
+
+
+  
+
 
 
   fetchProducts = async (searchQuery: string, selectedCategoryID: number | undefined) => {
@@ -46,7 +51,7 @@ class ProductStore {
       this.totalProducts = totalResponse.data.length;
       this.totalPages = Math.ceil(this.totalProducts / this.productsPerPage);
 
-    } catch (e) {
+    } catch {
       this.error = 'Ошибка при загрузке продуктов';
     } finally {
       this.loading = false;
@@ -57,7 +62,7 @@ class ProductStore {
     this.currentPage = page;
   };
 
-  handleProductClick = (product: ProductI, navigate: Function) => {
+  handleProductClick = (product: ProductI, navigate: NavigateFunction) => {
     navigate(`/product/${product.id}`);
   };
 }
