@@ -12,10 +12,10 @@ export type Option = {
 export type MultiDropdownProps = {
   className?: string;
   options: Option[];
-  value: Option | null;  // Теперь это одиночный объект или null
+  value: string | null;  // Теперь это одиночный объект или null
   onChange: (value: Option) => void;  // Передаем только одну категорию
   disabled?: boolean;
-  getTitle: (value: Option | null) => string;  // Модифицирован getTitle
+  getTitle: (value: string | null) => string;  // Модифицирован getTitle
 };
 
 const MultiDropdown: React.FC<MultiDropdownProps> = ({

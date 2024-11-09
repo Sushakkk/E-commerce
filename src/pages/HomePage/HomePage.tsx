@@ -9,14 +9,17 @@ import ProductList from './components/ProductList/ProductList';
 import Filters from './components/Filters/Filters';
 import ProductStore from 'stores/ProductStore/ProductStore';
 import { observer } from 'mobx-react-lite';
+import FilterStore from 'stores/FilterStore/FilterStore';
 
 const HomePage: React.FC = observer(() => {
   const { products, loading, error, totalProducts, currentPage } = ProductStore;
+  const { searchQuery, selectedCategory } = FilterStore; // Берем фильтры из FilterStore
 
-  // Загрузка продуктов при изменении страницы
+  // Загрузка продуктов при изменении страницы или фильтров
   useEffect(() => {
-    ProductStore.fetchProducts('', null); // Пример вызова с пустыми фильтрами
-  }, [currentPage]);
+    ProductStore.fetchProducts(searchQuery, selectedCategory?.key); // Пример вызова с фильтрами
+  }, [currentPage, searchQuery, selectedCategory]); // Добавляем зависимости для фильтров
+
 
   const handlePageChange = (page: number) => {
     ProductStore.setCurrentPage(page);

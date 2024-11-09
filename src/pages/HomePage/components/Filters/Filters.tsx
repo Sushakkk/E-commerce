@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import MultiDropdown, { Option } from 'components/MultiDropdown';
+import { observer } from 'mobx-react-lite';
 import styles from './Filters.module.scss';
+import FilterStore from 'stores/FilterStore/FilterStore';
 
 const Filters: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<Option | null>(null);  // Выбираем одну категорию
+
 
   const handleCategoryChange = (category: Option) => {
-    setSelectedCategory(category);
+    FilterStore.setSelectedCategory(category)
+    
+
   };
+
+
+
+  useEffect(() => {
+    FilterStore.fetchCategories();
+  }, []);
 
   return (
     <div className={styles['products__controls']}>
@@ -24,17 +34,14 @@ const Filters: React.FC = () => {
       </div>
       <div className={styles['products__filter']}>
         <MultiDropdown
-          options={[
-            { key: '1', value: 'Furniture' },
-            { key: '2', value: 'Electronics' },
-          ]}
-          value={selectedCategory} 
+          options={FilterStore.categories}
+          value={FilterStore.selectedCategory?.value ?? null}  
           onChange={handleCategoryChange}  
-          getTitle={(value) => value ? value.value : 'Filter'}  
+          getTitle={(value) => value ? value : 'Filter'}  
         />
       </div>
     </div>
   );
 };
 
-export default Filters;
+export default observer(Filters);
