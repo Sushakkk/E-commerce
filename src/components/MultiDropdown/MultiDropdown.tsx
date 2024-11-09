@@ -5,7 +5,7 @@ import Text from '../Text/Text';
 import ArrowDownIcon from '../icons/ArrowDownIcon';
 
 export type Option = {
-  key: string;
+  key: number;
   value: string;
 };
 

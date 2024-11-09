@@ -12,13 +12,15 @@ import { observer } from 'mobx-react-lite';
 import FilterStore from 'stores/FilterStore/FilterStore';
 
 const HomePage: React.FC = observer(() => {
-  const {loading, error, totalProducts, currentPage } = ProductStore;
+  const { loading, error, totalProducts, currentPage } = ProductStore;
   const { searchQuery, selectedCategory } = FilterStore; // Берем фильтры из FilterStore
 
   // Загрузка продуктов при изменении страницы или фильтров
   useEffect(() => {
-    ProductStore.fetchProducts(searchQuery, selectedCategory?.key); // Пример вызова с фильтрами
-  }, [currentPage, searchQuery, selectedCategory]); // Добавляем зависимости для фильтров
+    const categoryKey = selectedCategory?.key ?? null; 
+    ProductStore.fetchProducts(searchQuery, categoryKey); 
+  }, [currentPage, searchQuery, selectedCategory]); 
+  
 
 
   if (loading) return (
@@ -30,6 +32,8 @@ const HomePage: React.FC = observer(() => {
   );
 
   if (error) return <div className={styles['error-message']}>{error}</div>;
+
+
 
   return (
     <main id="main" className="page">

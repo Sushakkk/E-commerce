@@ -2,18 +2,22 @@ import React from 'react';
 import Text from 'components/Text/Text';
 import Card from 'components/Card';
 import Button from 'components/Button';
-import { ProductI } from 'modules/types';
 import { useNavigate } from 'react-router-dom';
-import { handleCardClick } from 'utils/navigationUtils';
 import styles from './RelatedProducts.module.scss';
+import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore';
+import ProductStore from 'stores/ProductStore/ProductStore';
+import { observer } from 'mobx-react-lite';
 
-interface RelatedItemsProps {
-    relatedProducts: ProductI[];
-    allProducts: ProductI[];
-}
 
-const RelatedItems: React.FC<RelatedItemsProps> = ({ relatedProducts, allProducts }) => {
+
+const RelatedItems: React.FC = () => {
     const navigate = useNavigate();
+
+
+
+  const { relatedProducts} = ProductDetailsStore; 
+
+
 
     return (
         <div className={styles['related__cards']}>
@@ -31,7 +35,7 @@ const RelatedItems: React.FC<RelatedItemsProps> = ({ relatedProducts, allProduct
                         contentSlot={`$${relatedProduct.price}`}
                         actionSlot={<Button>Add to Cart</Button>}
                         className={styles.related_product_card}
-                        onClick={() => handleCardClick(relatedProduct, allProducts, navigate)}
+                        onClick={() => ProductStore.handleProductClick(relatedProduct,navigate )}
                     />
                 ))}
             </div>
@@ -39,4 +43,4 @@ const RelatedItems: React.FC<RelatedItemsProps> = ({ relatedProducts, allProduct
     );
 };
 
-export default RelatedItems;
+export default observer(RelatedItems);

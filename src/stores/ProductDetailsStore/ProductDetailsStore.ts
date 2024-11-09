@@ -1,5 +1,5 @@
 // src/stores/ProductDetailStore.ts
-import { makeAutoObservable } from 'mobx';
+import { action, makeAutoObservable } from 'mobx';
 import axios from 'axios';
 import { ProductI } from 'modules/types';
 
@@ -9,8 +9,12 @@ class ProductDetailStore {
   loading: boolean = false;
   error: string | null = null;
 
+ 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {
+      fetchRelatedProducts: action,
+      fetchProduct: action,
+    });
   }
 
   // Загрузка данных о продукте
@@ -36,7 +40,7 @@ class ProductDetailStore {
       });
       this.relatedProducts = response.data
         .filter((product: ProductI) => product.id !== currentProductId)
-        .slice(0, 3); // Ограничим количество связанных товаров
+        .slice(0, 3); 
     } catch (e) {
       this.error = 'Failed to fetch related products';
     }

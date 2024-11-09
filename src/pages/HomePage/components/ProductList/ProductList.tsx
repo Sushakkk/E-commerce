@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import Card from 'components/Card';
 import Button from 'components/Button';
@@ -8,13 +8,14 @@ import styles from './ProductList.module.scss';
 
 const ProductList: React.FC = observer(() => {
 
-  
+
   const navigate = useNavigate();
-  const { getProducts, handleProductClick } = ProductStore;  
+  const { products, handleProductClick } = ProductStore;  
+  
 
   return (
     <section className={styles['products__cards']}>
-      {getProducts.map((product) => (
+      {products.map((product) => (
         <div className={styles['products__column']} key={product.id}>
           <Card
             image={product.images[0]}

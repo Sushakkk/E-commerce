@@ -17,7 +17,7 @@ import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore.
 const ProductPage: React.FC = observer(() => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { product, relatedProducts, loading, error } = ProductDetailsStore;
+  const { product,loading, error } = ProductDetailsStore;
 
   useEffect(() => {
     if (id) {
@@ -56,7 +56,7 @@ const ProductPage: React.FC = observer(() => {
             <ImageSlider product={product} />
             <ProductDetails product={product} />
           </div>
-          <RelatedProducts relatedProducts={relatedProducts} allProducts={[]} />
+          <RelatedProducts />
         </div>
       </div>
     </main>

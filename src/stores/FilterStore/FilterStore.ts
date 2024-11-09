@@ -1,6 +1,5 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, action, observable } from 'mobx';
 import axios from 'axios';
-import ProductStore from 'stores/ProductStore/ProductStore';  // Импортируем ProductStore
 import { Option } from 'components/MultiDropdown';
 
 class FilterStore {
@@ -9,16 +8,24 @@ class FilterStore {
   selectedCategory: Option | null = null;
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {
+      categories: observable,
+      searchQuery: observable,
+      selectedCategory: observable,
+      setSearchQuery: action,
+      setSelectedCategory: action,
+      fetchCategories: action,
+    });
   }
 
+  // Установка поискового запроса
   setSearchQuery(query: string) {
     this.searchQuery = query;
-   
   }
-  setSelectedCategory(category: Option | null) {
-    this.selectedCategory = category;  
 
+  // Установка выбранной категории
+  setSelectedCategory(category: Option | null) {
+    this.selectedCategory = category;
   }
 
   // Загружаем категории
@@ -33,8 +40,6 @@ class FilterStore {
       console.error('Ошибка при загрузке категорий', error);
     }
   }
-
- 
 }
 
 export default new FilterStore();
