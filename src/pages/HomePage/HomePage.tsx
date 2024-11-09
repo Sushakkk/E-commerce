@@ -17,9 +17,9 @@ const HomePage: React.FC = observer(() => {
 
   // Загрузка продуктов при изменении страницы или фильтров
   useEffect(() => {
-    const categoryKey = selectedCategory?.key ?? null; 
-    ProductStore.fetchProducts(searchQuery, categoryKey); 
-  }, [currentPage, searchQuery, selectedCategory]); 
+
+    ProductStore.fetchProducts(searchQuery, selectedCategory?.key); 
+  }, [currentPage, selectedCategory]); 
   
 
 

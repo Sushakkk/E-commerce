@@ -20,7 +20,7 @@ class ProductStore {
   }
 
 
-  fetchProducts = async (searchQuery: string, selectedCategoryID: number | null) => {
+  fetchProducts = async (searchQuery: string, selectedCategoryID: number | undefined) => {
     this.loading = true;
     this.error = null;
   

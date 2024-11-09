@@ -1,6 +1,7 @@
 import { makeAutoObservable, action, observable } from 'mobx';
 import axios from 'axios';
 import { Option } from 'components/MultiDropdown';
+import ProductStore from 'stores/ProductStore/ProductStore';
 
 class FilterStore {
   categories: Option[] = [];
@@ -19,8 +20,10 @@ class FilterStore {
   }
 
   // Установка поискового запроса
-  setSearchQuery(query: string) {
-    this.searchQuery = query;
+  setSearchQuery(searchQuery: string) {
+    this.searchQuery = searchQuery;
+    // ProductStore.fetchProducts(this.searchQuery, this.selectedCategory?.key);
+
   }
 
   // Установка выбранной категории
