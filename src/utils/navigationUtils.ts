@@ -1,6 +1,6 @@
 import { ProductI } from 'modules/types';
 
-interface NavigateOptions {
+export interface NavigateOptions {
   state?: { product: ProductI; products: ProductI[] };
 }
 

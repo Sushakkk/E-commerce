@@ -1,4 +1,3 @@
-// Pagination.tsx
 import React from 'react';
 import Button from 'components/Button';
 import PaginationIcon from 'components/PaginationIcon/PaginationIcon';
@@ -11,8 +10,6 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, onPageChange }) => {
-
-  // Функция для изменения страницы
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       onPageChange(page);

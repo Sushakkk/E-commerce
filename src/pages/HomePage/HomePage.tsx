@@ -1,64 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect } from 'react';
+
+
 import Loader from 'components/Loader';
 import Text from 'components/Text/Text';
 import styles from './HomePage.module.scss';
-import '../../styles/styles.scss'
-import { ProductI } from 'modules/types';
 import Pagination from './components/Pagination/Pagination';
 import ProductList from './components/ProductList/ProductList';
 import Filters from './components/Filters/Filters';
+import ProductStore from 'stores/ProductStore/ProductStore';
+import { observer } from 'mobx-react-lite';
 
+const HomePage: React.FC = observer(() => {
+  const { products, loading, error, totalProducts, currentPage } = ProductStore;
 
-
-const HomePage: React.FC = () => {
-  const [products, setProducts] = useState<ProductI[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [searchValue, setSearchValue] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalProducts, setTotalProducts] = useState<number>(0);
-  const productsPerPage = 9;
-  const totalPages = Math.ceil(totalProducts / productsPerPage);
-
-  const fetchProducts = async (page: number) => {
-    setLoading(true);
-    try {
-      const response = await axios.get('https://api.escuelajs.co/api/v1/products', {
-        params: { offset: (page - 1) * productsPerPage, limit: productsPerPage },
-      });
-      setProducts(response.data);
-
-      const totalResponse = await axios.get('https://api.escuelajs.co/api/v1/products', { params: { limit: 0 } });
-      setTotalProducts(totalResponse.data.length);
-    } catch{
-      setError('Не удалось загрузить данные');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Загрузка продуктов при изменении страницы
   useEffect(() => {
-    fetchProducts(currentPage);
+    ProductStore.fetchProducts('', null); // Пример вызова с пустыми фильтрами
   }, [currentPage]);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    ProductStore.setCurrentPage(page);
   };
 
-  
-
   if (loading) return (
-    <main className='page'>
-      <div className='page__loader'>
+    <main className="page">
+      <div className="page__loader">
         <Loader />
       </div>
-      </main>
+    </main>
   );
+
   if (error) return <div className={styles['error-message']}>{error}</div>;
 
+  const totalPages = Math.ceil(totalProducts / ProductStore.productsPerPage);
+
   return (
-    <main id="main" className='page'>
+    <main id="main" className="page">
       <div className={styles['page__main-block']}>
         <div className={styles['products__content']}>
           <div className={styles['products__header']}>
@@ -71,13 +48,13 @@ const HomePage: React.FC = () => {
               </Text>
             </div>
           </div>
-          <Filters searchValue={searchValue} setSearchValue={setSearchValue} />
+          <Filters />
           <div className={styles['products__body']}>
             <div className={styles['products__subtitle']}>
               <Text view="p-32" className="page-title" weight="bold">Total Products</Text>
               <Text view="p-20" color="accent" weight="bold">{totalProducts}</Text>
             </div>
-             <ProductList products={products} />
+            <ProductList />
           </div>
 
           <Pagination 
@@ -89,6 +66,6 @@ const HomePage: React.FC = () => {
       </div>
     </main>
   );
-};
+});
 
 export default HomePage;
