@@ -1,4 +1,3 @@
-// src/components/ProductList/ProductList.tsx
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import Card from 'components/Card';
@@ -7,14 +6,15 @@ import { useNavigate } from 'react-router-dom';
 import ProductStore from 'stores/ProductStore/ProductStore';
 import styles from './ProductList.module.scss';
 
-
 const ProductList: React.FC = observer(() => {
+
+  
   const navigate = useNavigate();
-  const { products, handleProductClick } = ProductStore;
+  const { getProducts, handleProductClick } = ProductStore;  
 
   return (
     <section className={styles['products__cards']}>
-      {products.map((product) => (
+      {getProducts.map((product) => (
         <div className={styles['products__column']} key={product.id}>
           <Card
             image={product.images[0]}

@@ -2,17 +2,17 @@ import React from 'react';
 import Button from 'components/Button';
 import PaginationIcon from 'components/PaginationIcon/PaginationIcon';
 import styles from './Pagination.module.scss';
+import ProductStore from 'stores/ProductStore/ProductStore';
 
-interface PaginationProps {
-  totalPages: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-}
 
-const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, onPageChange }) => {
+
+const Pagination: React.FC = () => {
+    const {totalPages, currentPage, setCurrentPage} = ProductStore; 
+
+
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
-      onPageChange(page);
+      setCurrentPage(page);
     }
   };
 

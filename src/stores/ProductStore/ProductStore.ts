@@ -1,7 +1,7 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, action, computed, observable } from 'mobx';
 import axios from 'axios';
 import { ProductI } from 'modules/types';
-import FilterStore from 'stores/FilterStore/FilterStore'; // Импортируем FilterStore для фильтров
+
 
 class ProductStore {
   products: ProductI[] = [];
@@ -10,12 +10,24 @@ class ProductStore {
   error: string | null = null;
   currentPage: number = 1;
   productsPerPage: number = 9;
+  totalPages: number = 1;
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {
+      products: observable,
+      totalProducts: observable,
+      loading: observable,
+      error: observable,
+      currentPage: observable,
+      totalPages: observable,
+      fetchProducts: action,
+      setCurrentPage: action,
+      handleProductClick: action,
+      getProducts: computed,
+    });
   }
 
-  // Загрузка товаров на основе фильтров
+  // Загрузка всех продуктов
   fetchProducts = async (searchQuery: string, selectedCategoryID: number | null) => {
     this.loading = true;
     this.error = null;
@@ -23,18 +35,13 @@ class ProductStore {
     try {
       const response = await axios.get('https://api.escuelajs.co/api/v1/products', {
         params: {
-          offset: (this.currentPage - 1) * this.productsPerPage,
-          limit: this.productsPerPage,
           title: searchQuery,
           categoryId: selectedCategoryID,
         },
       });
       this.products = response.data;
-
-      const totalResponse = await axios.get('https://api.escuelajs.co/api/v1/products', {
-        params: { limit: 0, categoryId: selectedCategoryID },
-      });
-      this.totalProducts = totalResponse.data.length;
+      this.totalProducts = this.products.length;
+      this.totalPages = Math.ceil(this.totalProducts / this.productsPerPage);
     } catch (e) {
       this.error = 'Ошибка при загрузке продуктов';
     } finally {
@@ -42,10 +49,19 @@ class ProductStore {
     }
   };
 
+  // Вычисляемое свойство для получения текущих продуктов
+  get getProducts() {
+    const start = (this.currentPage - 1) * this.productsPerPage;
+    const end = start + this.productsPerPage;
+    return this.products.slice(start, end);
+  }
+
+  // Установка текущей страницы
   setCurrentPage = (page: number) => {
     this.currentPage = page;
   };
 
+  // Обработчик клика по продукту
   handleProductClick = (product: ProductI, navigate: Function) => {
     navigate(`/product/${product.id}`);
   };

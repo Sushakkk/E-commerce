@@ -12,7 +12,7 @@ import { observer } from 'mobx-react-lite';
 import FilterStore from 'stores/FilterStore/FilterStore';
 
 const HomePage: React.FC = observer(() => {
-  const { products, loading, error, totalProducts, currentPage } = ProductStore;
+  const {loading, error, totalProducts, currentPage } = ProductStore;
   const { searchQuery, selectedCategory } = FilterStore; // Берем фильтры из FilterStore
 
   // Загрузка продуктов при изменении страницы или фильтров
@@ -20,10 +20,6 @@ const HomePage: React.FC = observer(() => {
     ProductStore.fetchProducts(searchQuery, selectedCategory?.key); // Пример вызова с фильтрами
   }, [currentPage, searchQuery, selectedCategory]); // Добавляем зависимости для фильтров
 
-
-  const handlePageChange = (page: number) => {
-    ProductStore.setCurrentPage(page);
-  };
 
   if (loading) return (
     <main className="page">
@@ -34,8 +30,6 @@ const HomePage: React.FC = observer(() => {
   );
 
   if (error) return <div className={styles['error-message']}>{error}</div>;
-
-  const totalPages = Math.ceil(totalProducts / ProductStore.productsPerPage);
 
   return (
     <main id="main" className="page">
@@ -60,11 +54,7 @@ const HomePage: React.FC = observer(() => {
             <ProductList />
           </div>
 
-          <Pagination 
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
+          <Pagination />
         </div>
       </div>
     </main>

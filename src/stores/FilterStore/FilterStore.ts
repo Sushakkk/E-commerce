@@ -12,23 +12,20 @@ class FilterStore {
     makeAutoObservable(this);
   }
 
-  // Устанавливаем строку поиска
   setSearchQuery(query: string) {
     this.searchQuery = query;
-    this.fetchProducts();  // Обновляем продукты при изменении запроса
+   
   }
-
-  // Устанавливаем выбранную категорию
   setSelectedCategory(category: Option | null) {
-    this.selectedCategory = category;  // Устанавливаем новый объект Option
-    this.fetchProducts();  // Обновляем продукты при изменении категории
+    this.selectedCategory = category;  
+
   }
 
   // Загружаем категории
   async fetchCategories() {
     try {
       const response = await axios.get('https://api.escuelajs.co/api/v1/categories');
-      this.categories = response.data.map((category: { id: string; name: string }) => ({
+      this.categories = response.data.map((category: { id: number; name: string }) => ({
         key: category.id,
         value: category.name,
       }));
@@ -37,10 +34,7 @@ class FilterStore {
     }
   }
 
-  // Перезапрашиваем продукты с новыми фильтрами
-  fetchProducts() {
-    ProductStore.fetchProducts(this.searchQuery, this.selectedCategory ? Number(this.selectedCategory.key): null);
-  }
+ 
 }
 
 export default new FilterStore();
