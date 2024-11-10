@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Loader from 'components/Loader';
 import Text from 'components/Text/Text';
 import styles from './HomePage.module.scss';
@@ -8,29 +8,52 @@ import Filters from './components/Filters/Filters';
 import ProductStore from 'stores/ProductStore/ProductStore';
 import { observer } from 'mobx-react-lite';
 import FilterStore from 'stores/FilterStore/FilterStore';
+import { useLocation } from 'react-router-dom';
 
 const HomePage: React.FC = observer(() => {
-  const { loading, error, totalProducts, currentPage } = ProductStore;
-  const {selectedCategory, searchQuery } = FilterStore; 
+  const { loading, error, totalProducts} = ProductStore;
+  const { selectedCategory, searchQuery } = FilterStore;
+
+  const [filtersLoaded, setFiltersLoaded] = useState(false);
+  const [productsLoaded, setProductsLoaded] = useState(false); 
+
+  const location = useLocation();
+
+  // Загрузка категорий и параметров до рендера
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const search = params.get('search') || '';
+    const categoryId = params.get('category') || '';
+
+    const initializeFilters = async () => {
+      await FilterStore.fetchCategories(); 
+      FilterStore.setQueryParams(search, Number(categoryId)); 
+      setFiltersLoaded(true); 
+    };
+
+    initializeFilters();
+  }, []); 
 
   useEffect(() => {
+    if (filtersLoaded) {
+      ProductStore.fetchProducts(searchQuery, selectedCategory?.key)
+        .then(() => setProductsLoaded(true))
+        .catch(() => setProductsLoaded(true)); 
+    }
+  }, [filtersLoaded, searchQuery, selectedCategory]); // Загружаем продукты после фильтров
 
-    ProductStore.fetchProducts( searchQuery, selectedCategory?.key); 
-  }, [currentPage, selectedCategory]); 
-  
-
-
-  if (loading) return (
-    <main className="page">
-      <div className="page__loader">
-        <Loader />
-      </div>
-    </main>
-  );
+  // Логика рендера
+  if (!filtersLoaded || !productsLoaded || loading) {
+    return (
+      <main className="page">
+        <div className="page__loader">
+          <Loader />
+        </div>
+      </main>
+    );
+  }
 
   if (error) return <div className={styles['error-message']}>{error}</div>;
-
-
 
   return (
     <main id="main" className="page">
@@ -50,7 +73,10 @@ const HomePage: React.FC = observer(() => {
           <div className={styles['products__body']}>
             <div className={styles['products__subtitle']}>
               <Text view="p-32" className="page-title" weight="bold">Total Products</Text>
-              <Text view="p-20" color="accent" weight="bold">{totalProducts}</Text>
+              {/* Здесь отображаем количество товаров только после загрузки */}
+              <Text view="p-20" color="accent" weight="bold">
+                {totalProducts !== null ? totalProducts : 'Loading...'}
+              </Text>
             </div>
             <ProductList />
           </div>

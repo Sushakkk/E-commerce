@@ -1,4 +1,3 @@
-// components/icons/Icon.tsx
 import * as React from 'react';
 
 export type IconProps = React.SVGAttributes<SVGElement> & {
@@ -26,7 +25,7 @@ const Icon: React.FC<React.PropsWithChildren<IconProps>> = ({
       case 'accent':
         return 'var(--accent)';
       default:
-        return 'currentColor'; // Цвет по умолчанию (наследование от родителя)
+        return 'currentColor';
     }
   };
 
@@ -36,7 +35,7 @@ const Icon: React.FC<React.PropsWithChildren<IconProps>> = ({
       width={width}
       height={height}
       fill={getColor()}
-      stroke={stroke==="none"? "none": getColor()}
+      stroke={stroke ?? getColor()}
       {...props}
     >
       {children}

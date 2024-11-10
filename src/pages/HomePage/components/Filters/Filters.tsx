@@ -1,20 +1,25 @@
-import React, { useEffect} from 'react';
+import React, { useCallback, useEffect, useState} from 'react';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import MultiDropdown, { Option } from 'components/MultiDropdown';
 import { observer } from 'mobx-react-lite';
 import styles from './Filters.module.scss';
 import FilterStore from 'stores/FilterStore/FilterStore';
+import { useLocation } from 'react-router-dom';
+
 
 
 const Filters: React.FC = () => {
+
+  const [searchValue, setSearch] = useState(FilterStore.searchQuery);
   
 
-  const handleSearchChange = (value: string) => {
-    FilterStore.setSearchQuery(value); 
-  };
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch(value);
+  }, []);
 
   const handleSearchSubmit = () => {
+    FilterStore.setSearchQuery(searchValue)
     FilterStore.applySearch(); 
   };
 
@@ -24,16 +29,13 @@ const Filters: React.FC = () => {
   };
 
 
-  useEffect(() => {
-    FilterStore.fetchCategories();
-  }, []);
 
   return (
     <div className={styles['products__controls']}>
       <div className={styles['products__search']}>
         <div className={styles['products__search-column--left']}>
             <Input
-                value={FilterStore.searchQuery}
+                value={searchValue}
                 onChange={handleSearchChange}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {

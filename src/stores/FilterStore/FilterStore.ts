@@ -1,4 +1,4 @@
-import { makeAutoObservable, action, observable } from 'mobx';
+import { makeAutoObservable, action, observable, runInAction } from 'mobx';
 import axios from 'axios';
 import { Option } from 'components/MultiDropdown';
 import ProductStore from 'stores/ProductStore/ProductStore';
@@ -7,6 +7,8 @@ class FilterStore {
   categories: Option[] = [];
   searchQuery: string = '';
   selectedCategory: Option | null = null;
+  categoriesLoaded = false;
+
 
   constructor() {
     makeAutoObservable(this, {
@@ -16,23 +18,25 @@ class FilterStore {
       setSearchQuery: action,
       setSelectedCategory: action,
       fetchCategories: action,
-      syncWithQueryParams: action,
+      setQueryParams: action,
     });
-
-    this.syncWithQueryParams();
   }
 
 
-  syncWithQueryParams() {
-    const params = new URLSearchParams(window.location.search);
-    const search = params.get('search') ?? '';
-    const category = params.get('category') ? parseInt(params.get('category') as string, 10) : null;
+  setQueryParams(search:string, categoryId:number) {
 
-    this.setSearchQuery(search);
     
-    this.setSelectedCategory(
-      category ? { key: category, value: '' } : null
-    );
+    this.setSearchQuery(search);
+    if (categoryId) {
+      const category = this.categories.find(
+        (cat) => cat.key === categoryId 
+      );
+     
+      this.setSelectedCategory(category || null);
+    } else {
+      this.setSelectedCategory(null);
+    }
+    
   }
 
 
@@ -51,7 +55,6 @@ class FilterStore {
     this.updateQueryParams();
   }
 
-  // Обновляем query параметры в URL
   updateQueryParams() {
     const params = new URLSearchParams(window.location.search);
     if (this.searchQuery) {
@@ -67,8 +70,8 @@ class FilterStore {
     window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
   }
 
-  // Загружаем категории с API
   async fetchCategories() {
+    if (this.categories.length > 0) return; 
     try {
       const categoriesResponse = await axios.get('https://api.escuelajs.co/api/v1/categories');
       const categories = categoriesResponse.data.map((category: { id: number; name: string }) => ({
@@ -91,9 +94,12 @@ class FilterStore {
       );
 
       const validCategories = (await Promise.all(categoryPromises)).filter(Boolean) as Option[];
+
+      runInAction(() => {
       this.categories = validCategories;
+      this.categoriesLoaded = true;
+      });
     } catch (error) {
-      console.error('Ошибка при загрузке категорий', error);
     }
   }
 }

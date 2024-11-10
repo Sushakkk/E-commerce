@@ -1,4 +1,4 @@
-import { action, makeAutoObservable } from 'mobx';
+import { action, makeAutoObservable, runInAction } from 'mobx';
 import axios from 'axios';
 import { ProductI } from 'modules/types';
 
@@ -18,7 +18,7 @@ class ProductStore {
       syncWithQueryParams: action,
     });
 
-    this.syncWithQueryParams();
+   
   }
 
   // Метод для синхронизации currentPage с query-параметрами при загрузке
@@ -41,7 +41,11 @@ class ProductStore {
           categoryId: selectedCategoryID,
         },
       });
+
+      runInAction(() => {
       this.products = response.data;
+
+      });
 
       const totalResponse = await axios.get('https://api.escuelajs.co/api/v1/products', {
          params: {
@@ -50,13 +54,22 @@ class ProductStore {
           categoryId: selectedCategoryID,
         },
       });
+
+      runInAction(() => {
       this.totalProducts = totalResponse.data.length;
       this.totalPages = Math.ceil(this.totalProducts / this.productsPerPage);
+      });
 
     } catch (e) {
+
+      runInAction(() => {
       this.error = 'Ошибка при загрузке продуктов';
+      });
     } finally {
+
+      runInAction(() => {
       this.loading = false;
+      });
     }
   };
   
