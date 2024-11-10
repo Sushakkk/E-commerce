@@ -1,8 +1,6 @@
 import { action, makeAutoObservable } from 'mobx';
 import axios from 'axios';
 import { ProductI } from 'modules/types';
-import { NavigateFunction } from 'react-router-dom';
-
 
 class ProductStore {
   products: ProductI[] = [];
@@ -17,13 +15,18 @@ class ProductStore {
     makeAutoObservable(this, {
       fetchProducts: action,
       setCurrentPage: action,
+      syncWithQueryParams: action,
     });
+
+    this.syncWithQueryParams();
   }
 
-
-  
-
-
+  // Метод для синхронизации currentPage с query-параметрами при загрузке
+  syncWithQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    const pageParam = parseInt(params.get('page') || '1', 10);
+    this.setCurrentPage(pageParam);
+  }
 
   fetchProducts = async (searchQuery: string, selectedCategoryID: number | undefined) => {
     this.loading = true;
@@ -40,7 +43,6 @@ class ProductStore {
       });
       this.products = response.data;
 
-
       const totalResponse = await axios.get('https://api.escuelajs.co/api/v1/products', {
          params: {
           limit: 0,
@@ -51,7 +53,7 @@ class ProductStore {
       this.totalProducts = totalResponse.data.length;
       this.totalPages = Math.ceil(this.totalProducts / this.productsPerPage);
 
-    } catch {
+    } catch (e) {
       this.error = 'Ошибка при загрузке продуктов';
     } finally {
       this.loading = false;
@@ -60,9 +62,20 @@ class ProductStore {
   
   setCurrentPage = (page: number) => {
     this.currentPage = page;
+    this.updateQueryParams();
   };
 
-  handleProductClick = (product: ProductI, navigate: NavigateFunction) => {
+  updateQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    if (this.currentPage > 1) {
+      params.set('page', String(this.currentPage));
+    } else {
+      params.delete('page');
+    }
+    window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+  }
+
+  handleProductClick = (product: ProductI, navigate: Function) => {
     navigate(`/product/${product.id}`);
   };
 }

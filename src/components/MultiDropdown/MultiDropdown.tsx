@@ -12,10 +12,10 @@ export type Option = {
 export type MultiDropdownProps = {
   className?: string;
   options: Option[];
-  value: string | null;  // Теперь это одиночный объект или null
-  onChange: (value: Option) => void;  // Передаем только одну категорию
+  value: string | null;
+  onChange: (value: Option | null) => void; 
   disabled?: boolean;
-  getTitle: (value: string | null) => string;  // Модифицирован getTitle
+  getTitle: (value: string | null) => string;
 };
 
 const MultiDropdown: React.FC<MultiDropdownProps> = ({
@@ -40,8 +40,8 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   };
 
   const handleOptionClick = (option: Option) => {
-    onChange(option);  // Выбираем только одну категорию
-    setIsOpen(false);   // Закрываем выпадающий список
+    onChange(option);
+    setIsOpen(false);
   };
 
   const handleClickOutside = (e: MouseEvent) => {
@@ -49,6 +49,15 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
       setIsOpen(false);
     }
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Backspace' && !currentInput) {
+      onChange(null); 
+    }
+  };
+
+
+  
 
   useEffect(() => {
     document.addEventListener('click', handleClickOutside);
@@ -66,6 +75,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
         value={value ? getTitle(value) : currentInput}
         onClick={() => !disabled && setIsOpen(true)}
         onChange={handleInputChange}
+        onKeyDown={handleKeyDown} // Добавляем обработчик нажатия клавиш
         placeholder={getTitle(value)}
         disabled={disabled}
         afterSlot={<ArrowDownIcon color="secondary" />}

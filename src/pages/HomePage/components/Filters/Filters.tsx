@@ -5,7 +5,7 @@ import MultiDropdown, { Option } from 'components/MultiDropdown';
 import { observer } from 'mobx-react-lite';
 import styles from './Filters.module.scss';
 import FilterStore from 'stores/FilterStore/FilterStore';
-import ProductStore from 'stores/ProductStore/ProductStore'; 
+
 
 const Filters: React.FC = () => {
   
@@ -15,12 +15,14 @@ const Filters: React.FC = () => {
   };
 
   const handleSearchSubmit = () => {
-    ProductStore.fetchProducts(FilterStore.searchQuery, FilterStore.selectedCategory?.key);
+    FilterStore.applySearch(); 
   };
 
-  const handleCategoryChange = (category: Option) => {
-    FilterStore.setSelectedCategory(category);
+  const handleCategoryChange = (category: Option | null) => {
+   
+    FilterStore.setSelectedCategory(category ?? null);
   };
+
 
   useEffect(() => {
     FilterStore.fetchCategories();
@@ -46,10 +48,11 @@ const Filters: React.FC = () => {
           className={styles['products__search-column--right']}
           onClick={handleSearchSubmit}
         >
-          Find now
+          Find Now
         </Button>
       </div>
       <div className={styles['products__filter']}>
+        
         <MultiDropdown
           options={FilterStore.categories}
           value={FilterStore.selectedCategory?.value ?? null}

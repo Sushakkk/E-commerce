@@ -11,11 +11,11 @@ import FilterStore from 'stores/FilterStore/FilterStore';
 
 const HomePage: React.FC = observer(() => {
   const { loading, error, totalProducts, currentPage } = ProductStore;
-  const {selectedCategory } = FilterStore; 
+  const {selectedCategory, searchQuery } = FilterStore; 
 
   useEffect(() => {
 
-    ProductStore.fetchProducts( '', selectedCategory?.key); 
+    ProductStore.fetchProducts( searchQuery, selectedCategory?.key); 
   }, [currentPage, selectedCategory]); 
   
 
