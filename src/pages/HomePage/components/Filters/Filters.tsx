@@ -9,7 +9,7 @@ import ProductStore from 'stores/ProductStore/ProductStore';
 
 
 
-const Filters: React.FC = () => {
+const Filters: React.FC = observer(() => {
 
   const [searchValue, setSearch] = useState(FilterStore.searchQuery);
   
@@ -65,6 +65,6 @@ const Filters: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
-export default observer(Filters);
+export default Filters;

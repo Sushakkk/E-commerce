@@ -72,7 +72,7 @@ class FilterStore {
       this.categories = validCategories;
       this.filtersLoaded = true;
       });
-    } catch (error) {
+    } catch {
       this.error = 'Ошибка при загрузке фильтров';
     }
   }

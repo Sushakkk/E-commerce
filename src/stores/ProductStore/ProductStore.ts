@@ -2,6 +2,7 @@ import { action, makeAutoObservable, runInAction } from 'mobx';
 import axios from 'axios';
 import { ProductI } from 'modules/types';
 import QueryStore from 'stores/QueryStore/QueryStore';
+import { NavigateFunction } from 'react-router-dom';
 
 class ProductStore {
   products: ProductI[] = [];
@@ -49,7 +50,7 @@ class ProductStore {
         this.totalProducts = totalResponse.data.length;
         this.totalPages = Math.ceil(this.totalProducts / this.productsPerPage);
       });
-    } catch (e) {
+    } catch {
       runInAction(() => {
         this.error = 'Ошибка при загрузке продуктов';
       });
@@ -63,7 +64,7 @@ class ProductStore {
 
   
 
-  handleProductClick = (product: ProductI, navigate: Function) => {
+  handleProductClick = (product: ProductI, navigate: NavigateFunction) => {
     navigate(`/product/${product.id}`);
   };
 }

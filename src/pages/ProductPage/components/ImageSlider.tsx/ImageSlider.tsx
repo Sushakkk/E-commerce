@@ -8,7 +8,7 @@ import { observer } from 'mobx-react-lite';
 
 
 
-const ImageSlider: React.FC = () => {
+const ImageSlider: React.FC = observer(() => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const { product } = ProductDetailsStore;
@@ -58,7 +58,7 @@ const ImageSlider: React.FC = () => {
       </button>
     </div>
   );
-};
+});
 
 
-export default observer(ImageSlider);
+export default ImageSlider;

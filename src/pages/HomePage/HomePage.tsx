@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect} from 'react';
 import Loader from 'components/Loader';
 import Text from 'components/Text/Text';
 import styles from './HomePage.module.scss';
