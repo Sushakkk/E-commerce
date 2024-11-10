@@ -17,7 +17,7 @@ const Header: React.FC = () => {
     <header className={styles.header}>
       <div className={styles.header__container}>
         <div className={styles.header__logo}>
-          <Link to="/"> 
+          <Link to="#"> 
             <Logo />
           </Link>
         </div>

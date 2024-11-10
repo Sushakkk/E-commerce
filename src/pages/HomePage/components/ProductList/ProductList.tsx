@@ -5,12 +5,22 @@ import Button from 'components/Button';
 import { useNavigate } from 'react-router-dom';
 import ProductStore from 'stores/ProductStore/ProductStore';
 import styles from './ProductList.module.scss';
+import Text from 'components/Text/Text';
 
 const ProductList: React.FC = observer(() => {
 
 
   const navigate = useNavigate();
   const { products, handleProductClick } = ProductStore;  
+
+
+  if(!ProductStore.totalPages){
+    return (
+      <section className={styles['products__not-found']}>
+        <Text view="p-32" className="page-title" weight="bold">No products found</Text>
+      </section>
+    );
+  }
   
 
   return (

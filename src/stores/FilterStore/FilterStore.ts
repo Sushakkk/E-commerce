@@ -26,6 +26,7 @@ class FilterStore {
 
   setSearchQuery(searchQuery: string) {
     this.searchQuery = searchQuery;
+    
   }
 
   applySearch() {

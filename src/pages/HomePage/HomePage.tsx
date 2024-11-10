@@ -18,7 +18,6 @@ const HomePage: React.FC = observer(() => {
 
   const location = useLocation();
 
-  // Загрузка категорий и параметров до рендера
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const search = params.get('search') || '';
@@ -33,15 +32,15 @@ const HomePage: React.FC = observer(() => {
     initializeFilters();
   }, []); 
 
-  
-
   useEffect(() => {
     if (QueryStore.queryLoaded) {
       ProductStore.fetchProducts(searchQuery, selectedCategory?.key)
     }
   }, [QueryStore.queryLoaded, searchQuery, selectedCategory, currentPage]); 
 
-  if (!QueryStore.queryLoaded) {
+
+
+  if (!QueryStore.queryLoaded || !ProductStore.productsLoaded) {
     return (
       <main className="page">
         <div className="page__loader">
@@ -52,7 +51,7 @@ const HomePage: React.FC = observer(() => {
   }
 
 
-  if(ProductStore.productsLoaded){
+
     return (
       <main id="main" className="page">
         <div className={styles['page__main-block']}>
@@ -83,7 +82,7 @@ const HomePage: React.FC = observer(() => {
         </div>
       </main>
     );
-  }
+
 });
 
 export default HomePage;

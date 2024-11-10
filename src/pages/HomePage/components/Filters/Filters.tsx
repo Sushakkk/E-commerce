@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState} from 'react';
+import React, { useCallback,useState} from 'react';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import MultiDropdown, { Option } from 'components/MultiDropdown';
 import { observer } from 'mobx-react-lite';
 import styles from './Filters.module.scss';
 import FilterStore from 'stores/FilterStore/FilterStore';
-import { useLocation } from 'react-router-dom';
+import ProductStore from 'stores/ProductStore/ProductStore';
 
 
 
@@ -16,6 +16,7 @@ const Filters: React.FC = () => {
 
   const handleSearchChange = useCallback((value: string) => {
     setSearch(value);
+    ProductStore.setCurrentPage(1);
   }, []);
 
   const handleSearchSubmit = () => {
@@ -24,8 +25,8 @@ const Filters: React.FC = () => {
   };
 
   const handleCategoryChange = (category: Option | null) => {
-   
     FilterStore.setSelectedCategory(category ?? null);
+    ProductStore.setCurrentPage(1);
   };
 
 

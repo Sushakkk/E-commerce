@@ -20,7 +20,7 @@ class QueryStore {
     FilterStore.setSearchQuery(search);
 
     if(page){
-    ProductStore.setCurrentPage(Number(page))
+        ProductStore.setCurrentPage(Number(page))
     }
     if (categoryId) {
       const category = FilterStore.categories.find(
