@@ -2,6 +2,7 @@ import { makeAutoObservable, action, observable, runInAction } from 'mobx';
 import axios from 'axios';
 import { Option } from 'components/MultiDropdown';
 import ProductStore from 'stores/ProductStore/ProductStore';
+import QueryStore from 'stores/QueryStore/QueryStore';
 
 class FilterStore {
   categories: Option[] = [];
@@ -31,29 +32,16 @@ class FilterStore {
 
   applySearch() {
     ProductStore.fetchProducts(this.searchQuery, this.selectedCategory?.key);
-    this.updateQueryParams();
+    QueryStore.updateQueryParams();
   }
 
 
   setSelectedCategory(category: Option | null) {
     this.selectedCategory = category;
-    this.updateQueryParams();
+    QueryStore.updateQueryParams();
   }
 
-  updateQueryParams() {
-    const params = new URLSearchParams(window.location.search);
-    if (this.searchQuery) {
-      params.set('search', this.searchQuery);
-    } else {
-      params.delete('search');
-    }
-    if (this.selectedCategory) {
-      params.set('category', String(this.selectedCategory.key));
-    } else {
-      params.delete('category');
-    }
-    window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
-  }
+  
 
   async fetchCategories() {
     if (this.categories.length > 0) return; 

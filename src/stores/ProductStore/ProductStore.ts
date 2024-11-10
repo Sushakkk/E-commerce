@@ -1,6 +1,7 @@
 import { action, makeAutoObservable, runInAction } from 'mobx';
 import axios from 'axios';
 import { ProductI } from 'modules/types';
+import QueryStore from 'stores/QueryStore/QueryStore';
 
 class ProductStore {
   products: ProductI[] = [];
@@ -57,18 +58,10 @@ class ProductStore {
   
   setCurrentPage = (page: number) => {
     this.currentPage = page;
-    this.updateQueryParams();
+    QueryStore.updateQueryParams();
   };
 
-  updateQueryParams() {
-    const params = new URLSearchParams(window.location.search);
-    if (this.currentPage > 1) {
-      params.set('page', String(this.currentPage));
-    } else {
-      params.delete('page');
-    }
-    window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
-  }
+  
 
   handleProductClick = (product: ProductI, navigate: Function) => {
     navigate(`/product/${product.id}`);

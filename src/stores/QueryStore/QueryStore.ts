@@ -12,6 +12,7 @@ class QueryStore {
   constructor() {
     makeAutoObservable(this, {
       setQueryParams: action,
+      updateQueryParams: action,
     });
   }
 
@@ -31,9 +32,28 @@ class QueryStore {
         FilterStore.setSelectedCategory(null);
     }
     this.queryLoaded=true
-
   }
 
+
+  updateQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    if (FilterStore.searchQuery) {
+      params.set('search', FilterStore.searchQuery);
+    } else {
+      params.delete('search');
+    }
+    if (FilterStore.selectedCategory) {
+      params.set('category', String(FilterStore.selectedCategory.key));
+    } else {
+      params.delete('category');
+    }
+    if (ProductStore.currentPage > 1) {
+      params.set('page', String(ProductStore.currentPage));
+    } else {
+      params.delete('page');
+    }
+    window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+  }
 
  
 }

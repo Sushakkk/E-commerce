@@ -1,23 +1,34 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 import Logo from '../Logo/Logo';
 import Text from '../Text/Text';
 import Basket from '../Basket/Basket';
 import User from '../User/User';
+import QueryStore from 'stores/QueryStore';
+
 
 const Header: React.FC = () => {
   const [activeItem, setActiveItem] = useState<string>('Product');
+  const navigate = useNavigate();
 
   const handleItemClick = (item: string) => {
     setActiveItem(item);
   };
 
+
+  const handleLogoClick = () => {
+    QueryStore.setQueryParams('', '', ''); 
+    navigate('/', { replace: true });
+    window.location.reload(); 
+  };
+  
+
   return (
     <header className={styles.header}>
       <div className={styles.header__container}>
         <div className={styles.header__logo}>
-          <Link to="#"> 
+          <Link to="#"  onClick={handleLogoClick}> 
             <Logo />
           </Link>
         </div>
