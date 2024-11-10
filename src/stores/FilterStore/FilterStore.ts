@@ -7,7 +7,8 @@ class FilterStore {
   categories: Option[] = [];
   searchQuery: string = '';
   selectedCategory: Option | null = null;
-  categoriesLoaded = false;
+  filtersLoaded = false;
+  error: string | null = null;
 
 
   constructor() {
@@ -18,26 +19,9 @@ class FilterStore {
       setSearchQuery: action,
       setSelectedCategory: action,
       fetchCategories: action,
-      setQueryParams: action,
     });
   }
 
-
-  setQueryParams(search:string, categoryId:number) {
-
-    
-    this.setSearchQuery(search);
-    if (categoryId) {
-      const category = this.categories.find(
-        (cat) => cat.key === categoryId 
-      );
-     
-      this.setSelectedCategory(category || null);
-    } else {
-      this.setSelectedCategory(null);
-    }
-    
-  }
 
 
   setSearchQuery(searchQuery: string) {
@@ -97,9 +81,10 @@ class FilterStore {
 
       runInAction(() => {
       this.categories = validCategories;
-      this.categoriesLoaded = true;
+      this.filtersLoaded = true;
       });
     } catch (error) {
+      this.error = 'Ошибка при загрузке фильтров';
     }
   }
 }

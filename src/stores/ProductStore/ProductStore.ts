@@ -5,7 +5,7 @@ import { ProductI } from 'modules/types';
 class ProductStore {
   products: ProductI[] = [];
   totalProducts: number = 0;
-  loading: boolean = false;
+  productsLoaded: boolean= false;
   error: string | null = null;
   currentPage: number = 1;
   productsPerPage: number = 9;
@@ -15,23 +15,13 @@ class ProductStore {
     makeAutoObservable(this, {
       fetchProducts: action,
       setCurrentPage: action,
-      syncWithQueryParams: action,
     });
 
-   
   }
 
-  // Метод для синхронизации currentPage с query-параметрами при загрузке
-  syncWithQueryParams() {
-    const params = new URLSearchParams(window.location.search);
-    const pageParam = parseInt(params.get('page') || '1', 10);
-    this.setCurrentPage(pageParam);
-  }
+ 
 
   fetchProducts = async (searchQuery: string, selectedCategoryID: number | undefined) => {
-    this.loading = true;
-    this.error = null;
-  
     try {
       const response = await axios.get('https://api.escuelajs.co/api/v1/products', {
         params: {
@@ -44,6 +34,7 @@ class ProductStore {
 
       runInAction(() => {
       this.products = response.data;
+      this.productsLoaded = true
 
       });
 
@@ -61,16 +52,10 @@ class ProductStore {
       });
 
     } catch (e) {
-
       runInAction(() => {
       this.error = 'Ошибка при загрузке продуктов';
-      });
-    } finally {
-
-      runInAction(() => {
-      this.loading = false;
-      });
-    }
+      })
+    } 
   };
   
   setCurrentPage = (page: number) => {

@@ -9,13 +9,12 @@ import ProductStore from 'stores/ProductStore/ProductStore';
 import { observer } from 'mobx-react-lite';
 import FilterStore from 'stores/FilterStore/FilterStore';
 import { useLocation } from 'react-router-dom';
+import QueryStore from 'stores/QueryStore/QueryStore';
 
 const HomePage: React.FC = observer(() => {
-  const { loading, error, totalProducts} = ProductStore;
-  const { selectedCategory, searchQuery } = FilterStore;
+  const {totalProducts, currentPage} = ProductStore;
+  const {selectedCategory, searchQuery } = FilterStore;
 
-  const [filtersLoaded, setFiltersLoaded] = useState(false);
-  const [productsLoaded, setProductsLoaded] = useState(false); 
 
   const location = useLocation();
 
@@ -24,26 +23,25 @@ const HomePage: React.FC = observer(() => {
     const params = new URLSearchParams(location.search);
     const search = params.get('search') || '';
     const categoryId = params.get('category') || '';
+    const page = params.get('page') || '';
 
     const initializeFilters = async () => {
       await FilterStore.fetchCategories(); 
-      FilterStore.setQueryParams(search, Number(categoryId)); 
-      setFiltersLoaded(true); 
+      QueryStore.setQueryParams(search, categoryId,page ); 
     };
 
     initializeFilters();
   }, []); 
 
-  useEffect(() => {
-    if (filtersLoaded) {
-      ProductStore.fetchProducts(searchQuery, selectedCategory?.key)
-        .then(() => setProductsLoaded(true))
-        .catch(() => setProductsLoaded(true)); 
-    }
-  }, [filtersLoaded, searchQuery, selectedCategory]); // Загружаем продукты после фильтров
+  
 
-  // Логика рендера
-  if (!filtersLoaded || !productsLoaded || loading) {
+  useEffect(() => {
+    if (QueryStore.queryLoaded) {
+      ProductStore.fetchProducts(searchQuery, selectedCategory?.key)
+    }
+  }, [QueryStore.queryLoaded, searchQuery, selectedCategory, currentPage]); 
+
+  if (!QueryStore.queryLoaded) {
     return (
       <main className="page">
         <div className="page__loader">
@@ -53,39 +51,39 @@ const HomePage: React.FC = observer(() => {
     );
   }
 
-  if (error) return <div className={styles['error-message']}>{error}</div>;
 
-  return (
-    <main id="main" className="page">
-      <div className={styles['page__main-block']}>
-        <div className={styles['products__content']}>
-          <div className={styles['products__header']}>
-            <div className={styles['products__title']}>
-              <Text view="title">Products</Text>
+  if(ProductStore.productsLoaded){
+    return (
+      <main id="main" className="page">
+        <div className={styles['page__main-block']}>
+          <div className={styles['products__content']}>
+            <div className={styles['products__header']}>
+              <div className={styles['products__title']}>
+                <Text view="title">Products</Text>
+              </div>
+              <div className={styles['products__description']}>
+                <Text view="p-20" color="secondary">
+                  We display products based on the latest products we have. If you want to see our old products, please enter the name of the item.
+                </Text>
+              </div>
             </div>
-            <div className={styles['products__description']}>
-              <Text view="p-20" color="secondary">
-                We display products based on the latest products we have. If you want to see our old products, please enter the name of the item.
-              </Text>
+            <Filters />
+            <div className={styles['products__body']}>
+              <div className={styles['products__subtitle']}>
+                <Text view="p-32" className="page-title" weight="bold">Total Products</Text>
+                <Text view="p-20" color="accent" weight="bold">
+                  {totalProducts}
+                </Text>
+              </div>
+              <ProductList />
             </div>
+  
+            <Pagination />
           </div>
-          <Filters />
-          <div className={styles['products__body']}>
-            <div className={styles['products__subtitle']}>
-              <Text view="p-32" className="page-title" weight="bold">Total Products</Text>
-              {/* Здесь отображаем количество товаров только после загрузки */}
-              <Text view="p-20" color="accent" weight="bold">
-                {totalProducts !== null ? totalProducts : 'Loading...'}
-              </Text>
-            </div>
-            <ProductList />
-          </div>
-
-          <Pagination />
         </div>
-      </div>
-    </main>
-  );
+      </main>
+    );
+  }
 });
 
 export default HomePage;

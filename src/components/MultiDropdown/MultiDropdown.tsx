@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './MultiDropdown.module.scss';
 import Input from '../Input/Input';
 import Text from '../Text/Text'; 
 import ArrowDownIcon from '../icons/ArrowDownIcon';
-
 
 export type Option = {
   key: number;
@@ -32,35 +31,39 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   const [currentInput, setCurrentInput] = useState('');
   const [filteredOptions, setFilteredOptions] = useState(options);
 
-  const handleInputChange = useCallback((inputValue: string) => {
+  const handleInputChange = (inputValue: string) => {
     setCurrentInput(inputValue);
-  }, []);
-  
-  const handleOptionClick = useCallback((option: Option) => {
+    const newFilteredOptions = options.filter((option) =>
+      option.value.toLowerCase().startsWith(inputValue.toLowerCase())
+    );
+    setFilteredOptions(newFilteredOptions);
+  };
+
+  const handleOptionClick = (option: Option) => {
     onChange(option);
     setIsOpen(false);
-  }, [onChange]);
-  
- 
-  
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !currentInput) {
-      onChange(null);
-    }
-  }, [currentInput, onChange]);
-  
+  };
 
+  const handleClickOutside = (e: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      setIsOpen(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Backspace' && !currentInput) {
+      onChange(null); 
+      setIsOpen(false);
+    }
+  };
+
+  
 
   useEffect(() => {
-    if (currentInput) {
-      const newFilteredOptions = options.filter((option) =>
-        option.value.toLowerCase().startsWith(currentInput.toLowerCase())
-      );
-      setFilteredOptions(newFilteredOptions);
-    } else {
-      setFilteredOptions(options);
-    }
-  }, [currentInput, options]);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   
 
   return (
