@@ -1,8 +1,9 @@
-import { action, makeAutoObservable, runInAction } from 'mobx';
+import { action, makeAutoObservable, runInAction, toJS } from 'mobx';
 import axios from 'axios';
 import { ProductI } from 'modules/types';
 import QueryStore from 'stores/QueryStore/QueryStore';
 import { NavigateFunction } from 'react-router-dom';
+import FilterStore from 'stores/FilterStore/FilterStore';
 
 class ProductStore {
   products: ProductI[] = [];
@@ -65,6 +66,8 @@ class ProductStore {
   
 
   handleProductClick = (product: ProductI, navigate: NavigateFunction) => {
+
+    
     navigate(`/product/${product.id}`);
   };
 }

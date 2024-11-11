@@ -20,9 +20,9 @@ const HomePage: React.FC = observer(() => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const search = params.get('search') || '';
-    const categoryId = params.get('category') || '';
-    const page = params.get('page') || '';
+    const search = params.get('search') || FilterStore.searchQuery;
+    const categoryId = params.get('category') || (FilterStore.selectedCategory?.key ? String(FilterStore.selectedCategory.key) : '');
+    const page = params.get('page') || String(ProductStore.currentPage);
 
     const initializeFilters = async () => {
       await FilterStore.fetchCategories(); 
