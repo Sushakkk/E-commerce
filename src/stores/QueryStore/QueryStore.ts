@@ -1,61 +1,74 @@
-import { makeAutoObservable, action} from 'mobx';
-import FilterStore from 'stores/FilterStore/FilterStore';
-import ProductStore from 'stores/ProductStore/ProductStore';
-
+import { makeAutoObservable, action } from 'mobx';
 
 class QueryStore {
-    queryLoaded: boolean= false;
-  
-
-
+  queryParams: { [key: string]: string | number | null } = {};
+  queryLoaded: boolean = false;
 
   constructor() {
     makeAutoObservable(this, {
-      setQueryParams: action,
+      setQueryParam: action,
       updateQueryParams: action,
+      setParamsFromUrl: action,
     });
+
+    // Инициализация параметров из текущего URL
+    this.setParamsFromUrl();
   }
 
-
-  setQueryParams(search:string, categoryId:string, page:string) {
-    FilterStore.setSearchQuery(search);
-
-    if(page){
-        ProductStore.setCurrentPage(Number(page))
-    }
-    if (categoryId) {
-      const category = FilterStore.categories.find(
-        (cat) => cat.key === Number(categoryId)
-      );
-      FilterStore.setSelectedCategory(category || null);
+  // Устанавливаем/обновляем конкретный параметр
+  setQueryParam(key: string, value: string | number | null) {
+    console.log(`setQueryParam called with key: ${key}, value: ${value}`); // Логируем изменения
+    if (value === null || value === '') {
+      // Удаляем параметр, если значение пустое или null
+      delete this.queryParams[key];
     } else {
-        FilterStore.setSelectedCategory(null);
+      this.queryParams[key] = value;
     }
-    this.queryLoaded=true
+    this.updateQueryParams();
   }
 
-
-  updateQueryParams() {
+  
+  setParamsFromUrl() {
     const params = new URLSearchParams(window.location.search);
-    if (FilterStore.searchQuery) {
-      params.set('search', FilterStore.searchQuery);
-    } else {
-      params.delete('search');
-    }
-    if (FilterStore.selectedCategory) {
-      params.set('category', String(FilterStore.selectedCategory.key));
-    } else {
-      params.delete('category');
-    }
-    if (ProductStore.currentPage > 1) {
-      params.set('page', String(ProductStore.currentPage));
-    } else {
-      params.delete('page');
-    }
+    params.forEach((value, key) => {
+      if (value) {
+        this.queryParams[key] = value;
+        console.log(this.queryParams);
+        
+      }
+    });
+    
+    this.queryLoaded = true;
+  }
+
+  // Обновляем URL с текущими параметрами
+  updateQueryParams() {
+    const params = new URLSearchParams();
+    Object.keys(this.queryParams).forEach((key) => {
+      const value = this.queryParams[key];
+      // Добавляем параметр в URL, только если его значение не пустое
+      if (value !== null && value !== undefined && value !== '') {
+        params.set(key, String(value));
+      }
+    });
+
+  
+    // Обновляем URL без перезагрузки страницы
     window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
   }
 
- 
+
+  getQueryParam(key: string) {
+   
+    return this.queryParams[key] || null;
+  }
+
+  // Удаление параметра
+  deleteQueryParam(key: string) {
+  
+    delete this.queryParams[key];
+    this.updateQueryParams();
+  }
 }
 
 export default new QueryStore();

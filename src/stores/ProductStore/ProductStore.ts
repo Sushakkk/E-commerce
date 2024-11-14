@@ -1,15 +1,14 @@
-import { action, makeAutoObservable, runInAction, toJS } from 'mobx';
+import { action, makeAutoObservable, observable, runInAction } from 'mobx';
 import axios from 'axios';
-import { ProductI } from 'modules/types';
+import { IProduct } from 'modules/types';
 import QueryStore from 'stores/QueryStore/QueryStore';
-import { NavigateFunction } from 'react-router-dom';
-import FilterStore from 'stores/FilterStore/FilterStore';
+
+import { Meta } from 'enums/Meta';
 
 class ProductStore {
-  products: ProductI[] = [];
+  products: IProduct[] = [];
   totalProducts: number = 0;
-  productsLoaded: boolean= false;
-  error: string | null = null;
+  meta: Meta = Meta.init; 
   currentPage: number = 1;
   productsPerPage: number = 9;
   totalPages: number = 1;
@@ -18,13 +17,17 @@ class ProductStore {
     makeAutoObservable(this, {
       fetchProducts: action,
       setCurrentPage: action,
+      products: observable,
+      totalProducts: observable,
+      currentPage: observable,
     });
-
   }
 
- 
-
   fetchProducts = async (searchQuery: string, selectedCategoryID: number | undefined) => {
+    this.meta = Meta.loading;
+
+
+    
     try {
       const [productsResponse, totalResponse] = await Promise.all([
         axios.get('https://api.escuelajs.co/api/v1/products', {
@@ -44,16 +47,15 @@ class ProductStore {
         }),
       ]);
 
-    
       runInAction(() => {
         this.products = productsResponse.data;
-        this.productsLoaded = true;
         this.totalProducts = totalResponse.data.length;
         this.totalPages = Math.ceil(this.totalProducts / this.productsPerPage);
+        this.meta = Meta.success;
       });
     } catch {
       runInAction(() => {
-        this.error = 'Ошибка при загрузке продуктов';
+        this.meta = Meta.error;
       });
     }
   };
@@ -63,13 +65,7 @@ class ProductStore {
     QueryStore.updateQueryParams();
   };
 
-  
-
-  handleProductClick = (product: ProductI, navigate: NavigateFunction) => {
-
-    
-    navigate(`/product/${product.id}`);
-  };
+ 
 }
 
 export default new ProductStore();

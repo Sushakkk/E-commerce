@@ -61,4 +61,4 @@ const ImageSlider: React.FC = observer(() => {
 });
 
 
-export default ImageSlider;
+export default React.memo(ImageSlider);

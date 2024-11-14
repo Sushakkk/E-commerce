@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import Card from 'components/Card';
 import Button from 'components/Button';
@@ -6,22 +6,25 @@ import { useNavigate } from 'react-router-dom';
 import ProductStore from 'stores/ProductStore/ProductStore';
 import styles from './ProductList.module.scss';
 import Text from 'components/Text/Text';
+import { handleProductClick } from 'utils/navigationUtils';
+
 
 const ProductList: React.FC = observer(() => {
-
-
   const navigate = useNavigate();
-  const { products, handleProductClick } = ProductStore;  
+  const { products } = ProductStore;
 
 
-  if(!ProductStore.totalPages){
+  const productClickHandler  = useCallback(handleProductClick(navigate), [navigate]);
+
+  if (!ProductStore.totalPages) {
     return (
       <section className={styles['products__not-found']}>
-        <Text view="p-32" className="page-title" weight="bold">No products found</Text>
+        <Text view="p-32" className="page-title" weight="bold">
+          No products found
+        </Text>
       </section>
     );
   }
-  
 
   return (
     <section className={styles['products__cards']}>
@@ -35,7 +38,7 @@ const ProductList: React.FC = observer(() => {
             contentSlot={`$${product.price}`}
             actionSlot={<Button>Add to Cart</Button>}
             className={styles['products__card']}
-            onClick={() => handleProductClick(product, navigate)}
+            onClick={() => productClickHandler(product)}
           />
         </div>
       ))}

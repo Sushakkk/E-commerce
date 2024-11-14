@@ -1,4 +1,4 @@
-import React, { useCallback,useState} from 'react';
+import React, { useCallback, useState } from 'react';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import MultiDropdown, { Option } from 'components/MultiDropdown';
@@ -8,44 +8,35 @@ import FilterStore from 'stores/FilterStore/FilterStore';
 import ProductStore from 'stores/ProductStore/ProductStore';
 
 
-
 const Filters: React.FC = observer(() => {
-
-  const [searchValue, setSearch] = useState(FilterStore.searchQuery);
-  
-
   const handleSearchChange = useCallback((value: string) => {
-    setSearch(value);
-    ProductStore.setCurrentPage(1);
+    FilterStore.setSearchQuery(value);  // Обновляем state в FilterStore
   }, []);
 
-  const handleSearchSubmit = () => {
-    FilterStore.setSearchQuery(searchValue)
-    FilterStore.applySearch(); 
-  };
+  const handleSearchSubmit = useCallback(() => {
+    FilterStore.applySearch();
+  }, []);
 
-  const handleCategoryChange = (category: Option | null) => {
-    FilterStore.setSelectedCategory(category ?? null);
-    ProductStore.setCurrentPage(1);
-  };
+  const handleCategoryChange = useCallback((category: Option | null) => {
+    FilterStore.handleCategoryChange(category);
+  }, []);
 
-
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit();
+    }
+  }, [handleSearchSubmit]);
 
   return (
     <div className={styles['products__controls']}>
       <div className={styles['products__search']}>
         <div className={styles['products__search-column--left']}>
-            <Input
-                value={searchValue}
-                onChange={handleSearchChange}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSearchSubmit();
-                  }
-                }}
+          <Input
+            value={FilterStore.searchQuery}  // Используем напрямую из FilterStore
+            onChange={handleSearchChange}
+            onKeyDown={handleKeyDown} 
             placeholder="Search product"
           />
-
         </div>
         <Button
           className={styles['products__search-column--right']}
@@ -55,9 +46,8 @@ const Filters: React.FC = observer(() => {
         </Button>
       </div>
       <div className={styles['products__filter']}>
-        
         <MultiDropdown
-          options={FilterStore.categories}
+          options={FilterStore.getCategories()}
           value={FilterStore.selectedCategory?.value ?? null}
           onChange={handleCategoryChange}
           getTitle={(value) => value ? value : 'Filter'}
@@ -66,5 +56,7 @@ const Filters: React.FC = observer(() => {
     </div>
   );
 });
+
+
 
 export default Filters;

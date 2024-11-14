@@ -1,15 +1,9 @@
-import { ProductI } from 'modules/types';
 
-export interface NavigateOptions {
-  state?: { product: ProductI; products: ProductI[] };
-}
+import { IProduct } from "modules/types";
+import { NavigateFunction } from "react-router-dom";
 
-export const handleCardClick = (
-  product: ProductI,
-  products: ProductI[],
-  navigate: (path: string, options?: NavigateOptions) => void
-) => {
-  navigate(`/product/${product.id}`, {
-    state: { product, products },
-  });
+export const handleProductClick = (navigate: NavigateFunction) => {
+  return (product: IProduct) => {
+    navigate(`/product/${product.id}`);
+  };
 };

@@ -10,7 +10,8 @@ export default defineConfig({
       'config': path.resolve(__dirname, 'src/config'),
       'styles': path.resolve(__dirname, 'src/styles'),
       'stores': path.resolve(__dirname, 'src/stores'),
-      'utils': path.resolve(__dirname, 'src/utils')
+      'utils': path.resolve(__dirname, 'src/utils'),
+      'enums': path.resolve(__dirname, 'src/enums')
     }
   }
 });

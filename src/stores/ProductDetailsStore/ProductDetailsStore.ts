@@ -1,60 +1,77 @@
-// src/stores/ProductDetailStore.ts
-import { action, makeAutoObservable, runInAction } from 'mobx';
+import { action, makeAutoObservable, observable, runInAction } from 'mobx';
 import axios from 'axios';
-import { ProductI } from 'modules/types';
+import { IProduct } from 'modules/types';
+import { Meta } from 'enums/Meta';
+
 
 class ProductDetailStore {
-  product: ProductI | null = null;
-  relatedProducts: ProductI[] = [];
-  loading: boolean = false;
-  error: string | null = null;
+  product: IProduct | null = null;
+  relatedProducts: IProduct[] = [];
+  productCategoryId: number=0;
 
  
+  productMeta: Meta = Meta.init;
+  relatedProductsMeta: Meta = Meta.init;
+
+ 
+  productError: string | null = null;
+  relatedProductsError: string | null = null;
+
   constructor() {
     makeAutoObservable(this, {
       fetchRelatedProducts: action,
       fetchProduct: action,
+      product: observable,
+      relatedProducts: observable,
+      productMeta: observable,
+      relatedProductsMeta: observable,
+      productError: observable,
+      relatedProductsError: observable,
     });
   }
 
-
+  // Загрузка данных о продукте
   fetchProduct = async (id: string) => {
-    this.loading = true;
-    this.error = null;
+    this.productMeta = Meta.loading;
+    this.productError = null;
+
     try {
       const response = await axios.get(`https://api.escuelajs.co/api/v1/products/${id}`);
       runInAction(() => {
-      this.product = response.data;
+        this.product = response.data;
+        this.productMeta = Meta.success;
+        this.productCategoryId =  response.data.category.id
       });
-      await this.fetchRelatedProducts(response.data.category.id, Number(id));
-    } catch {
+    } catch (error) {
       runInAction(() => {
-      this.error = 'Failed to fetch product data';
-      });
-    } finally {
-      runInAction(() => {
-      this.loading = false;
+        this.productError = 'Failed to fetch product data';
+        this.productMeta = Meta.error;
       });
     }
   };
 
 
-  fetchRelatedProducts = async (selectedCategoryID: number, currentProductId: number) => {
+  fetchRelatedProducts = async (id: string) => {
+    this.relatedProductsMeta = Meta.loading;
+    this.relatedProductsError = null;
+
     try {
       const response = await axios.get('https://api.escuelajs.co/api/v1/products', {
         params: {
-          categoryId: selectedCategoryID,
+          categoryId: this.productCategoryId,
         },
       });
 
       runInAction(() => {
-      this.relatedProducts = response.data
-        .filter((product: ProductI) => product.id !== currentProductId)
-        .slice(0, 3); 
+        this.relatedProducts = response.data
+          .filter((product: IProduct) => product.id !== Number(id))
+          .slice(0, 3);
+        this.relatedProductsMeta = Meta.success;
       });
-    } catch{
+    } catch (error) {
       runInAction(() => {
-        this.error = 'Failed to fetch related products';
+        this.relatedProductsError = 'Failed to fetch related products';
+        this.relatedProductsMeta = Meta.error;
       });
     }
   };

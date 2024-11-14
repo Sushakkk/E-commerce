@@ -11,18 +11,23 @@ import ImageSlider from './components/ImageSlider.tsx';
 import ProductDetails from './components/ProductDetails/ProductDetails.tsx';
 import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore.ts';
 
+
 const ProductPage: React.FC = observer(() => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { product,loading, error } = ProductDetailsStore;
+  const { product, productMeta} = ProductDetailsStore;
+
 
   useEffect(() => {
     if (id) {
-      ProductDetailsStore.fetchProduct(id);
+      Promise.all([
+        ProductDetailsStore.fetchProduct(id),
+        ProductDetailsStore.fetchRelatedProducts(id),
+      ]);
     }
   }, [id]);
 
-  if (loading) {
+  if (productMeta==='loading') {
     return (
       <main className="page">
         <div className="page__loader">
@@ -32,9 +37,7 @@ const ProductPage: React.FC = observer(() => {
     );
   }
 
-  if (error) {
-    return <div className={styles['error-message']}>{error}</div>;
-  }
+  
 
   if (!product) return <div>Товар не найден</div>;
 

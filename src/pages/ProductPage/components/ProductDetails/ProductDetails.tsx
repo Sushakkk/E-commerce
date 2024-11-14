@@ -3,6 +3,7 @@ import Text from 'components/Text/Text';
 import Button from 'components/Button';
 import styles from './ProductDetails.module.scss';
 import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore';
+import { observer } from 'mobx-react-lite';
 
 
 const ProductDetails: React.FC = () => {
@@ -35,4 +36,4 @@ const ProductDetails: React.FC = () => {
     );
 };
 
-export default ProductDetails;
+export default observer(ProductDetails);
