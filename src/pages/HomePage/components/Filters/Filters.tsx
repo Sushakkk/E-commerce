@@ -9,7 +9,7 @@ import FilterStore from 'stores/FilterStore/FilterStore';
 
 const Filters: React.FC = observer(() => {
   const handleSearchChange = useCallback((value: string) => {
-    FilterStore.setSearchQuery(value);  // Обновляем state в FilterStore
+    FilterStore.setSearchValue(value);  
   }, []);
 
   const handleSearchSubmit = useCallback(() => {
@@ -31,7 +31,7 @@ const Filters: React.FC = observer(() => {
       <div className={styles['products__search']}>
         <div className={styles['products__search-column--left']}>
           <Input
-            value={FilterStore.searchQuery}  // Используем напрямую из FilterStore
+            value={FilterStore.searchValue}  
             onChange={handleSearchChange}
             onKeyDown={handleKeyDown} 
             placeholder="Search product"

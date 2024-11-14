@@ -12,6 +12,8 @@ class FilterStore {
   meta: Meta = Meta.init;
   ParamsMeta: Meta = Meta.init;
 
+  searchValue: string = '';
+
   constructor() {
     makeAutoObservable(this, {
       searchQuery: observable,
@@ -28,6 +30,7 @@ class FilterStore {
 
   private async initializeParams() {
     this.ParamsMeta= Meta.loading
+    
     const search = QueryStore.getQueryParam('search');
     const categoryId = QueryStore.getQueryParam('category');
     
@@ -42,6 +45,11 @@ class FilterStore {
     this.ParamsMeta = Meta.success
   }
 
+
+  setSearchValue(value: string) {
+    this.searchValue = value;
+   
+  }
   setSearchQuery(query: string) {
     this.searchQuery = query;
     QueryStore.setQueryParam('search', query); 
@@ -68,12 +76,10 @@ class FilterStore {
     ProductStore.setCurrentPage(1); 
   }
 
-  handleSearchChange = (value: string) => {
-    this.setSearchQuery(value);
-    this.applySearch();
-  };
+
 
   applySearch() {
+    this.setSearchQuery(this.searchValue);
     ProductStore.fetchProducts(this.searchQuery, this.selectedCategory?.key);
     QueryStore.updateQueryParams(); 
   }
