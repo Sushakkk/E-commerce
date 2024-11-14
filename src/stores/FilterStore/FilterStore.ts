@@ -60,12 +60,14 @@ class FilterStore implements ILocalStore {
   setSearchQuery(query: string) {
     this.searchQuery = query;
     QueryStore.setQueryParam('search', query);
+    QueryStore.deleteQueryParam('page');
   }
 
   setSelectedCategory(categoryId: number | null) {
     const category = this.getCategoryById(categoryId);
     this.selectedCategory = category;
     QueryStore.setQueryParam('category', categoryId);
+    QueryStore.deleteQueryParam('page');
   }
 
   getCategoryById(categoryId: number | null): Option | null {
