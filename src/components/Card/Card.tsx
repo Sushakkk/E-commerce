@@ -43,7 +43,7 @@ const Card: React.FC<CardProps> = ({
       </div>
       <div className={styles.card__button}>
         {contentSlot && <Text tag="p" weight="bold" view="p-18">{contentSlot}</Text>}
-        {actionSlot && <div>{actionSlot}</div>}
+        {actionSlot && <div className={styles['card__button__add-to-card']} >{actionSlot}</div>}
       </div>
     </div>
   </div>

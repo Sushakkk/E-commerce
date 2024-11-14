@@ -1,0 +1,93 @@
+@import 'styles/variables';
+@import 'styles/mixin';
+
+
+
+
+.products{
+    &__content {
+        padding-top: 100px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        align-items: center;
+        gap: 48px;
+        padding-bottom: 48px;
+    }
+    
+    &__body {
+        width: 100%;
+    }
+    
+    &__header {
+        width: 653px;
+        height: 128px;
+        display: flex;
+        flex-direction: column;
+        gap: $space-xl;
+        align-items: center;
+    }
+    
+    &__description {
+        text-align: center;
+    }
+    
+    
+    
+    &__subtitle {
+        display: flex;
+        width: 266px;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: $space-xl;
+        text-align: left;
+    }
+    
+    &__cards {
+        padding-bottom: 30px;
+        @include cards-layout;
+    }
+    
+    
+    
+    &__column {
+        display: flex;
+        justify-content: center;
+    }
+    &__controls {
+        width: 100%;
+        gap: $space-xl;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    &__search {
+        display: flex;
+        gap: $space-xl;
+    }
+    
+    &__search-column--left {
+        flex: 1;
+    }
+    &__search-column--right {
+
+        width:137px
+    }
+    
+    
+    
+    &__filter {
+        width: 300px;
+    }
+    
+   
+    
+    
+}
+
+
+
+
+.page__main-block{
+    @include container
+}

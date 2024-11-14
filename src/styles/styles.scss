@@ -1,4 +1,4 @@
-
+@import './mixin';
 
 .wrapper {
   min-height: 100%;
@@ -7,11 +7,7 @@
   flex-direction: column;
 }
 
-._container {
-  max-width: 1240px;
-  margin: 0px auto;
-  box-sizing: content-box;
-}
+
 
 .page {
   min-height: 100vh;
@@ -27,13 +23,7 @@
     justify-content: center;
     width: 100%;
     height: 100vh;
+    @include container
+
   }
 } 
-._cards {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(360px, 1fr));
-  grid-template-rows: repeat(auto-fill, 1fr);
-  gap: 30px 80px;
-  justify-content: center;
-}

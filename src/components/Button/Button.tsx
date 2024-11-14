@@ -20,8 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false, 
   children, 
   className, 
-  height = '52px',
-  width = '155px', 
+   
   ...props 
 }) => {
   // Используем classNames для управления классами кнопки
@@ -40,8 +39,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       className={buttonClass}
-      disabled={loading || disabled} // Заблокируем кнопку при loading или disabled
-      style={{ width, height }} // Устанавливаем ширину кнопки через инлайн-стиль
+      disabled={loading || disabled} 
       {...props} 
     >
       {loading ? (

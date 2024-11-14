@@ -18,8 +18,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     { value, onChange, afterSlot, type = 'text', className = '', disabled, placeholder, ...rest },
     ref
   ) => {
+    
     const wrapperClassNames = [
-      styles['input-wrapper'], // Используем styles из CSS Modules
+      styles['input-wrapper'], 
       className,
       disabled ? styles['input-disabled'] : '',
       value ? styles['input-not-empty'] : styles['input-empty'],
@@ -30,17 +31,17 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={wrapperClassNames}>
         <input
-          {...rest} // Передаем все остальные пропсы
+          {...rest} 
           ref={ref}
           type={type}
           value={value || ''}
           placeholder={placeholder}
-          onChange={(e) => onChange(e.target.value)} // Обработчик onChange
-          className={styles['input-element']} // Используем styles из CSS Modules
+          onChange={(e) => onChange(e.target.value)} 
+          className={styles['input-element']} 
           disabled={disabled}
         />
         {afterSlot && (
-          <div className={styles['input-after-slot']}> {/* Используем styles из CSS Modules */}
+          <div className={styles['input-after-slot']}> 
             {afterSlot}
           </div>
         )}
@@ -49,4 +50,4 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
-export default Input;
+export default React.memo(Input);

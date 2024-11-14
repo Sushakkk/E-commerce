@@ -59,6 +59,12 @@
         gap: $space-xxs;
         margin-top: auto;
         align-items: center;
+
+        &__add-to-card{
+            width: 155px;
+            height: 52px;
+    
+        }
     }
     
     &__image {
@@ -68,4 +74,6 @@
         object-fit: cover; // Ensures the image fills the container without distortion
         cursor: pointer;
     }
+
+    
 }

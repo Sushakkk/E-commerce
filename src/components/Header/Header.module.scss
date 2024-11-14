@@ -1,4 +1,5 @@
 @import '../../styles/variables';
+@import '../../styles/mixin';
 
 
 .header {
@@ -25,6 +26,7 @@
       min-height: 90px;
       align-items: center;
       justify-content: space-between; 
+      @include container
     }
   
     &__logo {
