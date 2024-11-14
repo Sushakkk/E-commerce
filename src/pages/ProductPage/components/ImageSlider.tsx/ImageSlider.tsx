@@ -1,10 +1,15 @@
 import React, { useState, useCallback } from 'react';
 import styles from './ImageSlider.module.scss';
 import PaginationIcon from 'components/PaginationIcon/PaginationIcon';
-import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore';
 import { observer } from 'mobx-react-lite';
+import ProductDetailStore from 'stores/ProductDetailsStore';
 
-const ImageSlider: React.FC = observer(() => {
+
+interface ImageSliderProps {
+  ProductDetailsStore: ProductDetailStore;
+}
+
+const ImageSlider: React.FC<ImageSliderProps> = observer(({ ProductDetailsStore }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { product } = ProductDetailsStore;
 

@@ -2,18 +2,16 @@ import { action, makeAutoObservable, observable, runInAction } from 'mobx';
 import axios from 'axios';
 import { IProduct } from 'modules/types';
 import { Meta } from 'enums/Meta';
+import { ILocalStore } from 'stores/ILocalStore/ILocalStore';
 
-
-class ProductDetailStore {
+class ProductDetailStore implements ILocalStore {
   product: IProduct | null = null;
   relatedProducts: IProduct[] = [];
-  productCategoryId: number=0;
+  productCategoryId: number = 0;
 
- 
   productMeta: Meta = Meta.init;
   relatedProductsMeta: Meta = Meta.init;
 
- 
   productError: string | null = null;
   relatedProductsError: string | null = null;
 
@@ -39,7 +37,7 @@ class ProductDetailStore {
       runInAction(() => {
         this.product = response.data;
         this.productMeta = Meta.success;
-        this.productCategoryId =  response.data.category.id
+        this.productCategoryId = response.data.category.id;
       });
     } catch {
       runInAction(() => {
@@ -48,7 +46,6 @@ class ProductDetailStore {
       });
     }
   };
-
 
   fetchRelatedProducts = async (id: string) => {
     this.relatedProductsMeta = Meta.loading;
@@ -67,13 +64,23 @@ class ProductDetailStore {
           .slice(0, 3);
         this.relatedProductsMeta = Meta.success;
       });
-    } catch{
+    } catch {
       runInAction(() => {
         this.relatedProductsError = 'Failed to fetch related products';
         this.relatedProductsMeta = Meta.error;
       });
     }
   };
+
+  destroy() {
+    this.product = null;
+    this.relatedProducts = [];
+    this.productCategoryId = 0;
+    this.productMeta = Meta.init;
+    this.relatedProductsMeta = Meta.init;
+    this.productError = null;
+    this.relatedProductsError = null;
+  }
 }
 
-export default new ProductDetailStore();
+export default ProductDetailStore;

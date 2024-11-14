@@ -4,16 +4,20 @@ import Card from 'components/Card';
 import Button from 'components/Button';
 import { useNavigate } from 'react-router-dom';
 import styles from './RelatedProducts.module.scss';
-import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore';
 import { observer } from 'mobx-react-lite';
 import { handleProductClick } from 'utils/navigationUtils';
+import ProductDetailStore from 'stores/ProductDetailsStore';
 
-const RelatedItems: React.FC = observer(() => {
+
+interface RelatedItemsProps {
+  ProductDetailsStore: ProductDetailStore;
+}
+
+const RelatedItems: React.FC<RelatedItemsProps> = observer(({ ProductDetailsStore }) => {
   const navigate = useNavigate();
   const { relatedProducts } = ProductDetailsStore;
 
-
-  const productClickHandler  = useCallback(handleProductClick(navigate), [navigate]);
+  const productClickHandler = useCallback(handleProductClick(navigate), [navigate]);
 
   return (
     <div className={styles['related__cards']}>
