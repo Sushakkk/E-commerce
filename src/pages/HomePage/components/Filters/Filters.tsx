@@ -5,7 +5,6 @@ import MultiDropdown, { Option } from 'components/MultiDropdown';
 import { observer } from 'mobx-react-lite';
 import styles from './Filters.module.scss';
 import FilterStore from 'stores/FilterStore/FilterStore';
-import ProductStore from 'stores/ProductStore/ProductStore';
 
 
 const Filters: React.FC = observer(() => {

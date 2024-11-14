@@ -25,9 +25,6 @@ class ProductStore {
 
   fetchProducts = async (searchQuery: string, selectedCategoryID: number | undefined) => {
     this.meta = Meta.loading;
-
-
-    
     try {
       const [productsResponse, totalResponse] = await Promise.all([
         axios.get('https://api.escuelajs.co/api/v1/products', {

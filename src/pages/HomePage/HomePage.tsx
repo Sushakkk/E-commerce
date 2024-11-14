@@ -22,7 +22,7 @@ const HomePage: React.FC = observer(() => {
     if (QueryStore.queryLoaded && FilterStore.ParamsMeta ==='success') {
       ProductStore.fetchProducts(searchQuery, selectedCategory?.key)
     }
-  }, [QueryStore.queryLoaded, searchQuery, selectedCategory, currentPage]); 
+  }, [QueryStore.queryLoaded, searchQuery, selectedCategory, currentPage, FilterStore.ParamsMeta]); 
 
 
 
