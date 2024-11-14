@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback} from 'react';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import MultiDropdown, { Option } from 'components/MultiDropdown';
@@ -8,6 +8,7 @@ import FilterStore from 'stores/FilterStore/FilterStore';
 
 
 const Filters: React.FC = observer(() => {
+
   const handleSearchChange = useCallback((value: string) => {
     FilterStore.setSearchValue(value);  
   }, []);

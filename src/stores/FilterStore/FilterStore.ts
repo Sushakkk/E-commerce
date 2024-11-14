@@ -1,9 +1,9 @@
 import { makeAutoObservable, action, observable, runInAction, toJS } from 'mobx';
 import axios from 'axios';
 import { Option } from 'components/MultiDropdown';
-import ProductStore from 'stores/ProductStore/ProductStore';
 import QueryStore from 'stores/QueryStore/QueryStore';
 import { Meta } from 'enums/Meta';
+import ProductsStore from 'stores/ProductsStore/ProductsStore';
 
 class FilterStore {
   private _categories: Option[] = [];
@@ -25,23 +25,28 @@ class FilterStore {
       fetchCategories: action,
     });
 
-    this.initializeParams();
+    this.initializeParams()
   }
 
   private async initializeParams() {
     this.ParamsMeta= Meta.loading
     
-    const search = QueryStore.getQueryParam('search');
-    const categoryId = QueryStore.getQueryParam('category');
+    const search = QueryStore.getQueryParam('search') 
+    const categoryId = QueryStore.getQueryParam('category') 
     
-    if (search) this.setSearchQuery(String(search));
-    if (categoryId) this.setSelectedCategory(Number(categoryId));
+    if (search) {
+      this.setSearchQuery(String(search))
+      this.setSearchValue(String(search))
+    };
 
+    console.log(search, categoryId);
+  
     await this.fetchCategories();
     
     if (categoryId) {
       this.setSelectedCategory(Number(categoryId));
     }
+    console.log( toJS(this.searchQuery),toJS(this.selectedCategory));
     this.ParamsMeta = Meta.success
   }
 
@@ -73,14 +78,14 @@ class FilterStore {
 
   handleCategoryChange(category: Option | null) {
     this.setSelectedCategory(category?.key || null);
-    ProductStore.setCurrentPage(1); 
+    ProductsStore.setCurrentPage(1); 
   }
 
 
 
   applySearch() {
     this.setSearchQuery(this.searchValue);
-    ProductStore.fetchProducts(this.searchQuery, this.selectedCategory?.key);
+    ProductsStore.fetchProducts(this.searchQuery, this.selectedCategory?.key);
     QueryStore.updateQueryParams(); 
   }
 

@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import Card from 'components/Card';
 import Button from 'components/Button';
 import { useNavigate } from 'react-router-dom';
-import ProductStore from 'stores/ProductStore/ProductStore';
+import ProductsStore from 'stores/ProductsStore/ProductsStore';
 import styles from './ProductList.module.scss';
 import Text from 'components/Text/Text';
 import { handleProductClick } from 'utils/navigationUtils';
@@ -11,12 +11,12 @@ import { handleProductClick } from 'utils/navigationUtils';
 
 const ProductList: React.FC = observer(() => {
   const navigate = useNavigate();
-  const { products } = ProductStore;
+  const { products } = ProductsStore;
 
 
   const productClickHandler  = useCallback(handleProductClick(navigate), [navigate]);
 
-  if (!ProductStore.totalPages) {
+  if (!ProductsStore.totalPages) {
     return (
       <section className={styles['products__not-found']}>
         <Text view="p-32" className="page-title" weight="bold">

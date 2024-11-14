@@ -1,22 +1,24 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Button from 'components/Button';
 import PaginationIcon from 'components/PaginationIcon/PaginationIcon';
 import styles from './Pagination.module.scss';
-import ProductStore from 'stores/ProductStore/ProductStore';
 
+import { observer } from 'mobx-react-lite';
+import ProductsStore from 'stores/ProductsStore/ProductsStore';
 
+const Pagination: React.FC = observer(() => {
+  const { totalPages, currentPage, setCurrentPage } = ProductsStore;
 
-const Pagination: React.FC = () => {
-    const {totalPages, currentPage, setCurrentPage} = ProductStore; 
+  const handlePageChange = useCallback(
+    (page: number) => {
+      if (page >= 1 && page <= totalPages) {
+        setCurrentPage(page);
+      }
+    },
+    [setCurrentPage, totalPages]
+  );
 
-
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const getPaginationRange = () => {
+  const getPaginationRange = useCallback(() => {
     const range: (number | string)[] = [];
     if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) range.push(i);
@@ -30,7 +32,7 @@ const Pagination: React.FC = () => {
       }
     }
     return range;
-  };
+  }, [totalPages, currentPage]);
 
   return (
     <div className={styles.pagination__container}>
@@ -53,6 +55,6 @@ const Pagination: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Pagination;

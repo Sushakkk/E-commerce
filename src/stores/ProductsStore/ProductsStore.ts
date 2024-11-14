@@ -1,11 +1,11 @@
+// ProductStore.ts
 import { action, makeAutoObservable, observable, runInAction } from 'mobx';
 import axios from 'axios';
 import { IProduct } from 'modules/types';
 import QueryStore from 'stores/QueryStore/QueryStore';
-
 import { Meta } from 'enums/Meta';
 
-class ProductStore {
+class ProductsStore {
   products: IProduct[] = [];
   totalProducts: number = 0;
   meta: Meta = Meta.init; 
@@ -20,7 +20,17 @@ class ProductStore {
       products: observable,
       totalProducts: observable,
       currentPage: observable,
+      meta: observable,
     });
+
+    this.initializeParams();
+  }
+
+  private initializeParams() {
+    const page = QueryStore.getQueryParam('page');
+    if (page) {
+      this.currentPage = Number(page);
+    }
   }
 
   fetchProducts = async (searchQuery: string, selectedCategoryID: number | undefined) => {
@@ -59,10 +69,13 @@ class ProductStore {
   
   setCurrentPage = (page: number) => {
     this.currentPage = page;
-    QueryStore.updateQueryParams();
+    if (page === 1) {
+      QueryStore.deleteQueryParam('page');
+    } else {
+      QueryStore.setQueryParam('page', page); 
+    }
   };
-
- 
+  
 }
 
-export default new ProductStore();
+export default new ProductsStore();

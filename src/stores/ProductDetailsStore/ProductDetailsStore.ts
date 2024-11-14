@@ -30,7 +30,6 @@ class ProductDetailStore {
     });
   }
 
-  // Загрузка данных о продукте
   fetchProduct = async (id: string) => {
     this.productMeta = Meta.loading;
     this.productError = null;
@@ -42,7 +41,7 @@ class ProductDetailStore {
         this.productMeta = Meta.success;
         this.productCategoryId =  response.data.category.id
       });
-    } catch (error) {
+    } catch {
       runInAction(() => {
         this.productError = 'Failed to fetch product data';
         this.productMeta = Meta.error;
@@ -68,7 +67,7 @@ class ProductDetailStore {
           .slice(0, 3);
         this.relatedProductsMeta = Meta.success;
       });
-    } catch (error) {
+    } catch{
       runInAction(() => {
         this.relatedProductsError = 'Failed to fetch related products';
         this.relatedProductsMeta = Meta.error;

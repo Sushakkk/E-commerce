@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './MultiDropdown.module.scss';
 import Input from '../Input/Input';
 import Text from '../Text/Text'; 
@@ -31,47 +31,49 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   const [currentInput, setCurrentInput] = useState('');
   const [filteredOptions, setFilteredOptions] = useState(options);
 
-  const handleInputChange = (inputValue: string) => {
+  const handleInputChange = useCallback((inputValue: string) => {
     setCurrentInput(inputValue);
     const newFilteredOptions = options.filter((option) =>
       option.value.toLowerCase().startsWith(inputValue.toLowerCase())
     );
     setFilteredOptions(newFilteredOptions);
-  };
+  }, [options]);
 
-  const handleOptionClick = (option: Option) => {
+  const handleOptionClick = useCallback((option: Option) => {
     onChange(option);
     setIsOpen(false);
-  };
+  }, [onChange]);
 
-  const handleClickOutside = (e: MouseEvent) => {
+  const handleClickOutside = useCallback((e: MouseEvent) => {
     if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
       setIsOpen(false);
     }
-  };
+  }, []);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Backspace' && !currentInput) {
       onChange(null); 
       setIsOpen(false);
     }
-  };
-
-  
+  }, [currentInput, onChange]);
 
   useEffect(() => {
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+  }, [handleClickOutside]);
 
-  
+  const handleInputClick = useCallback(() => {
+    if (!disabled) {
+      setIsOpen(true);
+    }
+  }, [disabled]);
 
   return (
     <div className={`${styles.multiDropdown__container} ${className}`} ref={dropdownRef}>
       <Input
         type="text"
         value={value ? getTitle(value) : currentInput}
-        onClick={() => !disabled && setIsOpen(true)}
+        onClick={handleInputClick}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown} 
         placeholder={getTitle(value)}

@@ -6,7 +6,7 @@ import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore'
 import { observer } from 'mobx-react-lite';
 
 
-const ProductDetails: React.FC = () => {
+const ProductDetails: React.FC = observer( () => {
     const {product} = ProductDetailsStore;
 
     if (!product) {
@@ -34,6 +34,6 @@ const ProductDetails: React.FC = () => {
             </div>
         </div>
     );
-};
+});
 
-export default observer(ProductDetails);
+export default ProductDetails;

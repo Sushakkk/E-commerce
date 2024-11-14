@@ -5,28 +5,31 @@ import styles from './HomePage.module.scss';
 import Pagination from './components/Pagination/Pagination';
 import ProductList from './components/ProductList/ProductList';
 import Filters from './components/Filters/Filters';
-import ProductStore from 'stores/ProductStore/ProductStore';
 import { observer } from 'mobx-react-lite';
 import FilterStore from 'stores/FilterStore/FilterStore';
-
 import QueryStore from 'stores/QueryStore/QueryStore';
+import ProductsStore from 'stores/ProductsStore/ProductsStore';
 
 const HomePage: React.FC = observer(() => {
-  const {totalProducts, currentPage} = ProductStore;
+  const {totalProducts, currentPage} = ProductsStore;
   const {selectedCategory, searchQuery } = FilterStore;
 
-  
+
+  useEffect(()=>{
+    QueryStore.updateQueryParams();
+  }, [])
+
+
 
   useEffect(() => {
-  
     if (QueryStore.queryLoaded && FilterStore.ParamsMeta ==='success') {
-      ProductStore.fetchProducts(searchQuery, selectedCategory?.key)
+      ProductsStore.fetchProducts(searchQuery, selectedCategory?.key)
     }
   }, [QueryStore.queryLoaded, searchQuery, selectedCategory, currentPage, FilterStore.ParamsMeta]); 
 
 
 
-  if (!QueryStore.queryLoaded || ProductStore.meta==='loading' || FilterStore.ParamsMeta ==='loading') {
+  if (!QueryStore.queryLoaded || ProductsStore.meta==='loading' || FilterStore.ParamsMeta ==='loading') {
     return (
       <main className="page">
         <div className="page__loader">

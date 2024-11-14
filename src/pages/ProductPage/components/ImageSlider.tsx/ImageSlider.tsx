@@ -1,19 +1,13 @@
-
-import React, { useState } from 'react';
-
-import styles from './ImageSlider.module.scss'; 
+import React, { useState, useCallback } from 'react';
+import styles from './ImageSlider.module.scss';
 import PaginationIcon from 'components/PaginationIcon/PaginationIcon';
 import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore';
 import { observer } from 'mobx-react-lite';
 
-
-
 const ImageSlider: React.FC = observer(() => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
   const { product } = ProductDetailsStore;
 
- 
   if (!product) {
     return <div>Загрузка...</div>;
   }
@@ -21,17 +15,17 @@ const ImageSlider: React.FC = observer(() => {
   const isFirstImage = currentImageIndex === 0;
   const isLastImage = currentImageIndex === product.images.length - 1;
 
-  const handleNextImage = () => {
+  const handleNextImage = useCallback(() => {
     if (!isLastImage) {
-      setCurrentImageIndex(currentImageIndex + 1);
+      setCurrentImageIndex((prevIndex) => prevIndex + 1);
     }
-  };
+  }, [isLastImage]);
 
-  const handlePrevImage = () => {
+  const handlePrevImage = useCallback(() => {
     if (!isFirstImage) {
-      setCurrentImageIndex(currentImageIndex - 1);
+      setCurrentImageIndex((prevIndex) => prevIndex - 1);
     }
-  };
+  }, [isFirstImage]);
 
   return (
     <div className={styles.slider__container}>
@@ -59,6 +53,5 @@ const ImageSlider: React.FC = observer(() => {
     </div>
   );
 });
-
 
 export default React.memo(ImageSlider);
