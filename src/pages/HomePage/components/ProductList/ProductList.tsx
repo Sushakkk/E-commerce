@@ -8,15 +8,17 @@ import styles from './ProductList.module.scss';
 import Text from 'components/Text/Text';
 import { handleProductClick } from 'utils/navigationUtils';
 
+interface ProductListProps {
+  productsStore: ProductsStore;
+}
 
-const ProductList: React.FC = observer(() => {
+const ProductList: React.FC<ProductListProps> = observer(({ productsStore }) => {
   const navigate = useNavigate();
-  const { products } = ProductsStore;
+  const { products, totalPages } = productsStore;
 
+  const productClickHandler = useCallback(handleProductClick(navigate), [navigate]);
 
-  const productClickHandler  = useCallback(handleProductClick(navigate), [navigate]);
-
-  if (!ProductsStore.totalPages) {
+  if (!totalPages) {
     return (
       <section className={styles['products__not-found']}>
         <Text view="p-32" className="page-title" weight="bold">

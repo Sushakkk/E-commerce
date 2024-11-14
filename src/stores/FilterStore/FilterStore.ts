@@ -1,11 +1,12 @@
-import { makeAutoObservable, action, observable, runInAction, toJS } from 'mobx';
+import { makeAutoObservable, action, observable, runInAction } from 'mobx';
 import axios from 'axios';
 import { Option } from 'components/MultiDropdown';
 import QueryStore from 'stores/QueryStore/QueryStore';
 import { Meta } from 'enums/Meta';
 import ProductsStore from 'stores/ProductsStore/ProductsStore';
+import { ILocalStore } from 'stores/ILocalStore/ILocalStore';
 
-class FilterStore {
+class FilterStore implements ILocalStore {
   private _categories: Option[] = [];
   searchQuery: string = '';
   selectedCategory: Option | null = null;
@@ -13,6 +14,9 @@ class FilterStore {
   ParamsMeta: Meta = Meta.init;
 
   searchValue: string = '';
+
+  // Private instance of ProductsStore
+  private localProductsStore = new ProductsStore();
 
   constructor() {
     makeAutoObservable(this, {
@@ -25,39 +29,37 @@ class FilterStore {
       fetchCategories: action,
     });
 
-    this.initializeParams()
+    this.initializeParams();
   }
 
   private async initializeParams() {
-    this.ParamsMeta= Meta.loading
-    
-    const search = QueryStore.getQueryParam('search') 
-    const categoryId = QueryStore.getQueryParam('category') 
-    
+    this.ParamsMeta = Meta.loading;
+
+    const search = QueryStore.getQueryParam('search');
+    const categoryId = QueryStore.getQueryParam('category');
+
     if (search) {
-      this.setSearchQuery(String(search))
-      this.setSearchValue(String(search))
-    };
-
-    console.log(search, categoryId);
-  
-    await this.fetchCategories();
-    
-    if (categoryId) {
-      this.setSelectedCategory(Number(categoryId));
+      this.setSearchQuery(String(search));
+      this.setSearchValue(String(search));
     }
-    console.log( toJS(this.searchQuery),toJS(this.selectedCategory));
-    this.ParamsMeta = Meta.success
-  }
 
+    await this.fetchCategories();
+
+    runInAction(() => {
+      if (categoryId) {
+        this.setSelectedCategory(Number(categoryId));
+      }
+      this.ParamsMeta = Meta.success;
+    });
+  }
 
   setSearchValue(value: string) {
     this.searchValue = value;
-   
   }
+
   setSearchQuery(query: string) {
     this.searchQuery = query;
-    QueryStore.setQueryParam('search', query); 
+    QueryStore.setQueryParam('search', query);
   }
 
   setSelectedCategory(categoryId: number | null) {
@@ -78,15 +80,15 @@ class FilterStore {
 
   handleCategoryChange(category: Option | null) {
     this.setSelectedCategory(category?.key || null);
-    ProductsStore.setCurrentPage(1); 
+    // Using the private instance of ProductsStore
+    this.localProductsStore.setCurrentPage(1);
   }
-
-
 
   applySearch() {
     this.setSearchQuery(this.searchValue);
-    ProductsStore.fetchProducts(this.searchQuery, this.selectedCategory?.key);
-    QueryStore.updateQueryParams(); 
+    // Using the private instance of ProductsStore
+    this.localProductsStore.fetchProducts(this.searchQuery, this.selectedCategory?.key);
+    QueryStore.updateQueryParams();
   }
 
   async fetchCategories() {
@@ -109,6 +111,17 @@ class FilterStore {
       });
     }
   }
+
+
+
+  destroy(): void {
+    this._categories = [];
+    this.searchQuery = '';
+    this.selectedCategory = null;
+    this.meta = Meta.init;
+    this.ParamsMeta = Meta.init;
+    this.searchValue = '';
+  }
 }
 
-export default new FilterStore();
+export default FilterStore;

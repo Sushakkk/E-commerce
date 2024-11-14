@@ -1,14 +1,15 @@
-// ProductStore.ts
 import { action, makeAutoObservable, observable, runInAction } from 'mobx';
 import axios from 'axios';
 import { IProduct } from 'modules/types';
 import QueryStore from 'stores/QueryStore/QueryStore';
 import { Meta } from 'enums/Meta';
+import { ILocalStore } from 'stores/ILocalStore/ILocalStore';
 
-class ProductsStore {
+
+class ProductsStore implements ILocalStore {
   products: IProduct[] = [];
   totalProducts: number = 0;
-  meta: Meta = Meta.init; 
+  meta: Meta = Meta.init;
   currentPage: number = 1;
   productsPerPage: number = 9;
   totalPages: number = 1;
@@ -66,16 +67,22 @@ class ProductsStore {
       });
     }
   };
-  
+
   setCurrentPage = (page: number) => {
     this.currentPage = page;
     if (page === 1) {
       QueryStore.deleteQueryParam('page');
     } else {
-      QueryStore.setQueryParam('page', page); 
+      QueryStore.setQueryParam('page', page);
     }
   };
-  
+
+  // Реализация метода destroy из интерфейса ILocalStore
+  destroy() {
+    // Очистка данных или отмена подписок при необходимости
+    this.products = [];
+    this.meta = Meta.init;
+  }
 }
 
-export default new ProductsStore();
+export default ProductsStore;

@@ -6,8 +6,12 @@ import styles from './Pagination.module.scss';
 import { observer } from 'mobx-react-lite';
 import ProductsStore from 'stores/ProductsStore/ProductsStore';
 
-const Pagination: React.FC = observer(() => {
-  const { totalPages, currentPage, setCurrentPage } = ProductsStore;
+interface PaginationProps {
+  productsStore: ProductsStore;
+}
+
+const Pagination: React.FC<PaginationProps> = observer(({ productsStore }) => {
+  const { totalPages, currentPage, setCurrentPage } = productsStore;
 
   const handlePageChange = useCallback(
     (page: number) => {

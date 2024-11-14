@@ -31,7 +31,6 @@ class QueryStore {
     params.forEach((value, key) => {
       if (value) {
         this.queryParams[key] = value;
-        console.log(this.queryParams);
         
       }
     });
