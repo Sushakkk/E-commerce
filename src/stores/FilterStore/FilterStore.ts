@@ -15,7 +15,7 @@ class FilterStore implements ILocalStore {
 
   searchValue: string = '';
 
-  // Private instance of ProductsStore
+  
   private localProductsStore = new ProductsStore();
 
   constructor() {
@@ -60,14 +60,12 @@ class FilterStore implements ILocalStore {
   setSearchQuery(query: string) {
     this.searchQuery = query;
     QueryStore.setQueryParam('search', query);
-    QueryStore.deleteQueryParam('page');
   }
 
   setSelectedCategory(categoryId: number | null) {
     const category = this.getCategoryById(categoryId);
     this.selectedCategory = category;
     QueryStore.setQueryParam('category', categoryId);
-    QueryStore.deleteQueryParam('page');
   }
 
   getCategoryById(categoryId: number | null): Option | null {
@@ -82,13 +80,11 @@ class FilterStore implements ILocalStore {
 
   handleCategoryChange(category: Option | null) {
     this.setSelectedCategory(category?.key || null);
-    // Using the private instance of ProductsStore
     this.localProductsStore.setCurrentPage(1);
   }
 
   applySearch() {
     this.setSearchQuery(this.searchValue);
-    // Using the private instance of ProductsStore
     this.localProductsStore.fetchProducts(this.searchQuery, this.selectedCategory?.key);
     QueryStore.updateQueryParams();
   }

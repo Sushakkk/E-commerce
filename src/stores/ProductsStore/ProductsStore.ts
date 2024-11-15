@@ -1,4 +1,4 @@
-import { action, makeAutoObservable, observable, runInAction } from 'mobx';
+import { action, makeAutoObservable, observable, runInAction} from 'mobx';
 import axios from 'axios';
 import { IProduct } from 'modules/types';
 import QueryStore from 'stores/QueryStore/QueryStore';
@@ -29,13 +29,19 @@ class ProductsStore implements ILocalStore {
 
   private initializeParams() {
     const page = QueryStore.getQueryParam('page');
+    
     if (page) {
       this.currentPage = Number(page);
+    }
+    else{
+      this.currentPage = 1
     }
   }
 
   fetchProducts = async (searchQuery: string, selectedCategoryID: number | undefined) => {
+    this.initializeParams()
     this.meta = Meta.loading;
+    
     try {
       const [productsResponse, totalResponse] = await Promise.all([
         axios.get('https://api.escuelajs.co/api/v1/products', {
@@ -70,6 +76,7 @@ class ProductsStore implements ILocalStore {
 
   setCurrentPage = (page: number) => {
     this.currentPage = page;
+  
     if (page === 1) {
       QueryStore.deleteQueryParam('page');
     } else {
@@ -77,9 +84,8 @@ class ProductsStore implements ILocalStore {
     }
   };
 
-  // Реализация метода destroy из интерфейса ILocalStore
+  
   destroy() {
-    // Очистка данных или отмена подписок при необходимости
     this.products = [];
     this.meta = Meta.init;
   }
