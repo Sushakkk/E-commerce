@@ -6,10 +6,11 @@ import Pagination from './components/Pagination/Pagination';
 import ProductList from './components/ProductList/ProductList';
 import Filters from './components/Filters/Filters';
 import { observer } from 'mobx-react-lite';
-import QueryStore from 'stores/QueryStore/QueryStore';
 import { useLocalStore } from 'hooks/useLocalStore';
 import ProductsStore from 'stores/ProductsStore/ProductsStore';
 import FilterStore from 'stores/FilterStore/FilterStore';
+import rootStore from 'stores/RootStore/instance';
+
 
 const HomePage: React.FC = observer(() => {
  
@@ -20,16 +21,16 @@ const HomePage: React.FC = observer(() => {
   const { selectedCategory, searchQuery } = localFilterStore;
 
   useEffect(() => {
-    QueryStore.updateQueryParams();
+    rootStore.QueryStore.updateQueryParams();
   }, []);
 
   useEffect(() => {
-    if (QueryStore.queryLoaded && localFilterStore.ParamsMeta === 'success') {
+    if ( rootStore.QueryStore.queryLoaded && localFilterStore.ParamsMeta === 'success') {
       localProductsStore.fetchProducts(searchQuery, selectedCategory?.key);
     }
-  }, [QueryStore.queryLoaded, searchQuery, selectedCategory, currentPage, localFilterStore.ParamsMeta]);
+  }, [ rootStore.QueryStore.queryLoaded, searchQuery, selectedCategory, currentPage, localFilterStore.ParamsMeta]);
 
-  if (!QueryStore.queryLoaded || localProductsStore.meta === 'loading' || localFilterStore.ParamsMeta === 'loading') {
+  if (! rootStore.QueryStore.queryLoaded || localProductsStore.meta === 'loading' || localFilterStore.ParamsMeta === 'loading') {
     return (
       <main className="page">
         <div className="page__loader">
