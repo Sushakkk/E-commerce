@@ -1,10 +1,11 @@
 import { makeAutoObservable, action, observable, runInAction } from 'mobx';
 import axios from 'axios';
 import { Option } from 'components/MultiDropdown';
-import QueryStore from 'stores/QueryStore/QueryStore';
+import QueryStore from 'stores/RootStore/QueryStore/QueryStore';
 import { Meta } from 'enums/Meta';
 import ProductsStore from 'stores/ProductsStore/ProductsStore';
 import { ILocalStore } from 'stores/ILocalStore/ILocalStore';
+import rootStore from 'stores/RootStore/instance';
 
 class FilterStore implements ILocalStore {
   private _categories: Option[] = [];
@@ -35,8 +36,8 @@ class FilterStore implements ILocalStore {
   private async initializeParams() {
     this.ParamsMeta = Meta.loading;
 
-    const search = QueryStore.getQueryParam('search');
-    const categoryId = QueryStore.getQueryParam('category');
+    const search =  rootStore.QueryStore.getQueryParam('search');
+    const categoryId =  rootStore.QueryStore.getQueryParam('category');
 
     if (search) {
       this.setSearchQuery(String(search));
@@ -59,13 +60,13 @@ class FilterStore implements ILocalStore {
 
   setSearchQuery(query: string) {
     this.searchQuery = query;
-    QueryStore.setQueryParam('search', query);
+    rootStore.QueryStore.setQueryParam('search', query);
   }
 
   setSelectedCategory(categoryId: number | null) {
     const category = this.getCategoryById(categoryId);
     this.selectedCategory = category;
-    QueryStore.setQueryParam('category', categoryId);
+    rootStore.QueryStore.setQueryParam('category', categoryId);
   }
 
   getCategoryById(categoryId: number | null): Option | null {
@@ -85,9 +86,9 @@ class FilterStore implements ILocalStore {
 
   applySearch() {
     this.setSearchQuery(this.searchValue);
-    QueryStore.deleteQueryParam('page');
+    rootStore.QueryStore.deleteQueryParam('page');
     this.localProductsStore.fetchProducts(this.searchQuery, this.selectedCategory?.key);
-    QueryStore.updateQueryParams();
+    rootStore.QueryStore.updateQueryParams();
   }
 
   async fetchCategories() {

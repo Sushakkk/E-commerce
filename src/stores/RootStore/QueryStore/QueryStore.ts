@@ -1,7 +1,7 @@
 import { makeAutoObservable, action } from 'mobx';
 
 class QueryStore {
-  queryParams: { [key: string]: string | number | null } = {};
+  private _queryParams: { [key: string]: string | number | null } = {};
   queryLoaded: boolean = false;
 
   constructor() {
@@ -11,58 +11,49 @@ class QueryStore {
       setParamsFromUrl: action,
     });
 
- 
     this.setParamsFromUrl();
   }
 
-
-  setQueryParam(key: string, value: string | number | null) {
+  public setQueryParam(key: string, value: string | number | null) {
     if (value === null || value === '') {
-      delete this.queryParams[key];
+      delete this._queryParams[key];
     } else {
-      this.queryParams[key] = value;
+      this._queryParams[key] = value;
     }
     this.updateQueryParams();
   }
 
-  
-  setParamsFromUrl() {
+  public setParamsFromUrl() {
     const params = new URLSearchParams(window.location.search);
     params.forEach((value, key) => {
       if (value) {
-        this.queryParams[key] = value;
-        
+        this._queryParams[key] = value;
       }
     });
-    
+
     this.queryLoaded = true;
   }
 
-
   updateQueryParams() {
     const params = new URLSearchParams();
-    Object.keys(this.queryParams).forEach((key) => {
-      const value = this.queryParams[key];
+    Object.keys(this._queryParams).forEach((key) => {
+      const value = this._queryParams[key];
       if (value !== null && value !== undefined && value !== '') {
         params.set(key, String(value));
       }
     });
 
-  
-
     window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
   }
 
-
-  getQueryParam(key: string) {
-    return this.queryParams[key] || null;
+  public getQueryParam(key: string) {
+    return this._queryParams[key] || null;
   }
 
-  deleteQueryParam(key: string) {
-  
-    delete this.queryParams[key];
+  public deleteQueryParam(key: string) {
+    delete this._queryParams[key];
     this.updateQueryParams();
   }
 }
 
-export default new QueryStore();
+export default QueryStore;

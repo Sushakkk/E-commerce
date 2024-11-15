@@ -1,9 +1,11 @@
 import { action, makeAutoObservable, observable, runInAction} from 'mobx';
 import axios from 'axios';
 import { IProduct } from 'modules/types';
-import QueryStore from 'stores/QueryStore/QueryStore';
+import QueryStore from 'stores/RootStore/QueryStore/QueryStore';
 import { Meta } from 'enums/Meta';
 import { ILocalStore } from 'stores/ILocalStore/ILocalStore';
+import rootStore from 'stores/RootStore/instance';
+
 
 
 class ProductsStore implements ILocalStore {
@@ -28,7 +30,7 @@ class ProductsStore implements ILocalStore {
   }
 
   private initializeParams() {
-    const page = QueryStore.getQueryParam('page');
+    const page = rootStore.QueryStore.getQueryParam('page');
     
     if (page) {
       this.currentPage = Number(page);
@@ -78,9 +80,9 @@ class ProductsStore implements ILocalStore {
     this.currentPage = page;
   
     if (page === 1) {
-      QueryStore.deleteQueryParam('page');
+      rootStore.QueryStore.deleteQueryParam('page');
     } else {
-      QueryStore.setQueryParam('page', page);
+      rootStore.QueryStore.setQueryParam('page', page);
     }
   };
 
