@@ -6,7 +6,6 @@ import Pagination from './components/Pagination/Pagination';
 import ProductList from './components/ProductList/ProductList';
 import Filters from './components/Filters/Filters';
 import { observer } from 'mobx-react-lite';
-import QueryStore from 'stores/RootStore/QueryStore/QueryStore';
 import { useLocalStore } from 'hooks/useLocalStore';
 import ProductsStore from 'stores/ProductsStore/ProductsStore';
 import FilterStore from 'stores/FilterStore/FilterStore';

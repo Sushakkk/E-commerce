@@ -1,7 +1,6 @@
 import { makeAutoObservable, action, observable, runInAction } from 'mobx';
 import axios from 'axios';
 import { Option } from 'components/MultiDropdown';
-import QueryStore from 'stores/RootStore/QueryStore/QueryStore';
 import { Meta } from 'enums/Meta';
 import ProductsStore from 'stores/ProductsStore/ProductsStore';
 import { ILocalStore } from 'stores/ILocalStore/ILocalStore';

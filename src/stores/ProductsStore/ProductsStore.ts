@@ -1,7 +1,6 @@
 import { action, makeAutoObservable, observable, runInAction} from 'mobx';
 import axios from 'axios';
 import { IProduct } from 'modules/types';
-import QueryStore from 'stores/RootStore/QueryStore/QueryStore';
 import { Meta } from 'enums/Meta';
 import { ILocalStore } from 'stores/ILocalStore/ILocalStore';
 import rootStore from 'stores/RootStore/instance';
