@@ -1,0 +1,83 @@
+$font: #FAFAFA;
+$primary: rgba(0, 0, 0, 1);  
+$secondary: rgba(175, 173, 181, 1); 
+$accent: rgba(81, 133, 129, 1);  
+
+$text-primary: rgba(0, 0, 0, 1);  
+$text-secondary: rgba(175, 173, 181, 1); 
+$text-accent: rgba(81, 133, 129, 1);  
+
+
+$base:rgba(255, 255, 255, 1);
+$card:rgba(255, 255, 255, 1);
+$space-xl: 32px;
+$space-l: 24px;
+$space-xxl: 48px;
+$button-primary-text: rgba(255, 255, 255, 1);
+$brand-hover: rgba(134, 170, 167, 1);
+$button-primary-bg: rgba(81, 133, 129, 1);
+$button-primary-bg-disabled: rgba(217, 217, 217, 1);
+
+$disabled-background-color: #ffffff;
+$disabled-text-color: rgba(175, 173, 181, 1);
+
+$text-primary-color: #333333;
+$text-secondary-color: #a0a0a0;
+$background-color: rgba(236, 235, 235, 1);
+$border-color: #ccc;
+$hover-background-color: rgba(175, 173, 181, 1);
+$disabled-background-color: #ffffff;
+$disabled-border-color: #e0e0e0;
+$disabled-text-color: rgba(175, 173, 181, 1);
+$icon-color: #999999;
+$error-color: #ff4d4f;
+
+$text-color: rgba(0, 0, 0, 1);
+$font-family: 'Roboto', sans-serif;
+
+
+/* Отступы */
+$space-xxs:8px;
+$space-xs: 12px;
+$space-s: 16px;
+$space-m: 20px;
+
+
+$loader-animation-duration: 1s;
+
+
+
+
+ /* Шрифты */
+
+ $font-size-small: 12px;
+ $font-size-medium: 14px;
+ $font-size: 16px;
+ $font-size-large: 16px;
+ $font-size-xlarge: 18px;
+ $font-weight-light: 300;
+ $font-weight-normal: 400;
+ $font-weight-bold: 600;
+
+
+/* Размеры */
+$border-radius-small: 4px;
+$border-radius-medium: 8px;
+$border-radius-large: 12px;
+$input-height: 40px;
+$icon-size: 20px;
+
+
+ /* Переходы */
+ $transition-duration: 0.3s;
+ $transition-easing: ease-in-out;
+
+
+
+
+ :root {
+    --primary: #{$primary};
+    --secondary: #{$secondary};
+    --base: #{$base};
+    --font: #{$font};
+}

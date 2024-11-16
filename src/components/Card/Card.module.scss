@@ -1,0 +1,76 @@
+@use '../../styles/variables' as *;
+
+.card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: $space-xxl;
+    background-color: $card;
+    padding-bottom: $space-xxl;
+
+    &:hover {
+        box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25); // Тень
+    }
+
+    &__title {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; // Ограничиваем текст двумя строками
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        word-break: keep-all; // Сохраняем слова целиком
+        overflow-wrap: normal; // Предотвращаем разрыв слов
+    }
+    
+    &__subtitle {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; // Ограничиваем текст тремя строками
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        word-break: keep-all; // Сохраняем слова целиком
+        overflow-wrap: normal; // Предотвращаем разрыв слов
+    }
+    
+    &__content {
+        display: flex;
+        flex-direction: column;
+        padding: 0px $space-xs;
+        gap: $space-xl;
+        flex-grow: 1;
+
+    }
+    
+    &__body {
+        display: flex;
+        flex-direction: column;
+        width: 336px;
+        gap: 8px;
+        cursor: pointer;
+    }
+    
+    &__button {
+        display: flex;
+        justify-content: space-between;
+        width: 336px;
+        gap: $space-xxs;
+        margin-top: auto;
+        align-items: center;
+
+        &__add-to-card{
+            width: 155px;
+            height: 52px;
+    
+        }
+    }
+    
+    &__image {
+        background-color: #D9D9D9;
+        aspect-ratio: 1 / 1;
+        width: 100%; // Fills the width of the card
+        object-fit: cover; // Ensures the image fills the container without distortion
+        cursor: pointer;
+    }
+
+    
+}

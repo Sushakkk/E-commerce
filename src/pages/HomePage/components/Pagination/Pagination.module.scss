@@ -1,0 +1,38 @@
+@use 'styles/variables.scss' as *;
+@use 'styles/mixin.scss' as *;
+
+
+
+
+    
+    .pagination__container {
+        width: 296px;
+        justify-content: space-between;
+        display: flex;
+        align-items: center;
+    }
+    
+    
+
+
+
+.pagination__button {
+    background: none;
+    width: 38px;
+    height: 42px;
+    border: none;
+    padding: 3px 8px;
+    cursor: pointer;
+    width: 38px;
+    height: 42px;
+    color: #333;
+}
+
+ .active__page {
+    background-color: $accent;
+    width: 38px;
+    height: 42px;
+    color: #fff;
+}
+
+

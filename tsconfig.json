@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "components/*": ["src/components/*"],
+        "config/*": ["src/config/*"],
+        "styles/*": ["src/styles/*"],
+        "utils/*": ["src/utils/*"],
+        "models/*": ["src/models/*"],
+        "stores/*": ["src/stores/*"],
+        "enums/*": ["src/enums/*"],
+        "hooks/*": ["src/hooks/*"],
+        "modules/*": ["src/modules/*"],
+      },
+      "noEmit": true,
+
+      "allowJs": true,
+
+      "sourceMap": true,
+
+      "strict": true,
+      "strictNullChecks": true,
+      "skipLibCheck": true,
+      "module": "es6",
+      "target": "es6",
+      "moduleResolution": "node",
+    
+        "jsx": "react-jsx",
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+  
+    },
+    "include": ["src/**/*", "src/declaration.d.ts", "index.tsx"],
+    "exclude": ["node_modules"], 
+
+  }
