@@ -1,0 +1,33 @@
+@use 'styles/variables' as *;
+@use 'styles/mixin' as *;
+
+
+
+
+.products{
+    
+    &__cards {
+        padding-bottom: 30px;
+        @include cards-layout;
+    }
+    
+    
+    &__column {
+        display: flex;
+        justify-content: center;
+    }
+
+    &__not-found {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+    
+    
+}
+
+
+
+

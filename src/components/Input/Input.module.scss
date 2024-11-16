@@ -1,0 +1,56 @@
+@use '../../styles/variables' as *;
+
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: $base; // Белая заливка
+    padding: 5px 0;
+    font-size: $font-size-large;
+    border: 1px solid $base;
+
+    &.input-disabled {
+        background-color: $disabled-background-color;
+        color: $disabled-text-color;
+        cursor: not-allowed;
+    }
+
+    &:focus-within {
+        border: 1px solid $accent; 
+    }
+}
+
+.input-element {
+    width: 100%;
+    padding-left: $space-xxs; // Отступ текста от левого края
+    height: $input-height;
+    padding: 0 $space-s; // Исходные значения
+    font-size: $font-size-large;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: $text-primary-color;
+    transition: background-color $transition-duration $transition-easing;
+    padding-right: calc($space-s + 20px); // Увеличенный padding для слота
+
+    &::placeholder {
+        color: $text-secondary-color;
+    }
+
+    &:disabled {
+        background-color: $disabled-background-color;
+        color: $disabled-text-color;
+        opacity: 0.6;
+    }
+}
+
+.input-after-slot {
+    position: absolute;
+    right: 14px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $icon-color;
+    pointer-events: none; // Иконка не будет интерактивной
+}

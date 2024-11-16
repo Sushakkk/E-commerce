@@ -11,7 +11,7 @@ const TsCheckerPlugin = require('fork-ts-checker-webpack-plugin');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const getSettingsForStyles = (withModules = false) => {
-  // Заменяем в нашей функции style-loader на mini-css-extract-plugin
+
   return [
     isProd ? MiniCssExtractPlugin.loader : 'style-loader',
     !withModules
@@ -38,37 +38,51 @@ const getSettingsForStyles = (withModules = false) => {
 };
 
 module.exports = {
-    entry: path.join(srcPath, 'index.tsx'),
+    entry: path.join(srcPath, 'main.tsx'),
     target: !isProd ? 'web' : 'browserslist',
     devtool : isProd? 'hidden-source-map' : 'eval-source-map',
     output: {
         path: buildPath,
-        filename: "bundle.js"
+        filename: "bundle.js",
+        publicPath: '/',
     },
     module: {
     rules: [
-        {
-            test: /\.module\.s?css$/,
-            use: getSettingsForStyles(true),
-          },
-          {
-            test: /\.s?css$/,
-            exclude: /\.module\.s?css$/,
-            use: getSettingsForStyles(),
-          },
+      {
+        test: /\.module\.s?css$/,
+        use: getSettingsForStyles(true),
+       
+      },
+      {
+        test: /\.s?css$/,
+        exclude: /\.module\.s?css$/,
+        use: getSettingsForStyles(),
+      },
+      
           {
             test: /\.[tj]sx?$/,
             use: 'babel-loader'
-        },,
+        },
         {
-            test: /\.(png|svg|jpg)$/,
+            test: /\.(png|svg|jpg|jpeg)$/,
             type: "asset",
             parser: {
                 dataUrlCondition: {
                     maxSize: 10 * 1024
                 }
             }
-        }
+        },
+        {
+            test: /\.(woff2?|eot|ttf|otf)$/,
+            use: [
+              {
+                loader: 'file-loader',
+                options: {
+                  name: 'fonts/[name].[hash:8].[ext]',
+                },
+              },
+            ],
+          },
     ]
     },
     resolve: {
@@ -83,6 +97,7 @@ module.exports = {
                     stores: path.join(srcPath, 'stores'),
                     enums: path.join(srcPath, 'enums'),
                     hooks: path.join(srcPath, 'hooks'),
+                    modules: path.join(srcPath, 'modules'),
                     
                 }
             },
@@ -90,9 +105,9 @@ module.exports = {
         host: '127.0.0.1',
         port: 9000,
         static: {
-            directory: path.resolve(__dirname, 'public'), // Заменили contentBase на static
+            directory: path.resolve(__dirname, 'public'), 
         },
-        hot: true, // Включаем горячую перезагрузку
+        hot: true, 
         historyApiFallback: true
     },
     plugins: [
@@ -100,9 +115,9 @@ module.exports = {
           template: path.join(__dirname, 'index.html'),
         }),
         !isProd && new ReactRefreshWebpackPlugin(),
-        //Добавим плагин в plugins
+        
         isProd && new MiniCssExtractPlugin({
-          // Для того чтобы файл со стилями не кэшировался в браузере добавим filename
+          
           filename: '[name]-[hash].css',
         }),
         new TsCheckerPlugin ()

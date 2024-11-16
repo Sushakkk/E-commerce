@@ -10,6 +10,7 @@
         "stores/*": ["src/stores/*"],
         "enums/*": ["src/enums/*"],
         "hooks/*": ["src/hooks/*"],
+        "modules/*": ["src/modules/*"],
       },
       "noEmit": true,
 
@@ -23,12 +24,13 @@
       "module": "es6",
       "target": "es6",
       "moduleResolution": "node",
-        "jsx": "react",
+    
+        "jsx": "react-jsx",
       "esModuleInterop": true,
       "allowSyntheticDefaultImports": true,
   
     },
-    "include": ["src/**/*", "declaration.d.ts"],
+    "include": ["src/**/*", "src/declaration.d.ts", "index.tsx"],
     "exclude": ["node_modules"], 
 
   }

@@ -1,0 +1,54 @@
+
+@use 'styles/variables.scss' as *;
+@use 'styles/mixin.scss' as *;
+
+
+.page__product {
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 146px;
+  @include container
+}
+
+
+
+.product{
+  &__button-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start; 
+  }
+  
+  &__button_back {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 129px;
+    height: 48px;
+    text-align: start;
+  }
+  
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: $space-xxl;
+  }
+  &__wrapper {
+    padding-top: $space-xxl;
+    display: flex;
+    gap: $space-xxl;
+    justify-content: center;
+    width: 1301px;
+  }
+  
+}
+
+
+
+
+
+
+
+
+

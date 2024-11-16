@@ -1,0 +1,15 @@
+@use 'styles/variables.scss' as *;
+@use 'styles/mixin.scss' as *;
+
+
+
+.related__products{
+    @include cards-layout
+  }
+
+  
+  .related__cards {
+    display: flex;
+    flex-direction: column;
+    gap: $space-xl;
+  }
