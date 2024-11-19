@@ -3,7 +3,7 @@
     "short_name": "E-commerce",
     "start_url": "/E-commerce",
     "display": "standalone",
-    "background_color": "#FAFAFA",
+    "background_color": "#FFFFFF",
     "theme_color": "#FAFAFA",
     "orientation": "portrait-primary",
     "icons": 
