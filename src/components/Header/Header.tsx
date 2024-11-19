@@ -10,6 +10,7 @@ const Header: React.FC = () => {
   const [activeItem, setActiveItem] = useState<string>('Product');
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  
 
   // Переключение состояния меню
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);

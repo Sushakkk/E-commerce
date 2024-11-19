@@ -24,7 +24,9 @@
     cursor: pointer;
     transition: opacity 0.3s;
     top: 50%;
-    transform: translateY(-50%); /* Центрирование по вертикали */
+    transform: translateY(-50%); 
+
+   
   }
   
   &__button-left {

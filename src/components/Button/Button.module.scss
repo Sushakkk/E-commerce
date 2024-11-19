@@ -10,7 +10,7 @@
     border: none; 
     background-color: $button-primary-bg;
 
-    &:not(.button-disabled):not(.button-loading):hover { /* Применяем hover только к кнопкам, которые не disabled и не loading */
+    &:not(.button-disabled):not(.button-loading):hover { 
         background-color: $brand-hover; 
     }
 

@@ -10,6 +10,10 @@
   flex-direction: column;
   padding-bottom: 146px;
 
+  @media (max-width: 890px) {
+    padding-top: 30px;
+  }
+
 }
 
 
@@ -28,6 +32,10 @@
     width: 129px;
     height: 48px;
     text-align: start;
+    @media (max-width: 890px) {
+      width: 90px;
+    }
+
   }
   
   &__content {
@@ -41,6 +49,10 @@
     gap: $space-xxl;
     justify-content: center;
     align-items: flex-start;
+
+    @media (max-width: 890px) {
+      padding-top: 30px;
+    }
     @media (max-width: 860px) {
       flex-direction: column;
       align-items: center;

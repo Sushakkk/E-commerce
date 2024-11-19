@@ -1,7 +1,7 @@
 {
     "name": "E-commerce",
     "short_name": "E-commerce",
-    "start_url": "/E-commerce/",
+    "start_url": "/E-commerce",
     "display": "standalone",
     "background_color": "#FAFAFA",
     "theme_color": "#FAFAFA",
