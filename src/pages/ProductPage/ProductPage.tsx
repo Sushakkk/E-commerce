@@ -23,7 +23,6 @@ const ProductPage: React.FC = observer(() => {
   const localProductDetailsStore = useLocalStore(() => new ProductDetailsStore());
   const { product, productMeta} = localProductDetailsStore;
 
-  
 
   useEffect(() => {
     if (id) {
