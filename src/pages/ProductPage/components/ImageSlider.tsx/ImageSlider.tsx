@@ -17,8 +17,6 @@ const ImageSlider: React.FC<ImageSliderProps> = observer(({ ProductDetailsStore 
     return <div>Загрузка...</div>;
   }
 
-  console.log(product.images)
-
   const isFirstImage = currentImageIndex === 0;
   const isLastImage = currentImageIndex === product.images.length - 1;
 
@@ -46,6 +44,7 @@ const ImageSlider: React.FC<ImageSliderProps> = observer(({ ProductDetailsStore 
 
       <img
         src={product.images[currentImageIndex]}
+        // src="https://cdn1.ozone.ru/s3/multimedia-r/c600/6855038235.jpg"
         alt={product.title}
         className={styles.slider__image}
       />

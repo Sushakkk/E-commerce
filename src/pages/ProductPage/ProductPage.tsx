@@ -7,11 +7,12 @@ import PaginationIcon from 'components/PaginationIcon/PaginationIcon';
 import Text from 'components/Text/Text';
 import RelatedProducts from './components/RelatedProducts';
 import styles from './ProductPage.module.scss';
-import ImageSlider from './components/ImageSlider.tsx';
-import ProductDetails from './components/ProductDetails/ProductDetails.tsx';
-import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore.ts';
-import { useLocalStore } from 'hooks/useLocalStore.ts';
+
+import ProductDetails from './components/ProductDetails/ProductDetails';
+import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore';
+import { useLocalStore } from 'hooks/useLocalStore';
 import { observer } from 'mobx-react-lite';
+import ImageSlider from './components/ImageSlider.tsx';
 
 
 const ProductPage: React.FC = observer(() => {

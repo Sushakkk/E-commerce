@@ -1,11 +1,13 @@
 
 import { Route, Routes, useLocation } from 'react-router-dom';
-import HomePage from './pages/HomePage/HomePage';
-import ProductPage from './pages/ProductPage/ProductPage';
+
 import Header from './components/Header/Header';
 import './styles/null.scss'
 import './styles/styles.scss'
 import { useEffect } from 'react';
+import HomePage from './pages/HomePage';
+
+import ProductPage from './pages/ProductPage';
 
 function App() {
 

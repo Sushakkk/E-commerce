@@ -1,8 +1,5 @@
-@import '../../styles/variables';
-// @use '../../styles/variables' as *; // если вы хотите импортировать все переменные
+@use '../../styles/variables' as *;
 
-
-// card.scss
 .card {
     display: flex;
     flex-direction: column;

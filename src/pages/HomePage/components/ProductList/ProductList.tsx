@@ -33,7 +33,7 @@ const ProductList: React.FC<ProductListProps> = observer(({ productsStore }) => 
       {products.map((product) => (
         <div className={styles['products__column']} key={product.id}>
           <Card
-            image={product.images[0]}
+            image={product.images[0].replace(/[\[\]"]/g, '')}
             title={product.title}
             subtitle={product.description}
             captionSlot={product.category.name}

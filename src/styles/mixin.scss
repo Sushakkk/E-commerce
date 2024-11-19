@@ -1,15 +1,26 @@
 @mixin cards-layout {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(360px, 1fr));
-    grid-template-rows: repeat(auto-fill, 1fr);
-    gap: 30px 80px;
-    justify-content: center;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(360px, 1fr));  
+  grid-template-rows: auto;  
+  gap: 30px 80px;
+  justify-content: center;
+  
+  @media (max-width: 1264px) {
+    grid-template-columns: repeat(2, 360px);  
   }
+  @media (max-width: 860px) {
+    grid-template-columns: repeat(1, 360px);  
+  }
+
+ 
+}
 
 
   @mixin container {
     max-width: 1240px;
     margin: 0 auto;
     box-sizing: content-box;
+    padding: 0px 30px;
+
   }

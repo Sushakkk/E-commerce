@@ -1,15 +1,21 @@
-@import 'styles/variables.scss';
+@use 'styles/variables.scss' as *;
 
 .product__text-container {
     display: flex;
     flex-direction: column;
     gap: $space-xl;
+    @media (max-width: 992px) {
+      gap: $space-l;
+    }
   }
   
   .product__text_title {
     display: flex;
     flex-direction: column;
     gap: $space-xl;
+    @media (max-width: 992px) {
+      gap: $space-l;
+    }
   }
   
   
@@ -19,6 +25,10 @@
     display: flex;
     flex-direction: column;
     gap: $space-xxl;
+    @media (max-width: 992px) {
+      gap: $space-l;
+      height: auto;
+    }
   }
   
   .product__buttons {
@@ -26,6 +36,7 @@
     height: 52px;
     display: flex;
     gap: $space-xxl;
+   
   }
   
   .add-to-cart-button {
@@ -33,6 +44,7 @@
     background-color: $font;
     border: 1px solid $secondary;
     width: 155px;
+    
   }
 
   .buy-now-button{

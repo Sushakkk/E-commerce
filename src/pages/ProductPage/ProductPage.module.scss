@@ -1,14 +1,15 @@
 
-@import 'styles/variables.scss';
-@import 'styles/mixin.scss';
+@use 'styles/variables.scss' as *;
+@use 'styles/mixin.scss' as *;
 
 
 .page__product {
+  @include container;
   padding-top: 60px;
   display: flex;
   flex-direction: column;
   padding-bottom: 146px;
-  @include container
+
 }
 
 
@@ -39,10 +40,19 @@
     display: flex;
     gap: $space-xxl;
     justify-content: center;
-    width: 1301px;
+    align-items: flex-start;
+    @media (max-width: 860px) {
+      flex-direction: column;
+      align-items: center;
+
+    }
+  
+
   }
   
 }
+
+
 
 
 

@@ -8,19 +8,28 @@ import User from '../User/User';
 
 const Header: React.FC = () => {
   const [activeItem, setActiveItem] = useState<string>('Product');
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const handleItemClick = useCallback((item: string) => {
-    setActiveItem(item);
-  }, []);
+  // Переключение состояния меню
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
+  // Закрытие меню
+  const closeMenu = () => setIsMenuOpen(false);
+
+  // Обработчик для логотипа
   const handleLogoClick = useCallback(() => {
     navigate('/', { replace: true });
-    window.location.reload(); 
   }, [navigate]);
 
+  // Обработчик клика по пункту меню
+  const handleItemClick = (item: string) => {
+    setActiveItem(item);
+    closeMenu(); // Закрываем меню после выбора пункта
+  };
+
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} ${isMenuOpen ? styles.lock : ''}`}>
       <div className={styles.header__container}>
         <div className={styles.header__logo}>
           <Link to="#" onClick={handleLogoClick}>
@@ -28,40 +37,40 @@ const Header: React.FC = () => {
           </Link>
         </div>
 
-        <nav className={styles.header__menu}>
+    
+       
+
+        <nav className={`${styles.header__menu} ${isMenuOpen ? styles.active : ''}`}>
           <ul className={styles.menu__list}>
-            <li
-              className={`${styles.menu__item} ${activeItem === 'Product' ? styles.active : ''}`}
-              onClick={() => handleItemClick('Product')}
-            >
-              <Text tag="p" view="p-18" weight={activeItem === 'Product' ? '600' : undefined}>
-                Product
-              </Text>
-            </li>
-            <li
-              className={`${styles.menu__item} ${activeItem === 'Categories' ? styles.active : ''}`}
-              onClick={() => handleItemClick('Categories')}
-            >
-              <Text tag="p" view="p-18" weight={activeItem === 'Categories' ? '600' : undefined}>
-                Categories
-              </Text>
-            </li>
-            <li
-              className={`${styles.menu__item} ${activeItem === 'About us' ? styles.active : ''}`}
-              onClick={() => handleItemClick('About us')}
-            >
-              <Text tag="p" view="p-18" weight={activeItem === 'About us' ? '600' : undefined}>
-                About us
-              </Text>
-            </li>
+            {['Product', 'Categories', 'About us'].map((item) => (
+              <li
+                key={item}
+                className={`${styles.menu__item} ${activeItem === item ? styles.active : ''}`}
+                onClick={() => handleItemClick(item)}
+              >
+                <Text tag="p" view="p-18" weight={activeItem === item ? '600' : undefined}>
+                  {item}
+                </Text>
+              </li>
+            ))}
           </ul>
         </nav>
 
+        <div className={styles['header__burger-container']}>
         <div className={styles.header__icons}>
           <Basket />
           <User />
         </div>
+
+        <div
+          className={`${styles.header__burger} ${isMenuOpen ? styles.active : ''}`}
+          onClick={toggleMenu}
+        >
+          <span></span>
+        </div>
+        
       </div>
+        </div>
     </header>
   );
 };
