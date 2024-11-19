@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 import Loader, {  LoaderProps } from './Loader';
 

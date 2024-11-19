@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { IconProps } from './Icon';
 import CheckIcon from './CheckIcon';
 import ArrowDownIcon from './ArrowDownIcon';
