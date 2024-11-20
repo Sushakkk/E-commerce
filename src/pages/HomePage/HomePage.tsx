@@ -17,21 +17,28 @@ const HomePage: React.FC = observer(() => {
  
   const localProductsStore = useLocalStore(() => new ProductsStore());
   const localFilterStore = useLocalStore(() => new FilterStore());
-
   const { totalProducts, currentPage } = localProductsStore;
   const { selectedCategory, searchQuery } = localFilterStore;
+  const queryParams = rootStore.QueryStore.getQueryParams();
 
-  
+
+
+  useEffect(() => {
+    if (Object.keys(queryParams).length === 0) {
+      localFilterStore.selectedCategory=null;
+      localFilterStore.searchQuery=''
+      localProductsStore.currentPage=1;
+      localProductsStore.fetchProducts(searchQuery, selectedCategory?.key);
+    }
+  }, [queryParams]);
 
   useEffect(() => {
     rootStore.QueryStore.updateQueryParams();
     localFilterStore.initializeParams()
   }, []);
 
-  
-
   useEffect(() => {
-    window.scrollTo(0, 0); 
+    
     
     if ( rootStore.QueryStore.queryLoaded && localFilterStore.ParamsMeta === 'success') {
       localProductsStore.fetchProducts(searchQuery, selectedCategory?.key);

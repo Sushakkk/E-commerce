@@ -76,6 +76,13 @@ class ProductsStore implements ILocalStore {
     }
   };
 
+  reset= () => {
+    this.currentPage = 1;
+    rootStore.QueryStore.deleteQueryParam('page');
+  };
+
+  
+
   setCurrentPage = (page: number) => {
     this.currentPage = page;
   

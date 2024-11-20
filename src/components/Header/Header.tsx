@@ -37,10 +37,8 @@ const Header: React.FC = () => {
   const closeMenu = () => setIsMenuOpen(false);
 
   const handleLogoClick = useCallback(() => {
-    rootStore.QueryStore.resetQueryParams()
-    window.location.reload(); 
-    navigate('/', { replace: true });
-  }, [navigate]);
+    rootStore.QueryStore.resetQueryParams();
+  }, []);
 
   const handleItemClick = (item: string) => {
     setActiveItem(item);

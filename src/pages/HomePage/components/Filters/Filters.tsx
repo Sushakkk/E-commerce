@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import MultiDropdown, { Option } from 'components/MultiDropdown';
@@ -6,11 +6,14 @@ import { observer } from 'mobx-react-lite';
 import styles from './Filters.module.scss';
 import FilterStore from 'stores/FilterStore/FilterStore';
 
+
 interface FiltersProps {
   filterStore: FilterStore; 
 }
 
 const Filters: React.FC<FiltersProps> = observer(({ filterStore }) => {
+  
+  
   const handleSearchChange = useCallback((value: string) => {
     filterStore.setSearchValue(value);
   }, [filterStore]);

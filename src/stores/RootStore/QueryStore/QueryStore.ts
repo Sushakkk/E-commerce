@@ -51,19 +51,24 @@ class QueryStore {
     return this._queryParams[key] || null;
   }
 
+  public getQueryParams() {
+    return this._queryParams || null;
+  }
+
   public deleteQueryParam(key: string) {
     delete this._queryParams[key];
     this.updateQueryParams();
   }
   public resetQueryParams() {
     console.log('Before reset:', toJS(this._queryParams));
-    Object.keys(this._queryParams).forEach((key) => {
-      this._queryParams[key] = null;
-    });
-    this.updateQueryParams();
-    
+
+    this._queryParams= {}
+  
     console.log('After reset:', toJS(this._queryParams));
   }
+  
+
+
   
 }
 
