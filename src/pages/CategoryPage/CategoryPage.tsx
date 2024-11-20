@@ -1,39 +1,36 @@
 import React, { useEffect } from 'react';
 import Loader from 'components/Loader';
 import Text from 'components/Text/Text';
-import styles from './HomePage.module.scss';
-
-import Filters from './components/Filters/Filters';
+import styles from './CategoryPage.module.scss';
 import { observer } from 'mobx-react-lite';
 import { useLocalStore } from 'hooks/useLocalStore';
 import ProductsStore from 'stores/ProductsStore/ProductsStore';
-import FilterStore from 'stores/FilterStore/FilterStore';
-import rootStore from 'stores/RootStore/instance';
+import BackButton from 'components/BackButton/BackButton';
 import ProductList from 'components/ProductList';
 import Pagination from 'components/Pagination';
+import { useParams } from 'react-router-dom';
+import FilterStore from 'stores/FilterStore';
 
 
-const HomePage: React.FC = observer(() => {
+const CategoryPage: React.FC = observer(() => {
+  const { id } = useParams<{ id: string }>();
  
   const localProductsStore = useLocalStore(() => new ProductsStore());
-  const localFilterStore = useLocalStore(() => new FilterStore());
+  const localFiltersStore = useLocalStore(() => new FilterStore());
+  const category = localFiltersStore.getCategoryById(Number(id)) ;
+  const categoryName = category ? category.value : 'Category not found';
 
   const { totalProducts, currentPage } = localProductsStore;
-  const { selectedCategory, searchQuery } = localFilterStore;
+  const searchQuery ='';
+
+
+
 
   useEffect(() => {
-    rootStore.QueryStore.updateQueryParams();
-    localFilterStore.initializeParams()
-  }, []);
+      localProductsStore.fetchProducts(searchQuery, Number(id));
+  }, [currentPage]);
 
-  useEffect(() => {
-    
-    if ( rootStore.QueryStore.queryLoaded && localFilterStore.ParamsMeta === 'success') {
-      localProductsStore.fetchProducts(searchQuery, selectedCategory?.key);
-    }
-  }, [ rootStore.QueryStore.queryLoaded, searchQuery, selectedCategory, currentPage, localFilterStore.ParamsMeta]);
-
-  if (! rootStore.QueryStore.queryLoaded || localProductsStore.meta === 'loading' || localFilterStore.ParamsMeta === 'loading') {
+  if (localProductsStore.meta === 'loading' || localFiltersStore.meta === 'loading') {
     return (
       <main className="page">
         <div className="page__loader">
@@ -47,17 +44,17 @@ const HomePage: React.FC = observer(() => {
     <main id="main" className="page">
       <div className={styles['page__main-block']}>
         <div className={styles['products__content']}>
+            <BackButton/>
           <div className={styles['products__header']}>
             <div className={styles['products__title']}>
-              <Text view="title">Products</Text>
+              <Text view="title">{categoryName}</Text>
             </div>
             <div className={styles['products__description']}>
               <Text view="p-20" color="secondary">
-                We display products based on the latest products we have. If you want to see our old products, please enter the name of the item.
+              Explore our diverse collection of top-quality products, crafted to meet your needs and elevate your lifestyle.
               </Text>
             </div>
           </div>
-          <Filters filterStore={localFilterStore} />
           <div className={styles['products__body']}>
             <div className={styles['products__subtitle']}>
               <Text view="p-32" className="page-title" weight="bold">Total Products</Text>
@@ -75,4 +72,4 @@ const HomePage: React.FC = observer(() => {
   );
 });
 
-export default HomePage;
+export default CategoryPage;

@@ -1,0 +1,96 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixin' as *;
+
+
+
+
+.products{
+    &__content {
+        padding-top: 100px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        align-items: center;
+        gap: 48px;
+        padding-bottom: 48px;
+    }
+    
+    &__body {
+        width: 100%;
+        flex: 1;
+    }
+    
+    &__header {
+        width: 653px;
+        height: 128px;
+        display: flex;
+        flex-direction: column;
+        gap: $space-xl;
+        align-items: center;
+
+        @media (max-width: 860px) {
+            width: 100%;
+            height: 100%;
+            
+        }
+    }
+    
+    &__description {
+        text-align: center;
+    }
+    
+    
+    
+    &__subtitle {
+        display: flex;
+        width: 266px;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: $space-xl;
+        text-align: left;
+    }
+    
+    &__cards {
+        padding-bottom: 30px;
+        @include cards-layout;
+    }
+    
+    
+    
+    &__column {
+        display: flex;
+        justify-content: center;
+    }
+    &__controls {
+        width: 100%;
+        gap: $space-xl;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    &__search {
+        display: flex;
+        gap: $space-xl;
+    }
+    
+    &__search-column--left {
+        flex: 1;
+    }
+    
+    
+    
+    &__filter {
+        width: 300px;
+    }
+    
+   
+    
+    
+}
+
+
+
+
+.page__main-block{
+    @include container;
+}

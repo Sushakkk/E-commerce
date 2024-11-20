@@ -8,6 +8,8 @@ import { useEffect } from 'react';
 import HomePage from './pages/HomePage';
 
 import ProductPage from './pages/ProductPage';
+import CategoriesPage from './pages/CategoriesPage/CategoriesPage';
+import CategoryPage from './pages/CategoryPage/CategoryPage';
 
 function App() {
 
@@ -24,6 +26,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage/>} />
           <Route path="/product/:id" element={<ProductPage/>} />
+          <Route path="/categories" element={<CategoriesPage/>} />
+          <Route path="/category/:id" element={<CategoryPage/>} />
         </Routes>
 
     </div>

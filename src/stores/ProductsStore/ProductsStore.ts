@@ -38,6 +38,7 @@ class ProductsStore implements ILocalStore {
       this.currentPage = 1
     }
   }
+  
 
   fetchProducts = async (searchQuery: string, selectedCategoryID: number | undefined) => {
     this.initializeParams()

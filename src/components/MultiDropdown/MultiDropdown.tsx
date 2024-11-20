@@ -7,6 +7,8 @@ import ArrowDownIcon from '../icons/ArrowDownIcon';
 export type Option = {
   key: number;
   value: string;
+  img: string ;
+  productCount: number, 
 };
 
 export type MultiDropdownProps = {

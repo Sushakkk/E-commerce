@@ -27,12 +27,13 @@ class FilterStore implements ILocalStore {
       setSearchQuery: action,
       setSelectedCategory: action,
       fetchCategories: action,
+      initializeParams: action,
     });
 
-    this.initializeParams();
+    this.fetchCategories()
   }
 
-  private async initializeParams() {
+ async initializeParams() {
     this.ParamsMeta = Meta.loading;
 
     const search =  rootStore.QueryStore.getQueryParam('search');
@@ -96,10 +97,23 @@ class FilterStore implements ILocalStore {
     this.meta = Meta.loading;
     try {
       const categoriesResponse = await axios.get('https://api.escuelajs.co/api/v1/categories');
-      const categories = categoriesResponse.data.map((category: { id: number; name: string }) => ({
-        key: category.id,
-        value: category.name,
-      }));
+      
+      const categories = await Promise.all(
+        categoriesResponse.data
+          .filter((category: { name: string }) => category.name !== 'New Category')
+          .map(async (category: { id: number; name: string; image: string }) => {
+            const productCountResponse = await axios.get(`https://api.escuelajs.co/api/v1/products?categoryId=${category.id}`);
+            const productCount = productCountResponse.data.length;
+
+            return {
+              key: category.id,
+              value: category.name,
+              img: category.image,
+              productCount: productCount, 
+            };
+          })
+      );
+
       runInAction(() => {
         this._categories = categories;
         this.meta = Meta.success;

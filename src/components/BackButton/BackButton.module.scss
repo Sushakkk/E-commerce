@@ -1,0 +1,40 @@
+
+@use 'styles/variables.scss' as *;
+@use 'styles/mixin.scss' as *;
+
+
+
+
+
+.button{
+  &__container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start; 
+  }
+  
+  &__back {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 129px;
+    height: 48px;
+    text-align: start;
+    @media (max-width: 890px) {
+      width: 90px;
+    }
+
+  }
+  
+}
+
+
+
+
+
+
+
+
+
+
+
