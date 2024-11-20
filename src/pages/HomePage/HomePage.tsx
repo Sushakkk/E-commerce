@@ -28,6 +28,8 @@ const HomePage: React.FC = observer(() => {
     localFilterStore.initializeParams()
   }, []);
 
+  
+
   useEffect(() => {
     window.scrollTo(0, 0); 
     

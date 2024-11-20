@@ -7,6 +7,8 @@ import ProductsStore from 'stores/ProductsStore/ProductsStore';
 import styles from './ProductList.module.scss';
 import Text from 'components/Text/Text';
 import { handleProductClick } from 'utils/navigationUtils';
+import useImageHandler from 'hooks/useImageHandler';
+
 
 interface ProductListProps {
   productsStore: ProductsStore;
@@ -15,8 +17,12 @@ interface ProductListProps {
 const ProductList: React.FC<ProductListProps> = observer(({ productsStore }) => {
   const navigate = useNavigate();
   const { products, totalPages } = productsStore;
+  const { getImage } = useImageHandler();
 
   const productClickHandler = useCallback(handleProductClick(navigate), [navigate]);
+
+  
+  
 
   if (!totalPages) {
     return (
@@ -33,7 +39,7 @@ const ProductList: React.FC<ProductListProps> = observer(({ productsStore }) => 
       {products.map((product) => (
         <div className={styles['products__column']} key={product.id}>
           <Card
-            image={product.images[0].replace(/[\[\]"]/g, '')}
+            image={getImage(product.images[0])}
             title={product.title}
             subtitle={product.description}
             captionSlot={product.category.name}

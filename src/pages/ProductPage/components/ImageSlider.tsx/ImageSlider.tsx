@@ -3,6 +3,7 @@ import styles from './ImageSlider.module.scss';
 import PaginationIcon from 'components/PaginationIcon/PaginationIcon';
 import { observer } from 'mobx-react-lite';
 import ProductDetailStore from 'stores/ProductDetailsStore';
+import useImageHandler from 'hooks/useImageHandler';
 
 
 interface ImageSliderProps {
@@ -12,6 +13,7 @@ interface ImageSliderProps {
 const ImageSlider: React.FC<ImageSliderProps> = observer(({ ProductDetailsStore }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { product } = ProductDetailsStore;
+  const { getImage } = useImageHandler();
 
   if (!product) {
     return <div>Загрузка...</div>;
@@ -43,7 +45,7 @@ const ImageSlider: React.FC<ImageSliderProps> = observer(({ ProductDetailsStore 
       </button>
 
       <img
-        src={product.images[currentImageIndex]}
+        src={getImage(product.images[currentImageIndex])}
         // src="https://cdn1.ozone.ru/s3/multimedia-r/c600/6855038235.jpg"
         alt={product.title}
         className={styles.slider__image}

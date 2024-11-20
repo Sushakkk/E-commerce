@@ -1,4 +1,4 @@
-import { makeAutoObservable, action } from 'mobx';
+import { makeAutoObservable, action, toJS } from 'mobx';
 
 class QueryStore {
   private _queryParams: { [key: string]: string | number | null } = {};
@@ -9,6 +9,7 @@ class QueryStore {
       setQueryParam: action,
       updateQueryParams: action,
       setParamsFromUrl: action,
+      resetQueryParams: action,
     });
 
     this.setParamsFromUrl();
@@ -54,6 +55,16 @@ class QueryStore {
     delete this._queryParams[key];
     this.updateQueryParams();
   }
+  public resetQueryParams() {
+    console.log('Before reset:', toJS(this._queryParams));
+    Object.keys(this._queryParams).forEach((key) => {
+      this._queryParams[key] = null;
+    });
+    this.updateQueryParams();
+    
+    console.log('After reset:', toJS(this._queryParams));
+  }
+  
 }
 
 export default QueryStore;

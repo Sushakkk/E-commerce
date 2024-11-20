@@ -5,6 +5,7 @@ import Logo from '../Logo/Logo';
 import Text from '../Text/Text';
 import Basket from '../Basket/Basket';
 import User from '../User/User';
+import rootStore from 'stores/RootStore';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -36,6 +37,8 @@ const Header: React.FC = () => {
   const closeMenu = () => setIsMenuOpen(false);
 
   const handleLogoClick = useCallback(() => {
+    rootStore.QueryStore.resetQueryParams()
+    window.location.reload(); 
     navigate('/', { replace: true });
   }, [navigate]);
 

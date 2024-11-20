@@ -8,13 +8,13 @@ import Card from 'components/Card';
 import Loader from 'components/Loader';
 import { useNavigate } from 'react-router-dom'; 
 import BackButton from 'components/BackButton/BackButton';
-import ProductsStore from 'stores/ProductsStore';
+import useImageHandler from 'hooks/useImageHandler';
+
 
 const CategoriesPage: React.FC = () => {
   const localFiltersStore = useLocalStore(() => new FilterStore());
-  const localProductsStore = useLocalStore(() => new ProductsStore());
-  const { totalPages } = localProductsStore;
   const navigate = useNavigate(); 
+  const { getImage } = useImageHandler();
 
  
   useEffect(() => {
@@ -52,7 +52,7 @@ const CategoriesPage: React.FC = () => {
           <Text view="title">
             Categories
           </Text>
-          <Text view="p-20" color="secondary">
+          <Text  className={styles.categories__subtitle} view="p-20" color="secondary">
           Discover a wide variety of premium products, each carefully curated to suit your preferences and needs. From the latest trends to timeless essentials, we offer a selection designed to enhance your lifestyle. Start exploring today and find exactly what you're looking for!
               </Text>
           </div>
@@ -61,7 +61,7 @@ const CategoriesPage: React.FC = () => {
               <div className={styles['categories__column']} key={category.key}>
                 <Card
                         key={category.key}
-                        image={category.img || '/path/to/default-category-image.jpg'}
+                        image={getImage(category.img)}
                         title={category.value}
                         className={styles.categoryCard}
                         onClick={() => handleCategoryClick(category.key)} 
