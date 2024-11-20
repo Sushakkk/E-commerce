@@ -1,6 +1,7 @@
 {
   "name": "E-commerce",
   "short_name": "E-commerce",
+  "start_url": "/E-commerce",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
