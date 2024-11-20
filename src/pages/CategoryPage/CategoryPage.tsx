@@ -24,6 +24,9 @@ const CategoryPage: React.FC = observer(() => {
   const searchQuery ='';
 
 
+  useEffect(() => {
+    localProductsStore.currentPage=1;
+}, []);
 
 
   useEffect(() => {
@@ -43,20 +46,20 @@ const CategoryPage: React.FC = observer(() => {
   return (
     <main id="main" className="page">
       <div className={styles['page__main-block']}>
-        <div className={styles['products__content']}>
+        <div className={styles['category__content']}>
             <BackButton/>
-          <div className={styles['products__header']}>
-            <div className={styles['products__title']}>
+          <div className={styles['category__header']}>
+            <div className={styles['category__title']}>
               <Text view="title">{categoryName}</Text>
             </div>
-            <div className={styles['products__description']}>
+            <div className={styles['category__description']}>
               <Text view="p-20" color="secondary">
               Explore our diverse collection of top-quality products, crafted to meet your needs and elevate your lifestyle.
               </Text>
             </div>
           </div>
-          <div className={styles['products__body']}>
-            <div className={styles['products__subtitle']}>
+          <div className={styles['category__body']}>
+            <div className={styles['category__subtitle']}>
               <Text view="p-32" className="page-title" weight="bold">Total Products</Text>
               <Text view="p-20" color="accent" weight="bold">
                 {totalProducts}

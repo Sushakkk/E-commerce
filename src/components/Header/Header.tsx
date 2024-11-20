@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from './Header.module.scss';
 import Logo from '../Logo/Logo';
 import Text from '../Text/Text';
@@ -7,29 +7,41 @@ import Basket from '../Basket/Basket';
 import User from '../User/User';
 
 const Header: React.FC = () => {
-  const [activeItem, setActiveItem] = useState<string>('Product');
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const getActiveItem = useCallback(() => {
+    const path = location.pathname;
+  
+    if (path.startsWith('/category') || path === '/categories') {
+      return 'Categories'; 
+    } else if (path === '/about') {
+      return 'About us';
+    } else {
+      return 'Products'; 
+    }
+  }, [location.pathname]);
+  
+
+  const [activeItem, setActiveItem] = useState<string>(getActiveItem);
 
   useEffect(() => {
-    window.scrollTo(0, 0); 
-  }, [location]); 
-
+    setActiveItem(getActiveItem());
+    window.scrollTo(0, 0);
+  }, [location, getActiveItem]);
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
-
   const closeMenu = () => setIsMenuOpen(false);
-
 
   const handleLogoClick = useCallback(() => {
     navigate('/', { replace: true });
   }, [navigate]);
 
-
   const handleItemClick = (item: string) => {
     setActiveItem(item);
-    closeMenu(); 
+    closeMenu();
   };
 
   return (
@@ -44,7 +56,7 @@ const Header: React.FC = () => {
         <nav className={`${styles.header__menu} ${isMenuOpen ? styles.active : ''}`}>
           <ul className={styles.menu__list}>
             {[
-              { name: 'Product', path: '/' },
+              { name: 'Products', path: '/' },
               { name: 'Categories', path: '/categories' },
               { name: 'About us', path: '/about' },
             ].map(({ name, path }) => (

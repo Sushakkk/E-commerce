@@ -10,17 +10,21 @@ import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
 import CategoriesPage from './pages/CategoriesPage/CategoriesPage';
 import CategoryPage from './pages/CategoryPage/CategoryPage';
+import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 
 function App() {
 
-  const location = useLocation();
+
+
+  const location = useLocation(); 
 
   useEffect(() => {
-    window.scrollTo(0, 0); 
-  }, [location]); 
+    window.scrollTo(0, 0);
+  }, [location]);
 
   return (
     <div className="wrapper">
+      <ScrollToTop/>
       <Header />
   
         <Routes>

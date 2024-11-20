@@ -21,12 +21,15 @@ const HomePage: React.FC = observer(() => {
   const { totalProducts, currentPage } = localProductsStore;
   const { selectedCategory, searchQuery } = localFilterStore;
 
+  
+
   useEffect(() => {
     rootStore.QueryStore.updateQueryParams();
     localFilterStore.initializeParams()
   }, []);
 
   useEffect(() => {
+    window.scrollTo(0, 0); 
     
     if ( rootStore.QueryStore.queryLoaded && localFilterStore.ParamsMeta === 'success') {
       localProductsStore.fetchProducts(searchQuery, selectedCategory?.key);
