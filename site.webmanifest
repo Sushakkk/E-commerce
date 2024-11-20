@@ -1,6 +1,7 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "E-commerce",
+  "short_name": "E-commerce",
+  "start_url": "/E-commerce",
   "icons": [
     {
       "src": "/E-commerce/web-app-manifest-192x192.png",
