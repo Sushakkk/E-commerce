@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback} from 'react';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import MultiDropdown, { Option } from 'components/MultiDropdown';

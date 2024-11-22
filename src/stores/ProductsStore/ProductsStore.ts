@@ -68,6 +68,8 @@ class ProductsStore implements ILocalStore {
         this.totalProducts = totalResponse.data.length;
         this.totalPages = Math.ceil(this.totalProducts / this.productsPerPage);
         this.meta = Meta.success;
+
+        
       });
     } catch {
       runInAction(() => {

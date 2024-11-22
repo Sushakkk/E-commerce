@@ -11,6 +11,7 @@ import ProductPage from './pages/ProductPage';
 import CategoriesPage from './pages/CategoriesPage/CategoriesPage';
 import CategoryPage from './pages/CategoryPage/CategoryPage';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
+import AboutPage from './pages/AboutPage/AboutPage';
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/product/:id" element={<ProductPage/>} />
           <Route path="/categories" element={<CategoriesPage/>} />
           <Route path="/category/:id" element={<CategoryPage/>} />
+          <Route path="/about" element={<AboutPage/>} />
         </Routes>
 
     </div>

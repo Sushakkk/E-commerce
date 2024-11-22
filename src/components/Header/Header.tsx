@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link,  useLocation } from 'react-router-dom';
 import styles from './Header.module.scss';
 import Logo from '../Logo/Logo';
 import Text from '../Text/Text';
@@ -9,7 +9,7 @@ import rootStore from 'stores/RootStore';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const navigate = useNavigate();
+
   const location = useLocation();
 
   const getActiveItem = useCallback(() => {
