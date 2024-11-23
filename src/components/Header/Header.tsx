@@ -6,6 +6,9 @@ import Text from '../Text/Text';
 import Basket from '../Basket/Basket';
 import User from '../User/User';
 import rootStore from 'stores/RootStore';
+import AuthStore from 'stores/AuthStore';
+import Button from 'components/Button';
+import { useLocalStore } from 'mobx-react-lite';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -42,6 +45,16 @@ const Header: React.FC = () => {
 
   const handleItemClick = (item: string) => {
     setActiveItem(item);
+    closeMenu();
+  };
+
+
+  const localAuthStore = useLocalStore(() => new AuthStore());
+
+
+  const handleLogout = () => {
+    localAuthStore.logout();
+    console.log(`вышли ${localAuthStore.isAuthenticated}`)
     closeMenu();
   };
 
@@ -83,6 +96,10 @@ const Header: React.FC = () => {
             <Link to="/auth">
               <User />
             </Link>
+             {/* Добавляем кнопку выхода */}
+             <Button onClick={handleLogout} className={styles.logoutButton}>
+              Log out
+            </Button>
           </div>
 
           <div

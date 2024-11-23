@@ -1,8 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './AuthorizePage.module.scss';
 import Button from 'components/Button/Button';
+import { useLocalStore } from 'mobx-react-lite';
+import AuthStore from 'stores/AuthStore';
 
 const AuthorizePage: React.FC = () => {
+
+  const localAuthStore = useLocalStore(() => new AuthStore());
+
+
+  useEffect(() => {
+    localAuthStore.checkAuth();
+    console.log('Главная',localAuthStore.checkAuth(), localAuthStore.token);
+  }, [localAuthStore.isAuthenticated]);
+
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+
+
   const [isLoginActive, setIsLoginActive] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -12,62 +31,18 @@ const AuthorizePage: React.FC = () => {
   const [signUpData, setSignUpData] = useState({ email: '', password: '', confirmPassword: '' });
   const [signUpErrors, setSignUpErrors] = useState({ email: '', password: '', confirmPassword: '' });
 
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const errors = { email: '', password: '' };
-
-    if (!loginData.email) {
-      errors.email = 'E-mail is required';
-    } else if (!validateEmail(loginData.email)) {
-      errors.email = 'Invalid e-mail format';
-    }
-
-    if (!loginData.password) {
-      errors.password = 'Password is required';
-    }
-
-    setLoginErrors(errors);
-
-    if (!errors.email && !errors.password) {
-      console.log('Login Data:', loginData);
-
-      // Успешная отправка
-      handleSuccess();
-    }
+    localAuthStore.validateLogin(loginData)
   };
+
+  
 
   const handleSignUpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const errors = { email: '', password: '', confirmPassword: '' };
-
-    if (!signUpData.email) {
-      errors.email = 'E-mail is required';
-    } else if (!validateEmail(signUpData.email)) {
-      errors.email = 'Invalid e-mail format';
-    }
-
-    if (!signUpData.password) {
-      errors.password = 'Password is required';
-    } else if (signUpData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
-    }
-
-    if (signUpData.password !== signUpData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
-    }
-
-    setSignUpErrors(errors);
-
-    if (!errors.email && !errors.password && !errors.confirmPassword) {
-      console.log('Sign Up Data:', signUpData);
-
-      // Успешная отправка
-      handleSuccess();
+    if (localAuthStore.validateSignUp(signUpData)) {
+      localAuthStore.signUp();
     }
   };
 
