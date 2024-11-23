@@ -1,4 +1,4 @@
-import { makeAutoObservable, action, toJS } from 'mobx';
+import { makeAutoObservable, action} from 'mobx';
 
 class QueryStore {
   private _queryParams: { [key: string]: string | number | null } = {};

@@ -13,11 +13,17 @@
     width: 100%;
     align-items: center;
     gap:50px;
+    @media (max-width: 992px) {
+      flex-direction: column;
+    }
   }
   
-  .profile__image {
-    margin-right: 30px;
-  }
+  // .profile__image {
+  //   margin-right: 30px;
+  //   @media (max-width: 992px) {
+  //     flex-direction: column;
+  //   }
+  // }
   
   .uploadInput {
     display: none;
@@ -100,11 +106,20 @@
     gap:30px;
     width: 60%;
     max-width: 500px;
+    @media (max-width: 992px) {
+      width: 100%;
+    }
   }
   
-  .profile__infoItem {
+  .profile__field{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .profile__infoItem{
     display: flex;
     align-items: center;
+
   }
   
   .profileLabel {
@@ -114,15 +129,19 @@
   }
   
   .profileInput {
+    flex-grow: 1;
     padding: 8px;
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 4px;
   }
 
-//   .profile__button{
-//     padding-top: 30px;
-//   }
+  .profile__button{
+    @media (max-width: 992px) {
+      text-align: center;
+    }
+   
+  }
   
   .saveButton {
     width: 100px;
@@ -131,6 +150,8 @@
  
   
   .errorText {
+    margin-top: 5px;
+    text-align: center;
     color: red;
     margin-left: 10px;
  

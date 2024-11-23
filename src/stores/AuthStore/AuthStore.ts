@@ -1,5 +1,5 @@
-import { action, makeAutoObservable, observable, toJS } from 'mobx';
-import { ILocalStore } from 'stores/ILocalStore/ILocalStore';
+import { action, makeAutoObservable, observable} from 'mobx';
+
 import rootStore from 'stores/RootStore';
 import { decodeJWT, generateJWT } from 'utils/token';
 import { validateEmail } from 'utils/validation';
@@ -50,12 +50,22 @@ class AuthStore {
 
   setUser() {
     const authToken = rootStore.QueryStore.getQueryParam('auth');
-    this.token = authToken ? String(authToken) : null;
-    const decoded = decodeJWT(String(this.token));
-    const email = decoded.payload.email;
-    this.user= this.getUser(email)
+    if (!authToken) {
+      console.error("Auth token not found");
+      return;  // Останавливаем выполнение, если токен не найден
+    }
     
+    this.token = String(authToken);  // Преобразуем токен в строку
+    
+    try {
+      const decoded = decodeJWT(this.token);  // Декодируем токен
+      const email = decoded.payload.email;
+      this.user = this.getUser(email);  // Получаем пользователя по email
+    } catch (error) {
+      console.error("Error decoding JWT:", error);
+    }
   }
+  
 
   getUsers() {
     const storedUsers = localStorage.getItem('users');
@@ -131,8 +141,8 @@ class AuthStore {
     }
 
     if (this.validateSignUp(signUpData)) {
-     
-      this.users.push({ email: signUpData.email, password: signUpData.password, fio:"", image: null });
+      this.user={ email: signUpData.email, password: signUpData.password, fio:"", image: null }
+      this.users.push(this.user);
       this.saveUsersToLocalStorage();
 
 

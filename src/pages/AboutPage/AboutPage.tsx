@@ -2,7 +2,7 @@ import Button from 'components/Button/Button';
 import styles from './AboutPage.module.scss';
 import ImageCarousel from './components/ImageCarousel/ImageCarousel';
 import { Link } from 'react-router-dom';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback,  useRef } from 'react';
 
 
 const AboutPage = () => {

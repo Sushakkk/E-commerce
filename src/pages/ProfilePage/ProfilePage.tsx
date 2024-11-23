@@ -13,6 +13,7 @@ const ProfilePage: React.FC = observer(() => {
 
   useEffect(() => {
     const user = localAuthStore.user; 
+    console.log(user)
     if (user) {
       setEmail(user.email || ''); 
       setFullName(user.fio || ''); 
@@ -72,7 +73,8 @@ const ProfilePage: React.FC = observer(() => {
               </label>
             </div>
             <div className={styles.profile__info}>
-              <div className={styles.profile__infoItem}>
+              <div className={styles.profile__field}>
+                <div className={styles.profile__infoItem}>
                 <label htmlFor="email" className={styles.profileLabel}>
                   Email
                 </label>
@@ -84,9 +86,11 @@ const ProfilePage: React.FC = observer(() => {
                   placeholder="Enter your email"
                   className={styles.profileInput}
                 />
+                </div>
                 {!email && <span className={styles.errorText}>Email is required</span>}
               </div>
-              <div className={styles.profile__infoItem}>
+              <div className={styles.profile__field}>
+                <div className={styles.profile__infoItem}>
                 <label htmlFor="fullName" className={styles.profileLabel}>
                   Full Name
                 </label>
@@ -98,6 +102,7 @@ const ProfilePage: React.FC = observer(() => {
                   placeholder="Enter your full name"
                   className={styles.profileInput}
                 />
+                </div>
                 {!fullName && <span className={styles.errorText}>Full Name is required</span>}
               </div>
               <div className={styles.profile__button}>

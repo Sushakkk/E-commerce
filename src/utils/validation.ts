@@ -77,7 +77,7 @@ export const handleSignUpChange: HandleChangeFunction<SignUpData> = (
     const newErrors: ValidationErrors = { ...prevErrors };
 
     // Деструктуризация данных с учетом изменения поля
-    const { email, password, confirmPassword } = { ...currentData, [field]: value } as SignUpData;
+    const { password, confirmPassword } = { ...currentData, [field]: value } as SignUpData;
 
     if (field === 'email') {
       if (!value) {

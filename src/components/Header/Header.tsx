@@ -7,7 +7,7 @@ import Basket from '../Basket/Basket';
 import User from '../User/User';
 import rootStore from 'stores/RootStore';
 import AuthStore from 'stores/AuthStore';
-import { observer, useLocalStore } from 'mobx-react-lite';
+import { observer} from 'mobx-react-lite';
 
 const Header: React.FC = observer(() => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './AuthorizePage.module.scss';
 import Button from 'components/Button/Button';
-import { observer, useLocalStore } from 'mobx-react-lite';
+import { observer} from 'mobx-react-lite';
 import AuthStore from 'stores/AuthStore';
 import { validateEmail } from 'utils/validation';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ const AuthorizePage: React.FC = observer(() => {
 
 
   const [isLoginActive, setIsLoginActive] = useState(true);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const isSuccess=false;
 
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [loginErrors, setLoginErrors] = useState({ email: '', password: '' });
