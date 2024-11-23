@@ -25,7 +25,7 @@ interface Profile {
 
 class AuthStore {
   users: { email: string; password: string; fio: string | null; image: string | null; }[] = [];
-  user: Profile = { email: '', password: '', fio: '', image: '' };
+  user: Profile | null = null;
   token: string | null = null;
   isAuthenticated: boolean = false;
   signUpErrors: CheckData = { email: '', password: '', confirmPassword: '' };
@@ -44,7 +44,17 @@ class AuthStore {
     });
 
     this.getUsers();
+    this.setUser();
 
+  }
+
+  setUser() {
+    const authToken = rootStore.QueryStore.getQueryParam('auth');
+    this.token = authToken ? String(authToken) : null;
+    const decoded = decodeJWT(String(this.token));
+    const email = decoded.payload.email;
+    this.user= this.getUser(email)
+    
   }
 
   getUsers() {
@@ -63,7 +73,7 @@ class AuthStore {
 
 
   updateUserProfile(email: string, fio: string, image: string) {
-   
+    if (this.user) {
       if (this.user.fio !== fio) {
         this.user.fio = fio;
       }
@@ -78,9 +88,8 @@ class AuthStore {
         // Если пользователя нет в массиве, добавляем его
         this.users.push(this.user);
       }
-
-      
       this.saveUsersToLocalStorage();
+    }
 }
   
   
@@ -203,12 +212,16 @@ class AuthStore {
             this.user = foundUser;  
             this.isAuthenticated = true;
             localStorage.setItem('token', LoginToken);
-            rootStore.QueryStore.setQueryParam('auth', 'true');
+            rootStore.QueryStore.setQueryParam('auth', this.token);
           }
       } else {
         console.log('Не залогинились');
       }
     }
+  }
+
+  initializeParams(){
+    rootStore.QueryStore.setQueryParam('auth', this.token)
   }
   
 

@@ -2,7 +2,8 @@ import Button from 'components/Button/Button';
 import styles from './AboutPage.module.scss';
 import ImageCarousel from './components/ImageCarousel/ImageCarousel';
 import { Link } from 'react-router-dom';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+
 
 const AboutPage = () => {
 
@@ -12,7 +13,7 @@ const AboutPage = () => {
     { src: 'https://avatars.dzeninfra.ru/get-zen_doc/10198457/pub_64da2a484e2a872cc46cec50_64e632e92203891207c526f8/scale_1200', alt: 'Training people 3' },
     { src: 'https://amazingfacts.ru/wp-content/uploads/2023/06/1-9.jpg', alt: 'Training people 4' }
   ];
-   
+
 
   const familySectionRef = useRef<HTMLElement | null>(null);
 

@@ -13,8 +13,13 @@ import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import AboutPage from './pages/AboutPage/AboutPage';
 import AuthorizePage from './pages/AuthorizePage/AuthorizePage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
+import AuthStore from 'stores/AuthStore/AuthStore';
+import rootStore from 'stores/RootStore';
+
+
 
 function App() {
+  const token = rootStore.QueryStore.getQueryParam('auth');
 
 
 
@@ -23,6 +28,15 @@ function App() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
+
+
+  useEffect(() => {
+    AuthStore.initializeParams();
+  }, [AuthStore.token, location]);
+
+  useEffect(() => {
+    rootStore.QueryStore.setQueryParam('auth', token);
+  }, []);
 
   return (
     <div className="wrapper">
