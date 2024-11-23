@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Link,  useLocation } from 'react-router-dom';
+import { Link,  useLocation, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 import Logo from '../Logo/Logo';
 import Text from '../Text/Text';
@@ -7,13 +7,13 @@ import Basket from '../Basket/Basket';
 import User from '../User/User';
 import rootStore from 'stores/RootStore';
 import AuthStore from 'stores/AuthStore';
-import Button from 'components/Button';
 import { observer, useLocalStore } from 'mobx-react-lite';
 
 const Header: React.FC = observer(() => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const location = useLocation();
+  const navigate = useNavigate(); 
 
   const getActiveItem = useCallback(() => {
     const path = location.pathname;
@@ -51,13 +51,14 @@ const Header: React.FC = observer(() => {
   };
 
 
-  const localAuthStore = useLocalStore(() => new AuthStore());
+  const localAuthStore= AuthStore;
 
 
   const handleLogout = () => {
     localAuthStore.logout();
     console.log(`вышли ${localAuthStore.isAuthenticated}`)
     closeMenu();
+    navigate('/');
   };
 
 

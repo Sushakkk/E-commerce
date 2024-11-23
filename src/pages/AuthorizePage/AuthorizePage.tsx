@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './AuthorizePage.module.scss';
 import Button from 'components/Button/Button';
-import { useLocalStore } from 'mobx-react-lite';
+import { observer, useLocalStore } from 'mobx-react-lite';
 import AuthStore from 'stores/AuthStore';
 import { validateEmail } from 'utils/validation';
+import { useNavigate } from 'react-router-dom';
 
-const AuthorizePage: React.FC = () => {
-  const localAuthStore = useLocalStore(() => new AuthStore());
+const AuthorizePage: React.FC = observer(() => {
+  const localAuthStore= AuthStore;
 
 
 
@@ -22,6 +23,17 @@ const AuthorizePage: React.FC = () => {
     password: '',
     confirmPassword: '',
   });
+
+  const navigate = useNavigate();
+
+
+
+  useEffect(()=>{
+    console.log(localAuthStore.user)
+    if(localAuthStore.isAuthenticated){
+        navigate('/profile')
+    }
+  }, [localAuthStore.isAuthenticated])
 
   const handleLoginSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -110,10 +122,7 @@ const AuthorizePage: React.FC = () => {
     [validateEmail, signUpData.password]
   );
 
-  useEffect(() => {
-    localAuthStore.checkAuth();
-    console.log('Главная', localAuthStore.checkAuth(), localAuthStore.token);
-  }, [localAuthStore]);
+
 
 
 
@@ -223,6 +232,6 @@ const AuthorizePage: React.FC = () => {
       </section>
     </main>
   );
-};
+});
 
 export default AuthorizePage;

@@ -1,6 +1,7 @@
-import { action, makeAutoObservable } from 'mobx';
+import { action, makeAutoObservable, observable, toJS } from 'mobx';
 import { ILocalStore } from 'stores/ILocalStore/ILocalStore';
 import rootStore from 'stores/RootStore';
+import { decodeJWT, generateJWT } from 'utils/token';
 import { validateEmail } from 'utils/validation';
 
 
@@ -12,10 +13,19 @@ interface CheckData {
 interface Data {
   email: string;
   password: string;
+  
+}
+interface Profile {
+  email: string;
+  password: string;
+  fio: string | null;
+   image: string | null;
+  
 }
 
-class AuthStore implements ILocalStore {
-  users: { email: string; password: string }[] = [];
+class AuthStore {
+  users: { email: string; password: string; fio: string | null; image: string | null; }[] = [];
+  user: Profile = { email: '', password: '', fio: '', image: '' };
   token: string | null = null;
   isAuthenticated: boolean = false;
   signUpErrors: CheckData = { email: '', password: '', confirmPassword: '' };
@@ -24,7 +34,8 @@ class AuthStore implements ILocalStore {
 
   constructor() {
     makeAutoObservable(this, {
-      checkAuth: action,
+      isAuthenticated: observable,
+      user: observable,
       login: action,
       logout: action,
       validateSignUp: action,
@@ -32,8 +43,52 @@ class AuthStore implements ILocalStore {
       setSignUpErrors: action,
     });
 
+    this.getUsers();
 
-    this.loadUsersFromLocalStorage();
+  }
+
+  getUsers() {
+    const storedUsers = localStorage.getItem('users');
+    if (storedUsers) {
+      this.users = JSON.parse(storedUsers); 
+    } else {
+      this.users = []; 
+    }
+  }
+
+  getUser(email: string): Profile | null {
+    const user = this.users.find(user => user.email === email);
+    return user || null;  
+  }
+
+
+  updateUserProfile(email: string, fio: string, image: string) {
+   
+      if (this.user.fio !== fio) {
+        this.user.fio = fio;
+      }
+      if (this.user.image !== image) {
+        this.user.image = image; 
+      }
+
+      const userIndex = this.users.findIndex((user) => user.email === email);
+      if (userIndex !== -1) {
+        this.users[userIndex] = this.user;
+      } else {
+        // Если пользователя нет в массиве, добавляем его
+        this.users.push(this.user);
+      }
+
+      
+      this.saveUsersToLocalStorage();
+}
+  
+  
+
+   // Сохраняем пользователей в localStorage
+   saveUsersToLocalStorage() {
+    localStorage.setItem('users', JSON.stringify(this.users));
+      
   }
 
 
@@ -43,16 +98,7 @@ class AuthStore implements ILocalStore {
     rootStore.QueryStore.deleteQueryParam('auth');
   }
 
-  checkAuth() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.token = token;
-      this.isAuthenticated = true;
-    } else {
-      this.isAuthenticated = false; 
-    }
-    return this.isAuthenticated;
-  }
+
 
 
    // Загружаем пользователей из localStorage
@@ -61,14 +107,10 @@ class AuthStore implements ILocalStore {
     if (savedUsers) {
       this.users = JSON.parse(savedUsers);
     }
-    console.log(savedUsers);
     
   }
 
-  // Сохраняем пользователей в localStorage
-  saveUsersToLocalStorage() {
-    localStorage.setItem('users', JSON.stringify(this.users));
-  }
+ 
 
   signUp(signUpData: { email: string; password: string; confirmPassword: string }) {
     // Проверяем, существует ли пользователь с таким email
@@ -80,19 +122,15 @@ class AuthStore implements ILocalStore {
     }
 
     if (this.validateSignUp(signUpData)) {
-      // Добавляем нового пользователя в массив
-      this.users.push({ email: signUpData.email, password: signUpData.password });
-
-      // Сохраняем обновленный список пользователей в localStorage
+     
+      this.users.push({ email: signUpData.email, password: signUpData.password, fio:"", image: null });
       this.saveUsersToLocalStorage();
 
-      // Генерация токена
-      const token = this.generateJWT(signUpData.email, signUpData.password);
+
+      const token = generateJWT(signUpData.email, signUpData.password);
       this.token = token;
       this.isAuthenticated = true;
       localStorage.setItem('token', token);
-
-      console.log('User registered successfully:', token);
     }
   }
 
@@ -146,22 +184,27 @@ class AuthStore implements ILocalStore {
     this.loginErrors = errors;
   
     if (!errors.email && !errors.password) {
-      const LoginToken = this.generateJWT(loginData.email, loginData.password);
+      const LoginToken = generateJWT(loginData.email, loginData.password);
       const LocalToken = localStorage.getItem('token');
-      
-      console.log(` Логин токен ${LoginToken}`);
+
   
       // Декодируем и сравниваем
-      const decodedLocalToken = this.decodeJWT(LocalToken? LocalToken : "");
-      const decodedLoginToken = this.decodeJWT(LoginToken);
+      const decodedLocalToken = decodeJWT(LocalToken? LocalToken : "");
+      const decodedLoginToken = decodeJWT(LoginToken);
   
       if (decodedLocalToken.payload.email === decodedLoginToken.payload.email &&
           decodedLocalToken.payload.password === decodedLoginToken.payload.password) {
           this.token = LoginToken;
           this.isAuthenticated = true;
-          localStorage.setItem('token', LoginToken);
-          rootStore.QueryStore.setQueryParam('auth', 'true');
-        console.log('Зашли');
+
+          const foundUser = this.getUser(loginData.email);
+
+          if (foundUser) {
+            this.user = foundUser;  
+            this.isAuthenticated = true;
+            localStorage.setItem('token', LoginToken);
+            rootStore.QueryStore.setQueryParam('auth', 'true');
+          }
       } else {
         console.log('Не залогинились');
       }
@@ -171,61 +214,6 @@ class AuthStore implements ILocalStore {
 
 
 
-
-  // Генерация JWT
-  generateJWT(email: string, password: string) {
-    const header = { alg: "HS256", typ: "JWT" };
-    const payload = {
-      email: email,
-      password: password,
-      iat: Math.floor(Date.now() / 1000), // Время создания токена
-    };
-    const secretKey = "my_secret_key"; // В реальном приложении этот ключ должен быть на сервере
-
-    const encodedHeader = this.base64UrlEncode(header);
-    const encodedPayload = this.base64UrlEncode(payload);
-    const signature = this.generateSignature(encodedHeader, encodedPayload, secretKey);
-
-    return `${encodedHeader}.${encodedPayload}.${signature}`;
-  }
-
-  // Кодирование в base64url
-  base64UrlEncode(obj: object) {
-    return btoa(JSON.stringify(obj))
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, ''); // base64url
-  }
-
-  // Генерация подписи
-  generateSignature(header: string, payload: string, secretKey: string) {
-    const data = `${header}.${payload}`;
-    // Для упрощения используем простую HMAC подпись на клиенте
-    const signature = btoa(data + secretKey).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-    return signature;
-  }
-
-
-  // Декодирование base64url в строку
-base64UrlDecode(base64Url: string): string {
-  return atob(base64Url.replace(/-/g, '+').replace(/_/g, '/'));
-}
-
-// Функция для декодирования JWT
-decodeJWT(token: string): { header: any, payload: any } {
-  // Разделяем JWT на 3 части
-  const [encodedHeader, encodedPayload] = token.split('.');
-
-  // Декодируем Base64Url части
-  const decodedHeader = this.base64UrlDecode(encodedHeader);
-  const decodedPayload = this.base64UrlDecode(encodedPayload);
-
-  // Преобразуем JSON строки в объекты
-  const header = JSON.parse(decodedHeader);
-  const payload = JSON.parse(decodedPayload);
-
-  return { header, payload };
-}
 
 
 setSignUpErrors(errors: Partial<CheckData>) {
@@ -239,4 +227,4 @@ setSignUpErrors(errors: Partial<CheckData>) {
   }
 }
 
-export default AuthStore;
+export default new AuthStore();
