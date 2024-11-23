@@ -1,0 +1,137 @@
+@use 'styles/variables' as *;
+@use 'styles/mixin' as *;
+
+
+.profile__content {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 100px;
+  }
+  
+  .profile__details {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .profile__image {
+    margin-right: 30px;
+  }
+  
+  .uploadInput {
+    display: none;
+  }
+  
+  .uploadLabel {
+    cursor: pointer;
+    display: block;
+    width: 360px;
+    height: 360px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .profileImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profileImageWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .profileImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  // Чтобы картинка заполнила круглый контейнер
+  }
+  
+  .defaultImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    height: 100%;
+    color: #888;
+    font-size: 14px;
+  }
+  
+  .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    background: rgba(0, 0, 0, 0.5);  // Полупрозрачное затемнение
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    visibility: hidden;  // Скрыто по умолчанию
+    transition: visibility 0.3s ease;
+  }
+  
+  .profileImageWrapper:hover .overlay {
+    visibility: visible;  // Показывается при наведении
+  }
+  
+  .updateText {
+    text-align: center;
+  }
+  
+  .defaultImage {
+    color: #888;
+    text-align: center;
+  }
+  
+  .profile__info {
+    display: flex;
+    flex-direction: column;
+    gap:30px;
+    width: 100%;
+  }
+  
+  .profile__infoItem {
+    
+  }
+  
+  .profileLabel {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  .profileInput {
+    padding: 8px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+//   .profile__button{
+//     padding-top: 30px;
+//   }
+  
+  .saveButton {
+    width: 100px;
+  }
+  
+ 
+  
+  .errorText {
+    color: red;
+    margin-left: 10px;
+ 
+   
+  }
+  
+  

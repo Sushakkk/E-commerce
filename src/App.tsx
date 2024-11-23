@@ -12,6 +12,7 @@ import CategoryPage from './pages/CategoryPage/CategoryPage';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import AboutPage from './pages/AboutPage/AboutPage';
 import AuthorizePage from './pages/AuthorizePage/AuthorizePage';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/categories" element={<CategoriesPage/>} />
           <Route path="/category/:id" element={<CategoryPage/>} />
           <Route path="/auth" element={<AuthorizePage/>} />
+          <Route path="/profile" element={<ProfilePage/>} />
           <Route path="/" element={<AboutPage/>} />
         </Routes>
 

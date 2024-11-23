@@ -8,6 +8,10 @@
 }
 
 
+.page__main-block{
+  @include container
+}
+
 
 .page {
   min-height: 100vh;
