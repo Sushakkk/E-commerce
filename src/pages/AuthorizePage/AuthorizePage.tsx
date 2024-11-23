@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './AuthorizePage.module.scss';
+import Button from 'components/Button/Button';
 
 const AuthorizePage: React.FC = () => {
   const [isLoginActive, setIsLoginActive] = useState(true);
@@ -134,7 +135,7 @@ const AuthorizePage: React.FC = () => {
     setIsSuccess(true);
     setTimeout(() => {
       setIsSuccess(false);
-    }, 1000); // Зелёный цвет на 1 секунду
+    }, 1000);
   };
 
   return (
@@ -183,12 +184,12 @@ const AuthorizePage: React.FC = () => {
                 />
                 {loginErrors.password && <span className={styles.error}>{loginErrors.password}</span>}
               </div>
-              <button
+              <Button
                 type="submit"
                 className={`${styles.submitButton} ${isSuccess ? styles.success : ''}`}
               >
                 Login
-              </button>
+              </Button>
             </form>
           </div>
 
@@ -231,12 +232,12 @@ const AuthorizePage: React.FC = () => {
                   <span className={styles.error}>{signUpErrors.confirmPassword}</span>
                 )}
               </div>
-              <button
+              <Button
                 type="submit"
                 className={`${styles.submitButton} ${isSuccess ? styles.success : ''}`}
               >
                 Sign Up
-              </button>
+              </Button>
             </form>
           </div>
         </div>
