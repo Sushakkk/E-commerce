@@ -1,7 +1,10 @@
 import { action, makeAutoObservable } from 'mobx';
 import { ILocalStore } from 'stores/ILocalStore/ILocalStore';
+import rootStore from 'stores/RootStore';
+import { validateEmail } from 'utils/validation';
 
-interface SignUpErrors {
+
+interface CheckData {
   email: string;
   password: string;
   confirmPassword: string;
@@ -12,9 +15,10 @@ interface Data {
 }
 
 class AuthStore implements ILocalStore {
+  users: { email: string; password: string }[] = [];
   token: string | null = null;
   isAuthenticated: boolean = false;
-  signUpErrors: SignUpErrors = { email: '', password: '', confirmPassword: '' };
+  signUpErrors: CheckData = { email: '', password: '', confirmPassword: '' };
   loginErrors: Data = { email: '', password: ''};
   Data: Data = { email: '', password: ''};
 
@@ -25,40 +29,81 @@ class AuthStore implements ILocalStore {
       logout: action,
       validateSignUp: action,
       signUp: action,
+      setSignUpErrors: action,
     });
+
+
+    this.loadUsersFromLocalStorage();
   }
 
-  // Метод для логина, сохраняет токен в состоянии и в localStorage
-  login(token: string) {
-    this.token = token;
-    this.isAuthenticated = true;
-    localStorage.setItem('token', token);
-  }
 
   logout() {
     this.token = null;
     this.isAuthenticated = false;
+    rootStore.QueryStore.deleteQueryParam('auth');
   }
 
-  // Метод для инициализации состояния на основе localStorage
   checkAuth() {
     const token = localStorage.getItem('token');
     if (token) {
       this.token = token;
-      this.isAuthenticated = true; // Пользователь авторизован
+      this.isAuthenticated = true;
     } else {
-      this.isAuthenticated = false; // Нет токена, пользователь не авторизован
+      this.isAuthenticated = false; 
     }
     return this.isAuthenticated;
   }
 
-  // Логика для регистрации с валидацией
-  validateSignUp(signUpData: { email: string; password: string; confirmPassword: string }) {
-    const errors: SignUpErrors = { email: '', password: '', confirmPassword: '' };
+
+   // Загружаем пользователей из localStorage
+   loadUsersFromLocalStorage() {
+    const savedUsers = localStorage.getItem('users');
+    if (savedUsers) {
+      this.users = JSON.parse(savedUsers);
+    }
+    console.log(savedUsers);
+    
+  }
+
+  // Сохраняем пользователей в localStorage
+  saveUsersToLocalStorage() {
+    localStorage.setItem('users', JSON.stringify(this.users));
+  }
+
+  signUp(signUpData: { email: string; password: string; confirmPassword: string }) {
+    // Проверяем, существует ли пользователь с таким email
+    const existingUser = this.users.find(user => user.email === signUpData.email);
+
+    if (existingUser) {
+      console.error('User with this email already exists');
+      return;
+    }
+
+    if (this.validateSignUp(signUpData)) {
+      // Добавляем нового пользователя в массив
+      this.users.push({ email: signUpData.email, password: signUpData.password });
+
+      // Сохраняем обновленный список пользователей в localStorage
+      this.saveUsersToLocalStorage();
+
+      // Генерация токена
+      const token = this.generateJWT(signUpData.email, signUpData.password);
+      this.token = token;
+      this.isAuthenticated = true;
+      localStorage.setItem('token', token);
+
+      console.log('User registered successfully:', token);
+    }
+  }
+
+
+
+  validateSignUp(signUpData: CheckData) {
+    const errors: CheckData = { email: '', password: '', confirmPassword: '' };
 
     if (!signUpData.email) {
       errors.email = 'E-mail is required';
-    } else if (!this.validateEmail(signUpData.email)) {
+    } else if (!validateEmail(signUpData.email)) {
       errors.email = 'Invalid e-mail format';
     }
 
@@ -71,8 +116,6 @@ class AuthStore implements ILocalStore {
     if (signUpData.password !== signUpData.confirmPassword) {
       errors.confirmPassword = 'Passwords do not match';
     }
-
-    // Если ошибок нет, то регистрируем пользователя и генерируем токен
     this.signUpErrors = errors;
     if (!errors.email && !errors.password && !errors.confirmPassword) {
       console.log('TRUE Sign Up Data:', signUpData);
@@ -83,19 +126,16 @@ class AuthStore implements ILocalStore {
     return false;
   }
 
-  // Валидация email
-  validateEmail(email: string) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
+
+  
 
 
-  validateLogin(loginData: { email: string; password: string}){
+  login(loginData: { email: string; password: string }) {
     const errors = { email: '', password: '' };
   
     if (!loginData.email) {
       errors.email = 'E-mail is required';
-    } else if (!this.validateEmail(loginData.email)) {
+    } else if (!validateEmail(loginData.email)) {
       errors.email = 'Invalid e-mail format';
     }
   
@@ -107,19 +147,27 @@ class AuthStore implements ILocalStore {
   
     if (!errors.email && !errors.password) {
       const LoginToken = this.generateJWT(loginData.email, loginData.password);
-    
       const LocalToken = localStorage.getItem('token');
-      console.log(` Логин токен ${LoginToken}`);
       
-      if (LocalToken === LoginToken) {
-        this.login(LoginToken)
-        console.log('зашли');
-        
+      console.log(` Логин токен ${LoginToken}`);
+  
+      // Декодируем и сравниваем
+      const decodedLocalToken = this.decodeJWT(LocalToken? LocalToken : "");
+      const decodedLoginToken = this.decodeJWT(LoginToken);
+  
+      if (decodedLocalToken.payload.email === decodedLoginToken.payload.email &&
+          decodedLocalToken.payload.password === decodedLoginToken.payload.password) {
+          this.token = LoginToken;
+          this.isAuthenticated = true;
+          localStorage.setItem('token', LoginToken);
+          rootStore.QueryStore.setQueryParam('auth', 'true');
+        console.log('Зашли');
       } else {
-        console.log('не залогинились');
+        console.log('Не залогинились');
       }
     }
   }
+  
 
 
 
@@ -158,14 +206,32 @@ class AuthStore implements ILocalStore {
   }
 
 
-  signUp() {
-    const token = this.generateJWT(this.Data.email, this.Data.password);
-    this.token = token;
-    this.isAuthenticated = true;
-    localStorage.setItem('token', token); 
-    console.log(token);
-    
-  }
+  // Декодирование base64url в строку
+base64UrlDecode(base64Url: string): string {
+  return atob(base64Url.replace(/-/g, '+').replace(/_/g, '/'));
+}
+
+// Функция для декодирования JWT
+decodeJWT(token: string): { header: any, payload: any } {
+  // Разделяем JWT на 3 части
+  const [encodedHeader, encodedPayload] = token.split('.');
+
+  // Декодируем Base64Url части
+  const decodedHeader = this.base64UrlDecode(encodedHeader);
+  const decodedPayload = this.base64UrlDecode(encodedPayload);
+
+  // Преобразуем JSON строки в объекты
+  const header = JSON.parse(decodedHeader);
+  const payload = JSON.parse(decodedPayload);
+
+  return { header, payload };
+}
+
+
+setSignUpErrors(errors: Partial<CheckData>) {
+  this.signUpErrors = { ...this.signUpErrors, ...errors };
+}
+  
 
   // Метод для уничтожения экземпляра
   destroy(): void {

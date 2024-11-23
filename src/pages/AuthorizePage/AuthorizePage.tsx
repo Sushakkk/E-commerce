@@ -1,24 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from './AuthorizePage.module.scss';
 import Button from 'components/Button/Button';
 import { useLocalStore } from 'mobx-react-lite';
 import AuthStore from 'stores/AuthStore';
+import { validateEmail } from 'utils/validation';
 
 const AuthorizePage: React.FC = () => {
-
   const localAuthStore = useLocalStore(() => new AuthStore());
-
-
-  useEffect(() => {
-    localAuthStore.checkAuth();
-    console.log('Главная',localAuthStore.checkAuth(), localAuthStore.token);
-  }, [localAuthStore.isAuthenticated]);
-
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
 
 
 
@@ -29,89 +17,105 @@ const AuthorizePage: React.FC = () => {
   const [loginErrors, setLoginErrors] = useState({ email: '', password: '' });
 
   const [signUpData, setSignUpData] = useState({ email: '', password: '', confirmPassword: '' });
-  const [signUpErrors, setSignUpErrors] = useState({ email: '', password: '', confirmPassword: '' });
+  const [signUpErrors, setSignUpErrors] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
 
+  const handleLoginSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      localAuthStore.login(loginData);
+    },
+    [loginData, localAuthStore]
+  );
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    localAuthStore.validateLogin(loginData)
-  };
+  const handleSignUpSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      localAuthStore.signUp(signUpData);
+    },
+    [signUpData, localAuthStore]
+  );
 
-  
+  const handleLoginChange = useCallback(
+    (field: 'email' | 'password', value: string) => {
+      setLoginData((prevData) => ({ ...prevData, [field]: value }));
 
-  const handleSignUpSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (localAuthStore.validateSignUp(signUpData)) {
-      localAuthStore.signUp();
-    }
-  };
-
-  const handleLoginChange = (field: 'email' | 'password', value: string) => {
-    setLoginData({ ...loginData, [field]: value });
-
-    setLoginErrors((prevErrors) => {
-      const newErrors = { ...prevErrors };
-      if (field === 'email') {
-        if (!value) {
-          newErrors.email = 'E-mail is required';
-        } else if (!validateEmail(value)) {
-          newErrors.email = 'Invalid e-mail format';
-        } else {
-          newErrors.email = '';
+      setLoginErrors((prevErrors) => {
+        const newErrors = { ...prevErrors };
+        if (field === 'email') {
+          if (!value) {
+            newErrors.email = 'E-mail is required';
+          } else if (!validateEmail(value)) {
+            newErrors.email = 'Invalid e-mail format';
+          } else {
+            newErrors.email = '';
+          }
         }
-      }
-      if (field === 'password') {
-        newErrors.password = value ? '' : 'Password is required';
-      }
-      return newErrors;
-    });
-  };
+        if (field === 'password') {
+          newErrors.password = value ? '' : 'Password is required';
+        }
+        return newErrors;
+      });
+    },
+    [validateEmail]
+  );
 
-  const handleSignUpChange = (field: 'email' | 'password' | 'confirmPassword', value: string) => {
-    setSignUpData({ ...signUpData, [field]: value });
+  const handleSignUpChange = useCallback(
+    (field: 'email' | 'password' | 'confirmPassword', value: string) => {
+      setSignUpData((prevData) => ({ ...prevData, [field]: value }));
 
-    setSignUpErrors((prevErrors) => {
-      const newErrors = { ...prevErrors };
-      if (field === 'email') {
-        if (!value) {
-          newErrors.email = 'E-mail is required';
-        } else if (!validateEmail(value)) {
-          newErrors.email = 'Invalid e-mail format';
-        } else {
-          newErrors.email = '';
-        }
-      }
-      if (field === 'password') {
-        if (!value) {
-          newErrors.password = 'Password is required';
-        } else if (value.length < 6) {
-          newErrors.password = 'Password must be at least 6 characters';
-        } else {
-          newErrors.password = '';
-        }
-        if (value !== signUpData.confirmPassword) {
-          newErrors.confirmPassword = 'Passwords do not match';
-        } else {
-          newErrors.confirmPassword = '';
-        }
-      }
-      if (field === 'confirmPassword') {
-        if (value !== signUpData.password) {
-          newErrors.confirmPassword = 'Passwords do not match';
-        } else {
-          newErrors.confirmPassword = '';
-        }
-      }
-      return newErrors;
-    });
-  };
+      setSignUpErrors((prevErrors) => {
+        const newErrors = { ...prevErrors };
 
-  const handleSuccess = () => {
-    setIsSuccess(true);
-    setTimeout(() => {
-      setIsSuccess(false);
-    }, 1000);
-  };
+        if (field === 'email') {
+          if (!value) {
+            newErrors.email = 'E-mail is required';
+          } else if (!validateEmail(value)) {
+            newErrors.email = 'Invalid e-mail format';
+          } else {
+            newErrors.email = '';
+          }
+        }
+
+        if (field === 'password') {
+          if (!value) {
+            newErrors.password = 'Password is required';
+          } else if (value.length < 6) {
+            newErrors.password = 'Password must be at least 6 characters';
+          } else {
+            newErrors.password = '';
+          }
+
+          if (value !== signUpData.confirmPassword) {
+            newErrors.confirmPassword = 'Passwords do not match';
+          } else {
+            newErrors.confirmPassword = '';
+          }
+        }
+
+        if (field === 'confirmPassword') {
+          if (value !== signUpData.password) {
+            newErrors.confirmPassword = 'Passwords do not match';
+          } else {
+            newErrors.confirmPassword = '';
+          }
+        }
+
+        return newErrors;
+      });
+    },
+    [validateEmail, signUpData.password]
+  );
+
+  useEffect(() => {
+    localAuthStore.checkAuth();
+    console.log('Главная', localAuthStore.checkAuth(), localAuthStore.token);
+  }, [localAuthStore]);
+
+
 
   return (
     <main className={styles.page}>

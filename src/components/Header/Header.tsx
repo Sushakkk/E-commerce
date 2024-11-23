@@ -8,9 +8,9 @@ import User from '../User/User';
 import rootStore from 'stores/RootStore';
 import AuthStore from 'stores/AuthStore';
 import Button from 'components/Button';
-import { useLocalStore } from 'mobx-react-lite';
+import { observer, useLocalStore } from 'mobx-react-lite';
 
-const Header: React.FC = () => {
+const Header: React.FC = observer(() => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const location = useLocation();
@@ -40,7 +40,9 @@ const Header: React.FC = () => {
   const closeMenu = () => setIsMenuOpen(false);
 
   const handleLogoClick = useCallback(() => {
-    rootStore.QueryStore.resetQueryParams();
+    rootStore.QueryStore. deleteQueryParam('page')
+    rootStore.QueryStore. deleteQueryParam('search')
+    rootStore.QueryStore. deleteQueryParam('category')
   }, []);
 
   const handleItemClick = (item: string) => {
@@ -57,6 +59,9 @@ const Header: React.FC = () => {
     console.log(`вышли ${localAuthStore.isAuthenticated}`)
     closeMenu();
   };
+
+
+  
 
   return (
     <header className={`${styles.header} ${isMenuOpen ? styles.lock : ''}`}>
@@ -96,10 +101,12 @@ const Header: React.FC = () => {
             <Link to="/auth">
               <User />
             </Link>
-             {/* Добавляем кнопку выхода */}
-             <Button onClick={handleLogout} className={styles.logoutButton}>
-              Log out
-            </Button>
+             {/* Показываем кнопку выхода только если пользователь авторизован */}
+            {rootStore.QueryStore.getQueryParam('auth') && (
+              <Button onClick={handleLogout} className={styles.logoutButton}>
+                Log out
+              </Button>
+            )}
           </div>
 
           <div
@@ -112,6 +119,6 @@ const Header: React.FC = () => {
       </div>
     </header>
   );
-};
+});
 
 export default Header;

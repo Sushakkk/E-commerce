@@ -59,12 +59,9 @@ class QueryStore {
     delete this._queryParams[key];
     this.updateQueryParams();
   }
-  public resetQueryParams() {
-    console.log('Before reset:', toJS(this._queryParams));
-
-    this._queryParams= {}
   
-    console.log('After reset:', toJS(this._queryParams));
+  public resetQueryParams() {
+    this._queryParams= {}
   }
   
 
