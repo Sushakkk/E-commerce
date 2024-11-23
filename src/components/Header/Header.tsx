@@ -17,10 +17,10 @@ const Header: React.FC = () => {
   
     if (path.startsWith('/category') || path === '/categories') {
       return 'Categories'; 
-    } else if (path === '/about') {
-      return 'About us';
+    } else if (path === '/products') {
+      return 'Products';
     } else {
-      return 'Products'; 
+      return 'About us'; 
     }
   }, [location.pathname]);
   
@@ -57,9 +57,10 @@ const Header: React.FC = () => {
         <nav className={`${styles.header__menu} ${isMenuOpen ? styles.active : ''}`}>
           <ul className={styles.menu__list}>
             {[
-              { name: 'Products', path: '/' },
+               { name: 'About us', path: '/' },
+              { name: 'Products', path: '/products' },
               { name: 'Categories', path: '/categories' },
-              { name: 'About us', path: '/about' },
+             
             ].map(({ name, path }) => (
               <li
                 key={name}
@@ -79,7 +80,9 @@ const Header: React.FC = () => {
         <div className={styles['header__burger-container']}>
           <div className={styles.header__icons}>
             <Basket />
-            <User />
+            <Link to="/auth">
+              <User />
+            </Link>
           </div>
 
           <div

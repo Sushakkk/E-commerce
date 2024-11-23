@@ -6,12 +6,12 @@ import './styles/null.scss'
 import './styles/styles.scss'
 import { useEffect } from 'react';
 import HomePage from './pages/HomePage';
-
 import ProductPage from './pages/ProductPage';
 import CategoriesPage from './pages/CategoriesPage/CategoriesPage';
 import CategoryPage from './pages/CategoryPage/CategoryPage';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import AboutPage from './pages/AboutPage/AboutPage';
+import AuthorizePage from './pages/AuthorizePage/AuthorizePage';
 
 function App() {
 
@@ -29,11 +29,12 @@ function App() {
       <Header />
   
         <Routes>
-          <Route path="/" element={<HomePage/>} />
+          <Route path="/products" element={<HomePage/>} />
           <Route path="/product/:id" element={<ProductPage/>} />
           <Route path="/categories" element={<CategoriesPage/>} />
           <Route path="/category/:id" element={<CategoryPage/>} />
-          <Route path="/about" element={<AboutPage/>} />
+          <Route path="/auth" element={<AuthorizePage/>} />
+          <Route path="/" element={<AboutPage/>} />
         </Routes>
 
     </div>
