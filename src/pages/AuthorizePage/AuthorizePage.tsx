@@ -12,7 +12,7 @@ const AuthorizePage: React.FC = observer(() => {
   const localAuthStore= AuthStore;
 
   const [isLoginActive, setIsLoginActive] = useState(true);
-  const [isSuccess, setIsSuccess] = useState(false);
+
 
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [loginErrors, setLoginErrors] = useState({ email: '', password: '' });
@@ -23,6 +23,13 @@ const AuthorizePage: React.FC = observer(() => {
     password: '',
     confirmPassword: '',
   });
+  
+
+
+
+
+  console.log(localStorage.getItem('users'))
+
 
   const navigate = useNavigate();
   
@@ -260,7 +267,7 @@ const handleSignUpSubmit = useCallback(
               </div>
               <Button
                 type="submit"
-                className={`${styles.submitButton} ${isSuccess ? styles.success : ''}`}
+                className={`${styles.submitButton}`}
               >
                 Sign Up
               </Button>

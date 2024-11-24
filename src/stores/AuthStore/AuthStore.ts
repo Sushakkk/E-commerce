@@ -1,12 +1,15 @@
 import { action, makeAutoObservable, observable, toJS } from 'mobx';
+import { IBasketProduct } from 'modules/types';
+import BasketStore from 'stores/BasketStore';
 import rootStore from 'stores/RootStore';
 import { decodeJWT, generateJWT } from 'utils/token';
 import { validateSignUpData, validateLoginData } from 'utils/validationUtils';  // Новый импорт функций валидации
 
+
 interface CheckData {
   email: string;
   password: string;
-  confirmPassword: string;  // Убедитесь, что здесь тип строго 'string'
+  confirmPassword: string;  
 }
 
 interface Data {
@@ -18,6 +21,7 @@ interface Profile {
   password: string;
   fio: string | null;
   image: string | null;
+  basketItems: IBasketProduct[];  
 }
 
 class AuthStore {
@@ -49,6 +53,21 @@ class AuthStore {
     this.getUsers(); 
     this.setUser(); 
   }
+
+  saveBasketToUser() {
+   
+    if (this.user && this.isAuthenticated) {
+      const newBasket = BasketStore.basketItems;
+      if (this.user.basketItems) {
+        this.user.basketItems = newBasket;
+      } else {
+        this.user.basketItems = [...newBasket];
+      }
+
+      this.saveUsersToLocalStorage(this.user.email ? this.user.email : '');
+  
+    } 
+  }
   
 
   setUser() {
@@ -64,6 +83,7 @@ class AuthStore {
       const decoded = decodeJWT(this.token);
       const email = decoded.payload.email;
       this.user = this.getUser(email);
+      return this.user
     } catch (error) {
       console.error("Error decoding JWT:", error);
     }
@@ -97,13 +117,13 @@ class AuthStore {
     this.signUpErrors = errors;
 
     if (isValid) {
-      this.user = { email: signUpData.email, password: signUpData.password, fio: '', image: null };
+      this.user = { email: signUpData.email, password: signUpData.password, fio: '', image: null, basketItems: BasketStore.basketItems};
       this.users.push(this.user);
-      this.saveUsersToLocalStorage();
-
+      localStorage.setItem('users', JSON.stringify(this.users));
       const token = generateJWT(signUpData.email, signUpData.password);
       this.token = token;
       this.isAuthenticated = true;
+
       localStorage.setItem('token', token);
 
       return true;
@@ -112,28 +132,35 @@ class AuthStore {
   }
 
   login(loginData: Data) {
+    this.getUsers();
     const { errors, isValid } = validateLoginData(loginData);
     this.loginErrors = errors;
-    console.log(isValid);
-    
-
+  
     if (isValid) {
+      const userFromStore = this.getUser(loginData.email);
+      if (userFromStore) {
+        if (userFromStore.password === loginData.password) {
+          const userBasketItems = Array.isArray(userFromStore.basketItems) ? userFromStore.basketItems : [];
+          const basketItems = BasketStore.basketItems;
+          const updatedUser = {
+            ...userFromStore,
+            basketItems: [...userBasketItems, ...basketItems] 
+          };
 
-      const userFromStore= this.getUser(loginData.email)
-      if(userFromStore){
-        if(userFromStore.password===loginData.password){
-          this.token= generateJWT(loginData.email, loginData.password);
+          this.token = generateJWT(loginData.email, loginData.password);
           this.isAuthenticated = true;
-          this.user = userFromStore;
+          this.user = updatedUser;  
+          BasketStore.basketItems=[...userBasketItems, ...basketItems];
           localStorage.setItem('token', this.token);
           rootStore.QueryStore.setQueryParam('auth', this.token);
-        return true;
-      }
-
+          return true;
         }
       }
+    }
+  
     return false;
   }
+  
 
   updateUserProfile(email: string, fio: string, image: string) {
     if (this.user) {
@@ -143,23 +170,33 @@ class AuthStore {
       if (this.user.image !== image) {
         this.user.image = image;
       }
-
-      const userIndex = this.users.findIndex(user => user.email === email);
-      if (userIndex !== -1) {
-        this.users[userIndex] = this.user;
-      } else {
-        this.users.push(this.user);
-      }
-      this.saveUsersToLocalStorage();
+      this.saveUsersToLocalStorage(email);
     }
   }
 
-  saveUsersToLocalStorage() {
-    localStorage.setItem('users', JSON.stringify(this.users));
+  saveUsersToLocalStorage(email: string) {
+    // Проверяем, что this.user не равен null
+    if (this.user) {
+      const userIndex = this.users.findIndex(user => user.email === email);
+  
+      if (userIndex !== -1) {
+        this.users[userIndex] = this.user; // Присваиваем только если this.user не null
+      } else {
+        this.users.push(this.user); // Добавляем пользователя, если его нет в списке
+      }
+  
+
+      localStorage.setItem('users', JSON.stringify(this.users));
+      console.log(toJS(localStorage.getItem('users'))); 
+    } else {
+      console.error("User is null, cannot save to localStorage");
+    }
   }
+  
 
   logout() {
     this.token = null;
+    BasketStore.clearBasket();
     this.isAuthenticated = false;
     rootStore.QueryStore.deleteQueryParam('auth');
   }

@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import basketStore from 'stores/BasketStore/BasketStore';
 import styles from './BasketPage.module.scss';
+import rootStore from 'stores/RootStore';
 
 const BasketPage: React.FC = observer(() => {
   const { basketItems, totalPrice, totalItems } = basketStore;
+
+ 
 
   return (
     <main id="main" className="page">

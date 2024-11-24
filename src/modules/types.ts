@@ -7,3 +7,12 @@ export interface IProduct {
     category: { id: number, name: string };
   }
   
+
+export interface IBasketProduct {
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+    quantity?: number;
+  }
+  
