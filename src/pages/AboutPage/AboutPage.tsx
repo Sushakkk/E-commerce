@@ -2,10 +2,21 @@ import Button from 'components/Button/Button';
 import styles from './AboutPage.module.scss';
 import ImageCarousel from './components/ImageCarousel/ImageCarousel';
 import { Link } from 'react-router-dom';
-import { useCallback,  useRef } from 'react';
+import { useCallback,  useEffect,  useRef, useState } from 'react';
+import Loader from 'components/Loader';
 
 
 const AboutPage = () => {
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const simulateLoading = setTimeout(() => {
+      setIsLoading(false); 
+    }, 2000);
+
+    return () => clearTimeout(simulateLoading);
+  }, []);
 
   const familyImages = [
     { src: 'https://avatars.mds.yandex.net/i?id=22968304af6a0670ae5ee025c1e32855_l-5575009-images-thumbs&n=13', alt: 'Training people 1' },
@@ -28,6 +39,16 @@ const AboutPage = () => {
     },
     [] 
   );
+
+  if (isLoading) {
+    return (
+      <main className="page">
+        <div className="page__loader">
+          <Loader />
+        </div>
+      </main>
+    );
+  }
  
 
   return (

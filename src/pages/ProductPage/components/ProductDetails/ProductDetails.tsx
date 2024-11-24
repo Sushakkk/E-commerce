@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Text from 'components/Text/Text';
 import Button from 'components/Button';
 import styles from './ProductDetails.module.scss';
 import { observer } from 'mobx-react-lite';
 import ProductDetailStore from 'stores/ProductDetailsStore';
+import basketStore from 'stores/BasketStore';
 
 
 interface ProductDetailsProps {
@@ -12,6 +13,18 @@ interface ProductDetailsProps {
 
 const ProductDetails: React.FC<ProductDetailsProps> = observer(({ ProductDetailsStore }) => {
   const { product } = ProductDetailsStore;
+
+
+const handleAddToCart = useCallback(() => {
+  if (product) {
+    basketStore.addToBasket({
+      id: product.id.toString(),
+      name: product.title,
+      price: product.price,
+      image: product.images[0], 
+    });
+  }
+}, [product, basketStore]);
 
   if (!product) {
     return <div>Товар не найден</div>;
@@ -33,7 +46,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(({ ProductDetails
         </Text>
         <div className={styles.product__buttons}>
           <Button className={styles["buy-now-button"]}>Buy Now</Button>
-          <Button className={styles["add-to-cart-button"]}>Add to Cart</Button>
+          <Button className={styles["add-to-cart-button"]} onClick={handleAddToCart}>Add to Cart</Button>
         </div>
       </div>
     </div>

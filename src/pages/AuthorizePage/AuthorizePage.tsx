@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styles from './AuthorizePage.module.scss';
 import Button from 'components/Button/Button';
-import { observer, useLocalStore } from 'mobx-react-lite';
+import { observer} from 'mobx-react-lite';
 import AuthStore from 'stores/AuthStore';
 import { validateEmail } from 'utils/validation';
 import { toast, ToastContainer } from 'react-toastify'; // Import Toastify

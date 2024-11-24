@@ -7,7 +7,6 @@ import styles from './CategoriesPage.module.scss';
 import Card from 'components/Card';
 import Loader from 'components/Loader';
 import { useNavigate } from 'react-router-dom'; 
-import BackButton from 'components/BackButton/BackButton';
 import useImageHandler from 'hooks/useImageHandler';
 
 

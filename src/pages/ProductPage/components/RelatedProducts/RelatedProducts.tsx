@@ -19,6 +19,9 @@ const RelatedItems: React.FC<RelatedItemsProps> = observer(({ ProductDetailsStor
 
   const productClickHandler = useCallback(handleProductClick(navigate), [navigate]);
 
+
+
+
   return (
     <div className={styles['related__cards']}>
       <Text view="p-32" weight="bold">
@@ -36,6 +39,12 @@ const RelatedItems: React.FC<RelatedItemsProps> = observer(({ ProductDetailsStor
             actionSlot={<Button>Add to Cart</Button>}
             className={styles.related_product_card}
             onClick={() => productClickHandler(relatedProduct)}
+            product={{
+              id: relatedProduct.id.toString(),
+              name: relatedProduct.title,
+              price: relatedProduct.price,
+              image: relatedProduct.images[0],
+            }} 
           />
         ))}
       </div>
