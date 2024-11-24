@@ -175,7 +175,7 @@ const handleSignUpSubmit = useCallback(
 
   return (
     <main className={styles.page}>
-      <ToastContainer /> {/* Toast container for notifications */}
+      <ToastContainer /> 
       <section className={styles.formsSection}>
         <div className={styles.tabs}>
           <button
