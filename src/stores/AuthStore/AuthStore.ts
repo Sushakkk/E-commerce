@@ -86,6 +86,7 @@ class AuthStore {
       return this.user
     } catch (error) {
       console.error("Error decoding JWT:", error);
+      return false
     }
   }
 
