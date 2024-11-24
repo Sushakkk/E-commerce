@@ -47,7 +47,6 @@ const CategoriesPage: React.FC = () => {
     <main id="main" className="page">
       <div className={styles['page__main-block']}>
         <div className={styles.categories__content}>
-        <BackButton/>
           <div className={styles.categories__title}>
           <Text view="title">
             Categories

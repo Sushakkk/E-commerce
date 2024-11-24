@@ -79,6 +79,7 @@ const ProfilePage: React.FC = observer(() => {
                   Email
                 </label>
                 <input
+                  readOnly
                   type="email"
                   id="email"
                   value={email}
@@ -92,18 +93,18 @@ const ProfilePage: React.FC = observer(() => {
               <div className={styles.profile__field}>
                 <div className={styles.profile__infoItem}>
                 <label htmlFor="fullName" className={styles.profileLabel}>
-                  Full Name
+                  Fio
                 </label>
                 <input
                   type="text"
                   id="fullName"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Enter your full name"
+                  placeholder="Enter your fio"
                   className={styles.profileInput}
                 />
                 </div>
-                {!fullName && <span className={styles.errorText}>Full Name is required</span>}
+                {!fullName && <span className={styles.errorText}>Fio is required</span>}
               </div>
               <div className={styles.profile__button}>
                 <Button

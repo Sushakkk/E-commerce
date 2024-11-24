@@ -28,7 +28,7 @@ const AuthorizePage: React.FC = observer(() => {
 
 
 
-  console.log(localStorage.getItem('users'))
+  console.log('main')
 
 
   const navigate = useNavigate();
@@ -97,6 +97,9 @@ const handleSignUpSubmit = useCallback(
 
   const handleLoginChange = useCallback(
     (field: 'email' | 'password', value: string) => {
+
+
+      console.log('я сработал')
       setLoginData((prevData) => ({ ...prevData, [field]: value }));
 
       setLoginErrors((prevErrors) => {
@@ -116,7 +119,7 @@ const handleSignUpSubmit = useCallback(
         return newErrors;
       });
     },
-    [validateEmail]
+    []
   );
 
   const handleSignUpChange = useCallback(

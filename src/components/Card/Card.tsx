@@ -14,7 +14,7 @@ export type CardProps = {
   contentSlot?: React.ReactNode;
   onClick?: React.MouseEventHandler;
   actionSlot?: React.ReactNode;
-  product: { id: string; name: string; price: number; image: string }; 
+  product?: { id: string; name: string; price: number; image: string }; 
 };
 
 const Card: React.FC<CardProps> = ({
@@ -30,7 +30,9 @@ const Card: React.FC<CardProps> = ({
 }) => {
   // Функция для добавления в корзину
   const handleAddToCart = () => {
-    basketStore.addToBasket(product);
+    if(product){
+      basketStore.addToBasket(product);
+    }
   };
 
   return (
