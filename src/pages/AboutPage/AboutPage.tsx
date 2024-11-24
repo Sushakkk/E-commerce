@@ -4,19 +4,22 @@ import ImageCarousel from './components/ImageCarousel/ImageCarousel';
 import { Link } from 'react-router-dom';
 import { useCallback,  useEffect,  useRef, useState } from 'react';
 import Loader from 'components/Loader';
+import PracticeSection from './components/PracticeSection/PracticeSection';
+import { observer, useLocalStore } from 'mobx-react-lite';
+import ProductsStore from 'stores/ProductsStore';
 
 
-const AboutPage = () => {
+const AboutPage = observer(() => {
 
-  const [isLoading, setIsLoading] = useState(true);
+
+    
+  const localProductsStore = useLocalStore(() => new ProductsStore());
 
   useEffect(() => {
-    const simulateLoading = setTimeout(() => {
-      setIsLoading(false); 
-    }, 2000);
-
-    return () => clearTimeout(simulateLoading);
+    localProductsStore.fetchProducts('', 2);
   }, []);
+
+
 
   const familyImages = [
     { src: 'https://avatars.mds.yandex.net/i?id=22968304af6a0670ae5ee025c1e32855_l-5575009-images-thumbs&n=13', alt: 'Training people 1' },
@@ -40,7 +43,7 @@ const AboutPage = () => {
     [] 
   );
 
-  if (isLoading) {
+  if (localProductsStore.meta === 'loading') {
     return (
       <main className="page">
         <div className="page__loader">
@@ -153,8 +156,9 @@ const AboutPage = () => {
           </header>
         <ImageCarousel images={familyImages} />
         </section>
+        <PracticeSection  localProductsStore={localProductsStore}/>
     </main>
   );
-};
+});
 
 export default AboutPage;
