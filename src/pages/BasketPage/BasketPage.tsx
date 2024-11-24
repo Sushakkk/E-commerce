@@ -54,7 +54,7 @@ const handleCompleteOrder = useCallback(async () => {
 
     let userEmail = '';
   
-    if (AuthStore.setUser()) {
+    if (AuthStore.isAuthenticated) {
       const token = rootStore.QueryStore.getQueryParam('auth');
       const decoded = decodeJWT(String(token));
       userEmail = decoded.payload.email;

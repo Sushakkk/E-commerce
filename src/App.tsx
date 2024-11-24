@@ -16,6 +16,7 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AuthStore from 'stores/AuthStore/AuthStore';
 import rootStore from 'stores/RootStore';
 import BasketPage from './pages/BasketPage/BasketPage';
+import Footer from 'components/Footer/Footer';
 
 
 
@@ -37,6 +38,7 @@ function App() {
 
   useEffect(() => {
     rootStore.QueryStore.setQueryParam('auth', token);
+    
   }, []);
 
   return (
@@ -54,6 +56,7 @@ function App() {
           <Route path="/" element={<AboutPage/>} />
           <Route path="/basket" element={<BasketPage />} />
         </Routes>
+        <Footer/>
 
     </div>
   );

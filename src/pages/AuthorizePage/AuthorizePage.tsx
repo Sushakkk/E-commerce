@@ -4,8 +4,8 @@ import Button from 'components/Button/Button';
 import { observer} from 'mobx-react-lite';
 import AuthStore from 'stores/AuthStore';
 import { validateEmail } from 'utils/validation';
-import { toast, ToastContainer } from 'react-toastify'; // Import Toastify
-import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
+import { toast, ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css'; 
 import { useNavigate } from 'react-router-dom';
 
 const AuthorizePage: React.FC = observer(() => {
@@ -28,7 +28,7 @@ const AuthorizePage: React.FC = observer(() => {
 
 
 
-  console.log('main')
+
 
 
   const navigate = useNavigate();
