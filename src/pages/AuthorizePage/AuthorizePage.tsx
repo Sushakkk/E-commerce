@@ -1,18 +1,18 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './AuthorizePage.module.scss';
 import Button from 'components/Button/Button';
-import { observer} from 'mobx-react-lite';
+import { observer, useLocalStore } from 'mobx-react-lite';
 import AuthStore from 'stores/AuthStore';
 import { validateEmail } from 'utils/validation';
+import { toast, ToastContainer } from 'react-toastify'; // Import Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
 import { useNavigate } from 'react-router-dom';
 
 const AuthorizePage: React.FC = observer(() => {
   const localAuthStore= AuthStore;
 
-
-
   const [isLoginActive, setIsLoginActive] = useState(true);
-  const isSuccess=false;
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [loginErrors, setLoginErrors] = useState({ email: '', password: '' });
@@ -25,31 +25,68 @@ const AuthorizePage: React.FC = observer(() => {
   });
 
   const navigate = useNavigate();
+  
 
-
-
-  useEffect(()=>{
-    console.log(localAuthStore.user)
-    if(localAuthStore.isAuthenticated){
-        navigate('/profile')
-    }
-  }, [localAuthStore.isAuthenticated])
+  const notifySuccess = (message: string) => 
+  toast.success(message, { 
+    position: 'top-right', 
+    className:  `${styles['custom-toast']}`, 
+  });
+  const notifyError = (message: string) => 
+  toast.error(message, { 
+    position: 'top-right', 
+    className: `${styles['custom-toast']}`, 
+  });
 
   const handleLoginSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
-      localAuthStore.login(loginData);
+      const isSuccess = localAuthStore.login(loginData);
+  
+      if (isSuccess) {
+        notifySuccess('Successful!');
+        setTimeout(() => {
+          navigate('/');
+        }, 3000);
+      } else {
+        notifyError('Invalid email or password');
+      }
     },
     [loginData, localAuthStore]
   );
+  
+  
 
-  const handleSignUpSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      localAuthStore.signUp(signUpData);
-    },
-    [signUpData, localAuthStore]
-  );
+
+const handleSignUpSubmit = useCallback(
+  async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (signUpErrors.email || signUpErrors.password || signUpErrors.confirmPassword) {
+      return; 
+    }
+
+    const isSignUpSuccess = await localAuthStore.signUp(signUpData);
+
+    if (isSignUpSuccess) {
+
+      notifySuccess('Registration successful!');
+
+      setTimeout(() => {
+        navigate('/'); 
+      }, 3000);
+    } else {
+
+      if (localAuthStore.signUpErrors.email === 'User with this email already exists') {
+        notifyError('User with this email already exists');
+      } else {
+        notifyError('Error during registration');
+      }
+    }
+  },
+  [signUpData, localAuthStore, signUpErrors, navigate] 
+);
+
+  
 
   const handleLoginChange = useCallback(
     (field: 'email' | 'password', value: string) => {
@@ -122,12 +159,13 @@ const AuthorizePage: React.FC = observer(() => {
     [validateEmail, signUpData.password]
   );
 
-
+  
 
 
 
   return (
     <main className={styles.page}>
+      <ToastContainer /> {/* Toast container for notifications */}
       <section className={styles.formsSection}>
         <div className={styles.tabs}>
           <button
@@ -174,7 +212,7 @@ const AuthorizePage: React.FC = observer(() => {
               </div>
               <Button
                 type="submit"
-                className={`${styles.submitButton} ${isSuccess ? styles.success : ''}`}
+                className={`${styles.submitButton}`}
               >
                 Login
               </Button>

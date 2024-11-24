@@ -47,6 +47,12 @@ const ProductList: React.FC<ProductListProps> = observer(({ productsStore }) => 
             actionSlot={<Button>Add to Cart</Button>}
             className={styles['products__card']}
             onClick={() => productClickHandler(product)}
+            product={{
+              id: product.id.toString(),
+              name: product.title,
+              price: product.price,
+              image: product.images[0],
+            }} // Передаём товар в карточку
           />
         </div>
       ))}

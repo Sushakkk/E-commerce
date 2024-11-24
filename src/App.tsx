@@ -15,6 +15,7 @@ import AuthorizePage from './pages/AuthorizePage/AuthorizePage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AuthStore from 'stores/AuthStore/AuthStore';
 import rootStore from 'stores/RootStore';
+import BasketPage from './pages/BasketPage/BasketPage';
 
 
 
@@ -51,6 +52,7 @@ function App() {
           <Route path="/auth" element={<AuthorizePage/>} />
           <Route path="/profile" element={<ProfilePage/>} />
           <Route path="/" element={<AboutPage/>} />
+          <Route path="/basket" element={<BasketPage />} />
         </Routes>
 
     </div>

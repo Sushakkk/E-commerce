@@ -3,6 +3,7 @@ import { Link,  useLocation, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 import Logo from '../Logo/Logo';
 import Text from '../Text/Text';
+import basketStore from 'stores/BasketStore/BasketStore';
 import Basket from '../Basket/Basket';
 import User from '../User/User';
 import rootStore from 'stores/RootStore';
@@ -98,7 +99,14 @@ const Header: React.FC = observer(() => {
 
         <div className={styles['header__burger-container']}>
           <div className={styles.header__icons}>
-            <Basket />
+            <Link to="/basket">
+              <div className={styles.basketIcon}>
+                <Basket />
+                {basketStore.totalItems > 0 && (
+                  <span className={styles.basketCount}>{basketStore.totalItems}</span>
+                )}
+              </div>
+            </Link>
             {rootStore.QueryStore.getQueryParam('auth') ? (
           <Link to="/profile">
             <User />

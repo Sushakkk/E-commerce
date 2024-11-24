@@ -1,0 +1,121 @@
+@use 'styles/variables' as *;
+@use 'styles/mixin' as *;
+
+
+.page__main-block{
+  @include container;
+}
+
+.basketContainer{
+  margin-top: 100px;
+}
+.basketPage {
+  padding: 150px 100px;
+
+}
+
+.basketTitle {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.emptyBasket {
+  margin-top: 100px;  
+  font-size: 18px;
+  color: #777;
+}
+
+.basketContent {
+  display: flex;
+  gap: 20px;
+  @media (max-width: 830px) {
+   flex-direction: column-reverse;
+  }
+}
+
+.basketItems {
+  flex: 2;
+}
+
+.basketItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.basketItemImage {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 20px;
+}
+
+.basketItemDetails {
+  flex: 1;
+}
+
+.basketItemName {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 5px 0;
+}
+
+.basketItemPrice,
+.basketItemQuantity {
+  font-size: 16px;
+  margin: 0;
+}
+
+.removeButton {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #d9363e;
+  }
+}
+.completeButton{
+  background-color: #0d8f59;
+  color: white;
+  margin-top: 22px;
+  border: none;
+  border-radius: 4px;
+  padding: 18px 32px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #097b4c;
+  }
+}
+.basketSummary {
+  flex: 1;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.basketSummary h2 {
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.basketSummary p {
+  font-size: 18px;
+  margin: 5px 0;
+}

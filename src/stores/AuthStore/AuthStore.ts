@@ -1,86 +1,139 @@
-import { action, makeAutoObservable, observable} from 'mobx';
-
+import { action, makeAutoObservable, observable, toJS } from 'mobx';
 import rootStore from 'stores/RootStore';
 import { decodeJWT, generateJWT } from 'utils/token';
-import { validateEmail } from 'utils/validation';
-
+import { validateSignUpData, validateLoginData } from 'utils/validationUtils';  // Новый импорт функций валидации
 
 interface CheckData {
   email: string;
   password: string;
-  confirmPassword: string;
+  confirmPassword: string;  // Убедитесь, что здесь тип строго 'string'
 }
+
 interface Data {
   email: string;
   password: string;
-  
 }
 interface Profile {
   email: string;
   password: string;
   fio: string | null;
-   image: string | null;
-  
+  image: string | null;
 }
 
 class AuthStore {
-  users: { email: string; password: string; fio: string | null; image: string | null; }[] = [];
+  users: Profile[] = [];
   user: Profile | null = null;
   token: string | null = null;
   isAuthenticated: boolean = false;
   signUpErrors: CheckData = { email: '', password: '', confirmPassword: '' };
-  loginErrors: Data = { email: '', password: ''};
-  Data: Data = { email: '', password: ''};
+  loginErrors: Data = { email: '', password: '' };
 
   constructor() {
     makeAutoObservable(this, {
-      isAuthenticated: observable,
+      users: observable,
       user: observable,
-      login: action,
-      logout: action,
-      validateSignUp: action,
+      token: observable,
+      isAuthenticated: observable,
+      signUpErrors: observable,
+      loginErrors: observable,
+      setUser: action,
+      getUsers: action,
+      getUser: action,
       signUp: action,
-      setSignUpErrors: action,
+      login: action,
+      updateUserProfile: action,
+      saveUsersToLocalStorage: action,
+      logout: action,
+      initializeParams: action,
     });
-
-    this.getUsers();
-    this.setUser();
-
+    this.getUsers(); 
+    this.setUser(); 
   }
+  
 
   setUser() {
     const authToken = rootStore.QueryStore.getQueryParam('auth');
     if (!authToken) {
       console.error("Auth token not found");
-      return;  // Останавливаем выполнение, если токен не найден
+      return;
     }
-    
-    this.token = String(authToken);  // Преобразуем токен в строку
-    
+
+    this.token = String(authToken);
+
     try {
-      const decoded = decodeJWT(this.token);  // Декодируем токен
+      const decoded = decodeJWT(this.token);
       const email = decoded.payload.email;
-      this.user = this.getUser(email);  // Получаем пользователя по email
+      this.user = this.getUser(email);
     } catch (error) {
       console.error("Error decoding JWT:", error);
     }
   }
-  
 
   getUsers() {
     const storedUsers = localStorage.getItem('users');
     if (storedUsers) {
-      this.users = JSON.parse(storedUsers); 
+      this.users = JSON.parse(storedUsers);
     } else {
-      this.users = []; 
+      this.users = [];
     }
+    console.log(toJS(this.users ));
+    
   }
 
   getUser(email: string): Profile | null {
     const user = this.users.find(user => user.email === email);
-    return user || null;  
+    return user || null;
   }
 
+  signUp(signUpData: CheckData) {
+    const existingUser = this.users.find(user => user.email === signUpData.email);
+
+    if (existingUser) {
+      this.signUpErrors.email = 'User with this email already exists';
+      return false;
+    }
+
+    const { errors, isValid } = validateSignUpData(signUpData);
+    this.signUpErrors = errors;
+
+    if (isValid) {
+      this.user = { email: signUpData.email, password: signUpData.password, fio: '', image: null };
+      this.users.push(this.user);
+      this.saveUsersToLocalStorage();
+
+      const token = generateJWT(signUpData.email, signUpData.password);
+      this.token = token;
+      this.isAuthenticated = true;
+      localStorage.setItem('token', token);
+
+      return true;
+    }
+    return false;
+  }
+
+  login(loginData: Data) {
+    const { errors, isValid } = validateLoginData(loginData);
+    this.loginErrors = errors;
+    console.log(isValid);
+    
+
+    if (isValid) {
+
+      const userFromStore= this.getUser(loginData.email)
+      if(userFromStore){
+        if(userFromStore.password===loginData.password){
+          this.token= generateJWT(loginData.email, loginData.password);
+          this.isAuthenticated = true;
+          this.user = userFromStore;
+          localStorage.setItem('token', this.token);
+          rootStore.QueryStore.setQueryParam('auth', this.token);
+        return true;
+      }
+
+        }
+      }
+    return false;
+  }
 
   updateUserProfile(email: string, fio: string, image: string) {
     if (this.user) {
@@ -88,28 +141,22 @@ class AuthStore {
         this.user.fio = fio;
       }
       if (this.user.image !== image) {
-        this.user.image = image; 
+        this.user.image = image;
       }
 
-      const userIndex = this.users.findIndex((user) => user.email === email);
+      const userIndex = this.users.findIndex(user => user.email === email);
       if (userIndex !== -1) {
         this.users[userIndex] = this.user;
       } else {
-        // Если пользователя нет в массиве, добавляем его
         this.users.push(this.user);
       }
       this.saveUsersToLocalStorage();
     }
-}
-  
-  
-
-   // Сохраняем пользователей в localStorage
-   saveUsersToLocalStorage() {
-    localStorage.setItem('users', JSON.stringify(this.users));
-      
   }
 
+  saveUsersToLocalStorage() {
+    localStorage.setItem('users', JSON.stringify(this.users));
+  }
 
   logout() {
     this.token = null;
@@ -117,136 +164,8 @@ class AuthStore {
     rootStore.QueryStore.deleteQueryParam('auth');
   }
 
-
-
-
-   // Загружаем пользователей из localStorage
-   loadUsersFromLocalStorage() {
-    const savedUsers = localStorage.getItem('users');
-    if (savedUsers) {
-      this.users = JSON.parse(savedUsers);
-    }
-    
-  }
-
- 
-
-  signUp(signUpData: { email: string; password: string; confirmPassword: string }) {
-    // Проверяем, существует ли пользователь с таким email
-    const existingUser = this.users.find(user => user.email === signUpData.email);
-
-    if (existingUser) {
-      console.error('User with this email already exists');
-      return;
-    }
-
-    if (this.validateSignUp(signUpData)) {
-      this.user={ email: signUpData.email, password: signUpData.password, fio:"", image: null }
-      this.users.push(this.user);
-      this.saveUsersToLocalStorage();
-
-
-      const token = generateJWT(signUpData.email, signUpData.password);
-      this.token = token;
-      this.isAuthenticated = true;
-      localStorage.setItem('token', token);
-    }
-  }
-
-
-
-  validateSignUp(signUpData: CheckData) {
-    const errors: CheckData = { email: '', password: '', confirmPassword: '' };
-
-    if (!signUpData.email) {
-      errors.email = 'E-mail is required';
-    } else if (!validateEmail(signUpData.email)) {
-      errors.email = 'Invalid e-mail format';
-    }
-
-    if (!signUpData.password) {
-      errors.password = 'Password is required';
-    } else if (signUpData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
-    }
-
-    if (signUpData.password !== signUpData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
-    }
-    this.signUpErrors = errors;
-    if (!errors.email && !errors.password && !errors.confirmPassword) {
-      console.log('TRUE Sign Up Data:', signUpData);
-      this.Data.email = signUpData.email;
-      this.Data.password = signUpData.password;
-      return true;
-    }
-    return false;
-  }
-
-
-  
-
-
-  login(loginData: { email: string; password: string }) {
-    const errors = { email: '', password: '' };
-  
-    if (!loginData.email) {
-      errors.email = 'E-mail is required';
-    } else if (!validateEmail(loginData.email)) {
-      errors.email = 'Invalid e-mail format';
-    }
-  
-    if (!loginData.password) {
-      errors.password = 'Password is required';
-    }
-  
-    this.loginErrors = errors;
-  
-    if (!errors.email && !errors.password) {
-      const LoginToken = generateJWT(loginData.email, loginData.password);
-      const LocalToken = localStorage.getItem('token');
-
-  
-      // Декодируем и сравниваем
-      const decodedLocalToken = decodeJWT(LocalToken? LocalToken : "");
-      const decodedLoginToken = decodeJWT(LoginToken);
-  
-      if (decodedLocalToken.payload.email === decodedLoginToken.payload.email &&
-          decodedLocalToken.payload.password === decodedLoginToken.payload.password) {
-          this.token = LoginToken;
-          this.isAuthenticated = true;
-
-          const foundUser = this.getUser(loginData.email);
-
-          if (foundUser) {
-            this.user = foundUser;  
-            this.isAuthenticated = true;
-            localStorage.setItem('token', LoginToken);
-            rootStore.QueryStore.setQueryParam('auth', this.token);
-          }
-      } else {
-        console.log('Не залогинились');
-      }
-    }
-  }
-
-  initializeParams(){
-    rootStore.QueryStore.setQueryParam('auth', this.token)
-  }
-  
-
-
-
-
-
-setSignUpErrors(errors: Partial<CheckData>) {
-  this.signUpErrors = { ...this.signUpErrors, ...errors };
-}
-  
-
-  // Метод для уничтожения экземпляра
-  destroy(): void {
-    throw new Error('Method not implemented.');
+  initializeParams() {
+    rootStore.QueryStore.setQueryParam('auth', this.token);
   }
 }
 
