@@ -10,6 +10,7 @@ class QueryStore {
       updateQueryParams: action,
       setParamsFromUrl: action,
       resetQueryParams: action,
+      addQueryParam:action,
     });
 
     this.setParamsFromUrl();
@@ -63,7 +64,13 @@ class QueryStore {
   public resetQueryParams() {
     this._queryParams= {}
   }
-  
+
+  public addQueryParam(key: string, value: string | number) {
+    const params = new URLSearchParams(window.location.search);
+    params.set(key, String(value));
+    window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+  }
+ 
 
 
   

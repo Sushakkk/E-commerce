@@ -10,6 +10,7 @@ import ProductList from 'components/ProductList';
 import Pagination from 'components/Pagination';
 import { useParams } from 'react-router-dom';
 import FilterStore from 'stores/FilterStore';
+import { toJS } from 'mobx';
 
 
 const CategoryPage: React.FC = observer(() => {
@@ -25,12 +26,16 @@ const CategoryPage: React.FC = observer(() => {
 
 
   useEffect(() => {
+    console.log('я сработал')
     localProductsStore.currentPage=1;
+   
 }, []);
 
 
   useEffect(() => {
       localProductsStore.fetchProducts(searchQuery, Number(id));
+      console.log(toJS(localProductsStore.products))
+      console.log(toJS(localProductsStore.currentPage))
   }, [currentPage]);
 
   if (localProductsStore.meta === 'loading' || localFiltersStore.meta === 'loading') {

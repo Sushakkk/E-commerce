@@ -9,7 +9,7 @@ import User from '../User/User';
 import rootStore from 'stores/RootStore';
 import AuthStore from 'stores/AuthStore';
 import { observer} from 'mobx-react-lite';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Header: React.FC = observer(() => {

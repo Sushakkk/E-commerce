@@ -1,4 +1,4 @@
-import { action, makeAutoObservable, observable, toJS } from 'mobx';
+import { action, makeAutoObservable, observable} from 'mobx';
 import { IBasketProduct } from 'modules/types';
 import AuthStore from 'stores/AuthStore';
 

@@ -33,7 +33,9 @@ function App() {
 
 
   useEffect(() => {
-    AuthStore.initializeParams();
+    if(token){
+      rootStore.QueryStore.addQueryParam('auth', String(token))
+    }
   }, [AuthStore.token, location]);
 
   useEffect(() => {
