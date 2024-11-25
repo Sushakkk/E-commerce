@@ -42,6 +42,7 @@ const CategoryPage: React.FC = observer(() => {
       </main>
     );
   }
+  console.log(localProductsStore.products)
 
   return (
     <main id="main" className="page">

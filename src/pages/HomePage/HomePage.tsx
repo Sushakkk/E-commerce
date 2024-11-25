@@ -33,6 +33,7 @@ const HomePage: React.FC = observer(() => {
   }, [queryParams]);
 
   useEffect(() => {
+    
     rootStore.QueryStore.updateQueryParams();
     localFilterStore.initializeParams()
   }, []);

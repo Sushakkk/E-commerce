@@ -16,7 +16,7 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import rootStore from 'stores/RootStore';
 import BasketPage from './pages/BasketPage/BasketPage';
 import Footer from 'components/Footer/Footer';
-import { toJS } from 'mobx';
+
 
 
 
@@ -28,22 +28,22 @@ function App() {
   const location = useLocation(); 
 
   useEffect(() => {
+    console.log('chf,jnfh')
     window.scrollTo(0, 0);
   }, [location]);
 
 
   useEffect(() => {
-    rootStore.AuthStore.initializeParams();
-  }, [rootStore.AuthStore.token, location]);
+    if(token){
+      rootStore.QueryStore.addQueryParam('auth', String(token));
+    }
+  }, [rootStore.AuthStore.token,location]);
 
   useEffect(() => {
-    console.log('Я СРАБОТАЛ')
     rootStore.QueryStore.setQueryParam('auth', token);
     rootStore.AuthStore.setUser()
   }, []);
-  // useEffect(() => {
-  //   console.log('app', toJS(rootStore.AuthStore.user))
-  // }, [location]);
+
 
   return (
     <div className="wrapper">

@@ -6,12 +6,17 @@ import styles from './BackButton.module.scss';
 const BackButton = () => {
     const navigate = useNavigate();
 
+    const handleBackClick = () => {
+        navigate(-3);
+        window.scrollTo(0, 0); 
+    };
+
     return (
         <div className={styles.button__container}>
-          <div className={styles.button__back} onClick={() => navigate(-3)}>
-            <PaginationIcon />
-            <Text view="p-20">Назад</Text>
-          </div>
+            <div className={styles.button__back} onClick={handleBackClick}>
+                <PaginationIcon />
+                <Text view="p-20">Назад</Text>
+            </div>
         </div>
     );
 };

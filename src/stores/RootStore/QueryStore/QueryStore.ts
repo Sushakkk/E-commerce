@@ -1,4 +1,4 @@
-import { makeAutoObservable, action, toJS} from 'mobx';
+import { makeAutoObservable, action, extendObservable, observable, toJS} from 'mobx';
 
 class QueryStore {
   private _queryParams: { [key: string]: string | number | null } = {};
@@ -10,8 +10,9 @@ class QueryStore {
       updateQueryParams: action,
       setParamsFromUrl: action,
       resetQueryParams: action,
+      queryLoaded: observable,
     });
-
+      
     this.setParamsFromUrl();
   }
 
@@ -37,7 +38,6 @@ class QueryStore {
 
   updateQueryParams() {
     const params = new URLSearchParams();
-    
     Object.keys(this._queryParams).forEach((key) => {
       const value = this._queryParams[key];
       if (value !== null && value !== undefined && value !== '') {
@@ -64,6 +64,20 @@ class QueryStore {
   public resetQueryParams() {
     this._queryParams= {}
   }
+
+  public clear(){
+    window.history.pushState({}, '', `${window.location.pathname}?${""}`);
+  }
+
+  public addQueryParam(key: string, value: string | number) {
+    const params = new URLSearchParams(window.location.search);
+    params.set(key, String(value));
+    console.log(toJS(params));
+    
+    window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+  }
+
+
   
 
 

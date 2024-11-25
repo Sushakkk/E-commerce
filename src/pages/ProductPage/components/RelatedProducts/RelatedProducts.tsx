@@ -7,6 +7,7 @@ import styles from './RelatedProducts.module.scss';
 import { observer } from 'mobx-react-lite';
 import { handleProductClick } from 'utils/navigationUtils';
 import ProductDetailStore from 'stores/ProductDetailsStore';
+import useImageHandler from 'hooks/useImageHandler';
 
 
 interface RelatedItemsProps {
@@ -18,6 +19,7 @@ const RelatedItems: React.FC<RelatedItemsProps> = observer(({ ProductDetailsStor
   const { relatedProducts } = ProductDetailsStore;
 
   const productClickHandler = useCallback(handleProductClick(navigate), [navigate]);
+  const { getImage } = useImageHandler();
 
 
 
@@ -31,7 +33,7 @@ const RelatedItems: React.FC<RelatedItemsProps> = observer(({ ProductDetailsStor
         {relatedProducts.map((relatedProduct) => (
           <Card
             key={relatedProduct.id}
-            image={relatedProduct.images[0]}
+            image={getImage(relatedProduct.images[0])}
             title={relatedProduct.title}
             subtitle={relatedProduct.description}
             captionSlot={relatedProduct.category.name}

@@ -65,19 +65,13 @@ class AuthStore {
   }
 
   saveBasketToUser() {
-    console.log('save', toJS(this.user));
-    console.log('save1111', toJS(this.isAuthenticated));
-   
     if (this.user && this.isAuthenticated) {
-      console.log('saveeee');
       const newBasket = rootStore.BasketStore.basketItems;
-     
       if (this.user.basketItems) {
         this.user.basketItems = newBasket;
       } else {
         this.user.basketItems = [...newBasket];
       }
-
       this.saveUsersToLocalStorage(this.user.email ? this.user.email : '');
       console.log('save', toJS(this.user));
   
@@ -87,7 +81,6 @@ class AuthStore {
 
   setUser() {
     const authToken =rootStore.QueryStore.getQueryParam('auth');
-    console.log('setuser', authToken);
     
     if (!authToken) {
       console.error("Auth token not found");
@@ -124,7 +117,6 @@ class AuthStore {
    
     
     const user = this.users.find(user => user.email === email);
-    console.log('GETUSER', toJS(user));
     return user || null;
   }
 
@@ -164,17 +156,11 @@ class AuthStore {
     this.loginErrors = errors;
   
     if (isValid) {
-
-
       const userFromStore = this.getUser(loginData.email);
-      console.log('логин user',toJS(userFromStore));
       if (userFromStore) {
         if (userFromStore.password === loginData.password) {
           const userBasketItems = Array.isArray(userFromStore.basketItems) ? userFromStore.basketItems : [];
           const basketItems = rootStore.BasketStore.basketItems;
-
-          console.log('логин',toJS(basketItems));
-          console.log('логин',toJS(userBasketItems));
           const updatedUser = {
             ...userFromStore,
             basketItems: [...userBasketItems, ...basketItems] 
@@ -186,11 +172,6 @@ class AuthStore {
          rootStore.BasketStore.basketItems=[...userBasketItems, ...basketItems];
           localStorage.setItem('token', this.token);
           rootStore.QueryStore.setQueryParam('auth', this.token);
-          console.log('логин',toJS( rootStore.QueryStore.getQueryParam('auth')));
-
-          console.log('логин',toJS(this.user));
-    
-          
           this.filterStoreInstance.reset();
           this.ProductsStoreInstance.reset();
           return true;
@@ -240,10 +221,6 @@ class AuthStore {
    rootStore.BasketStore.clearBasket();
     this.isAuthenticated = false;
    rootStore.QueryStore.deleteQueryParam('auth');
-
-   console.log('out',
-   localStorage.getItem('users'));
-
     this.filterStoreInstance.reset();
     this.ProductsStoreInstance.reset();
   }
