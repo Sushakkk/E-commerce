@@ -52,7 +52,7 @@ const ProductList: React.FC<ProductListProps> = observer(({ productsStore }) => 
               name: product.title,
               price: product.price,
               image: product.images[0],
-            }} // Передаём товар в карточку
+            }} 
           />
         </div>
       ))}

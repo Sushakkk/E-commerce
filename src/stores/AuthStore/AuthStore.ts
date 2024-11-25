@@ -1,9 +1,11 @@
 import { action, makeAutoObservable, observable, toJS } from 'mobx';
 import { IBasketProduct } from 'modules/types';
 import BasketStore from 'stores/BasketStore';
+import FilterStore from 'stores/FilterStore';
+import ProductsStore from 'stores/ProductsStore';
 import rootStore from 'stores/RootStore';
 import { decodeJWT, generateJWT } from 'utils/token';
-import { validateSignUpData, validateLoginData } from 'utils/validationUtils';  // Новый импорт функций валидации
+import { validateSignUpData, validateLoginData } from 'utils/validationUtils';
 
 
 interface CheckData {
@@ -31,6 +33,11 @@ class AuthStore {
   isAuthenticated: boolean = false;
   signUpErrors: CheckData = { email: '', password: '', confirmPassword: '' };
   loginErrors: Data = { email: '', password: '' };
+
+
+  private filterStoreInstance = new FilterStore();
+  private ProductsStoreInstance = new ProductsStore();
+
 
   constructor() {
     makeAutoObservable(this, {
@@ -126,6 +133,8 @@ class AuthStore {
       this.isAuthenticated = true;
 
       localStorage.setItem('token', token);
+      this.filterStoreInstance.reset();
+      this.ProductsStoreInstance.reset();
 
       return true;
     }
@@ -134,6 +143,7 @@ class AuthStore {
 
   login(loginData: Data) {
     this.getUsers();
+    
     const { errors, isValid } = validateLoginData(loginData);
     this.loginErrors = errors;
   
@@ -154,6 +164,9 @@ class AuthStore {
           BasketStore.basketItems=[...userBasketItems, ...basketItems];
           localStorage.setItem('token', this.token);
           rootStore.QueryStore.setQueryParam('auth', this.token);
+          
+          this.filterStoreInstance.reset();
+          this.ProductsStoreInstance.reset();
           return true;
         }
       }
@@ -176,19 +189,18 @@ class AuthStore {
   }
 
   saveUsersToLocalStorage(email: string) {
-    // Проверяем, что this.user не равен null
+
     if (this.user) {
       const userIndex = this.users.findIndex(user => user.email === email);
   
       if (userIndex !== -1) {
-        this.users[userIndex] = this.user; // Присваиваем только если this.user не null
+        this.users[userIndex] = this.user; 
       } else {
-        this.users.push(this.user); // Добавляем пользователя, если его нет в списке
+        this.users.push(this.user); 
       }
   
 
       localStorage.setItem('users', JSON.stringify(this.users));
-      console.log(toJS(localStorage.getItem('users'))); 
     } else {
       console.error("User is null, cannot save to localStorage");
     }
@@ -200,6 +212,8 @@ class AuthStore {
     BasketStore.clearBasket();
     this.isAuthenticated = false;
     rootStore.QueryStore.deleteQueryParam('auth');
+    this.filterStoreInstance.reset();
+    this.ProductsStoreInstance.reset();
   }
 
   initializeParams() {

@@ -11,6 +11,7 @@ import Loader from 'components/Loader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BasketStore from 'stores/BasketStore/BasketStore';
+import useImageHandler from 'hooks/useImageHandler';
 
 
 const BasketPage: React.FC = observer(() => {
@@ -104,6 +105,8 @@ if (isLoading) {
 }
 
 
+  const { getImage } = useImageHandler();
+
   return (
     <main id="main" className="page">
       <div className={styles['page__main-block']}>
@@ -119,7 +122,7 @@ if (isLoading) {
                 {basketItems.map((item) => (
                   <div className={styles.basketItem} key={item.id}>
                     <img
-                      src={item.image}
+                      src={getImage(item.image)}
                       alt={item.name}
                       className={styles.basketItemImage}
                     />
@@ -161,7 +164,7 @@ if (isLoading) {
                 <p>Total Price: ${totalPrice.toFixed(2)}</p>
                 <button
                   className={styles.completeButton}
-                  onClick={handleCompleteOrder}  // Trigger email sending on click
+                  onClick={handleCompleteOrder} 
                 >
                   Complete Order
                 </button>

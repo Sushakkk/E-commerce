@@ -5,7 +5,6 @@ import { observer } from 'mobx-react-lite';
 import ProductDetailStore from 'stores/ProductDetailsStore';
 import useImageHandler from 'hooks/useImageHandler';
 
-
 interface ImageSliderProps {
   ProductDetailsStore: ProductDetailStore;
 }
@@ -34,30 +33,36 @@ const ImageSlider: React.FC<ImageSliderProps> = observer(({ ProductDetailsStore 
     }
   }, [isFirstImage]);
 
+  // Если количество изображений = 1, не показывать кнопки навигации
+  const showPagination = product.images.length > 1;
+
   return (
     <div className={styles.slider__container}>
-      <button
-        onClick={handlePrevImage}
-        className={`${styles.slider__button} ${styles['slider__button-left']} ${isFirstImage ? styles['slider__button-disabled'] : ''}`}
-        disabled={isFirstImage}
-      >
-        <PaginationIcon direction="left" strokeWidth="3" color="base" />
-      </button>
+      {showPagination && (
+        <button
+          onClick={handlePrevImage}
+          className={`${styles.slider__button} ${styles['slider__button-left']} ${isFirstImage ? styles['slider__button-disabled'] : ''}`}
+          disabled={isFirstImage}
+        >
+          <PaginationIcon direction="left" strokeWidth="3" color="base" />
+        </button>
+      )}
 
       <img
         src={getImage(product.images[currentImageIndex])}
-        // src="https://cdn1.ozone.ru/s3/multimedia-r/c600/6855038235.jpg"
         alt={product.title}
         className={styles.slider__image}
       />
 
-      <button
-        onClick={handleNextImage}
-        className={`${styles.slider__button} ${styles['slider__button-right']} ${isLastImage ? styles['slider__button-disabled'] : ''}`}
-        disabled={isLastImage}
-      >
-        <PaginationIcon direction="right" strokeWidth="3" color="base" />
-      </button>
+      {showPagination && (
+        <button
+          onClick={handleNextImage}
+          className={`${styles.slider__button} ${styles['slider__button-right']} ${isLastImage ? styles['slider__button-disabled'] : ''}`}
+          disabled={isLastImage}
+        >
+          <PaginationIcon direction="right" strokeWidth="3" color="base" />
+        </button>
+      )}
     </div>
   );
 });

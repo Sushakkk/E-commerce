@@ -63,7 +63,6 @@ const Header: React.FC = observer(() => {
 
   const handleLogout = () => {
     localAuthStore.logout();
-    console.log(`вышли ${localAuthStore.isAuthenticated}`)
     closeMenu();
     navigate('/', { state: { message: 'Logout' } });
   };
