@@ -8,7 +8,7 @@ const BackButton = () => {
 
     return (
         <div className={styles.button__container}>
-          <div className={styles.button__back} onClick={() => navigate(-1)}>
+          <div className={styles.button__back} onClick={() => navigate(-3)}>
             <PaginationIcon />
             <Text view="p-20">Назад</Text>
           </div>

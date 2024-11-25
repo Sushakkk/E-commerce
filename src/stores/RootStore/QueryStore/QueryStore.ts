@@ -1,4 +1,4 @@
-import { makeAutoObservable, action} from 'mobx';
+import { makeAutoObservable, action, toJS} from 'mobx';
 
 class QueryStore {
   private _queryParams: { [key: string]: string | number | null } = {};
@@ -37,6 +37,7 @@ class QueryStore {
 
   updateQueryParams() {
     const params = new URLSearchParams();
+    
     Object.keys(this._queryParams).forEach((key) => {
       const value = this._queryParams[key];
       if (value !== null && value !== undefined && value !== '') {

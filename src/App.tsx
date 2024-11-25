@@ -13,10 +13,10 @@ import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import AboutPage from './pages/AboutPage/AboutPage';
 import AuthorizePage from './pages/AuthorizePage/AuthorizePage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
-import AuthStore from 'stores/AuthStore/AuthStore';
 import rootStore from 'stores/RootStore';
 import BasketPage from './pages/BasketPage/BasketPage';
 import Footer from 'components/Footer/Footer';
+import { toJS } from 'mobx';
 
 
 
@@ -33,13 +33,17 @@ function App() {
 
 
   useEffect(() => {
-    AuthStore.initializeParams();
-  }, [AuthStore.token, location]);
+    rootStore.AuthStore.initializeParams();
+  }, [rootStore.AuthStore.token, location]);
 
   useEffect(() => {
+    console.log('Я СРАБОТАЛ')
     rootStore.QueryStore.setQueryParam('auth', token);
-    
+    rootStore.AuthStore.setUser()
   }, []);
+  // useEffect(() => {
+  //   console.log('app', toJS(rootStore.AuthStore.user))
+  // }, [location]);
 
   return (
     <div className="wrapper">

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from './AuthorizePage.module.scss';
 import Button from 'components/Button/Button';
 import { observer} from 'mobx-react-lite';
@@ -6,10 +6,13 @@ import AuthStore from 'stores/AuthStore';
 import { validateEmail } from 'utils/validation';
 import { toast, ToastContainer } from 'react-toastify'; // Import Toastify
 import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import rootStore from 'stores/RootStore/instance';
+
 
 const AuthorizePage: React.FC = observer(() => {
-  const localAuthStore= AuthStore;
+  const localAuthStore= rootStore.AuthStore;
+  const location = useLocation()
 
   const [isLoginActive, setIsLoginActive] = useState(true);
 
@@ -23,8 +26,26 @@ const AuthorizePage: React.FC = observer(() => {
     password: '',
     confirmPassword: '',
   });
+
+  // useEffect(()=>{
+  //   rootStore.AuthStore.setUser(); 
+  //   console.log('главная', rootStore.AuthStore.user)
+  //   console.log('главная', rootStore.AuthStore.users)
+  // }, [rootStore.AuthStore.isAuthenticated])
   
 
+  // const { state } = location;
+
+
+ 
+
+  // useEffect(() => {
+  //   if (state?.message) {
+  //     notifyError(state.message)
+  //  }
+       
+   
+  //    }, [state]);
 
 
   const navigate = useNavigate();

@@ -7,6 +7,8 @@ import rootStore from 'stores/RootStore/instance';
 
 
 
+
+
 class ProductsStore implements ILocalStore {
   products: IProduct[] = [];
   totalProducts: number = 0;
@@ -25,7 +27,7 @@ class ProductsStore implements ILocalStore {
       meta: observable,
     });
 
-    this.initializeParams();
+    // this.initializeParams();
   }
 
   private initializeParams() {

@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './Card.module.scss';
 import Text from '../Text/Text';
-import basketStore from 'stores/BasketStore/BasketStore';
+import rootStore from 'stores/RootStore/instance';
+
 
 
 export type CardProps = {
@@ -30,7 +31,7 @@ const Card: React.FC<CardProps> = ({
   // Функция для добавления в корзину
   const handleAddToCart = () => {
     if(product){
-      basketStore.addToBasket(product);
+      rootStore.BasketStore.addToBasket(product);
     }
   };
 

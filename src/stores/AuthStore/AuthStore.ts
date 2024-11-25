@@ -1,6 +1,5 @@
 import { action, makeAutoObservable, observable, toJS } from 'mobx';
 import { IBasketProduct } from 'modules/types';
-import BasketStore from 'stores/BasketStore';
 import FilterStore from 'stores/FilterStore';
 import ProductsStore from 'stores/ProductsStore';
 import rootStore from 'stores/RootStore';
@@ -23,10 +22,13 @@ interface Profile {
   password: string;
   fio: string | null;
   image: string | null;
+  orderCount: number| 0;
   basketItems: IBasketProduct[];  
 }
 
 class AuthStore {
+ 
+
   users: Profile[] = [];
   user: Profile | null = null;
   token: string | null = null;
@@ -40,6 +42,7 @@ class AuthStore {
 
 
   constructor() {
+ 
     makeAutoObservable(this, {
       users: observable,
       user: observable,
@@ -58,13 +61,15 @@ class AuthStore {
       initializeParams: action,
     });
     this.getUsers(); 
-    this.setUser(); 
+    // this.setUser(); 
   }
 
   saveBasketToUser() {
+ 
    
     if (this.user && this.isAuthenticated) {
-      const newBasket = BasketStore.basketItems;
+      const newBasket = rootStore.BasketStore.basketItems;
+     
       if (this.user.basketItems) {
         this.user.basketItems = newBasket;
       } else {
@@ -72,13 +77,16 @@ class AuthStore {
       }
 
       this.saveUsersToLocalStorage(this.user.email ? this.user.email : '');
+      console.log('save', toJS(this.user));
   
     } 
   }
   
 
   setUser() {
-    const authToken = rootStore.QueryStore.getQueryParam('auth');
+    const authToken =rootStore.QueryStore.getQueryParam('auth');
+    console.log('setuser', authToken);
+    
     if (!authToken) {
       console.error("Auth token not found");
       return;
@@ -104,12 +112,15 @@ class AuthStore {
     } else {
       this.users = [];
     }
-    console.log(toJS(this.users ));
     
   }
 
   getUser(email: string): Profile | null {
+    this.getUsers();
+   
+    
     const user = this.users.find(user => user.email === email);
+    console.log('GETUSER', toJS(user));
     return user || null;
   }
 
@@ -125,7 +136,7 @@ class AuthStore {
     this.signUpErrors = errors;
 
     if (isValid) {
-      this.user = { email: signUpData.email, password: signUpData.password, fio: '', image: null, basketItems: BasketStore.basketItems};
+      this.user = { email: signUpData.email, password: signUpData.password, fio: '', image: null, basketItems:  rootStore.BasketStore.basketItems, orderCount: 0};
       this.users.push(this.user);
       localStorage.setItem('users', JSON.stringify(this.users));
       const token = generateJWT(signUpData.email, signUpData.password);
@@ -143,16 +154,23 @@ class AuthStore {
 
   login(loginData: Data) {
     this.getUsers();
+   
     
     const { errors, isValid } = validateLoginData(loginData);
     this.loginErrors = errors;
   
     if (isValid) {
+
+
       const userFromStore = this.getUser(loginData.email);
+      console.log('логин user',toJS(userFromStore));
       if (userFromStore) {
         if (userFromStore.password === loginData.password) {
           const userBasketItems = Array.isArray(userFromStore.basketItems) ? userFromStore.basketItems : [];
-          const basketItems = BasketStore.basketItems;
+          const basketItems = rootStore.BasketStore.basketItems;
+
+          console.log('логин',toJS(basketItems));
+          console.log('логин',toJS(userBasketItems));
           const updatedUser = {
             ...userFromStore,
             basketItems: [...userBasketItems, ...basketItems] 
@@ -161,9 +179,13 @@ class AuthStore {
           this.token = generateJWT(loginData.email, loginData.password);
           this.isAuthenticated = true;
           this.user = updatedUser;  
-          BasketStore.basketItems=[...userBasketItems, ...basketItems];
+         rootStore.BasketStore.basketItems=[...userBasketItems, ...basketItems];
           localStorage.setItem('token', this.token);
           rootStore.QueryStore.setQueryParam('auth', this.token);
+          console.log('логин',toJS( rootStore.QueryStore.getQueryParam('auth')));
+
+          console.log('логин',toJS(this.user));
+    
           
           this.filterStoreInstance.reset();
           this.ProductsStoreInstance.reset();
@@ -208,10 +230,13 @@ class AuthStore {
   
 
   logout() {
+    console.log('out',toJS(this.user));
     this.token = null;
-    BasketStore.clearBasket();
+    this.user = null;
+    console.log('out',toJS(this.user));
+   rootStore.BasketStore.clearBasket();
     this.isAuthenticated = false;
-    rootStore.QueryStore.deleteQueryParam('auth');
+   rootStore.QueryStore.deleteQueryParam('auth');
     this.filterStoreInstance.reset();
     this.ProductsStoreInstance.reset();
   }
@@ -221,4 +246,4 @@ class AuthStore {
   }
 }
 
-export default new AuthStore();
+export default AuthStore;

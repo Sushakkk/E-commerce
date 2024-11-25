@@ -1,11 +1,16 @@
-import { action, makeAutoObservable, observable, toJS } from 'mobx';
+import { action, makeAutoObservable, observable, toJS} from 'mobx';
 import { IBasketProduct } from 'modules/types';
-import AuthStore from 'stores/AuthStore';
+import rootStore from 'stores/RootStore';
+
+
+
 
 class BasketStore {
   basketItems: IBasketProduct[] = [];
+ 
 
   constructor() {
+
     makeAutoObservable(this, {
       addToBasket: action,
       removeFromBasket: action,
@@ -13,12 +18,14 @@ class BasketStore {
       basketItems: observable,
     });
 
-    this.loadBasketFromLocalStorage(); // Загрузка корзины при инициализации
+    this.loadBasketFromLocalStorage(); 
   }
 
   saveBasketToLocalStorage() {
     try {
       localStorage.setItem("basket", JSON.stringify(this.basketItems));
+      console.log('basket',localStorage.getItem("basket"));
+      
     } catch (error) {
       console.error("Error saving basket to localStorage:", error);
     }
@@ -36,6 +43,8 @@ class BasketStore {
   }
 
   addToBasket(item: IBasketProduct) {
+    console.log(item);
+    
     const existingItem = this.basketItems.find((product) => product.id === item.id);
     if (existingItem) {
       existingItem.quantity = (existingItem.quantity || 1) + 1;
@@ -43,7 +52,7 @@ class BasketStore {
       this.basketItems.push({ ...item, quantity: 1 });
     }
     this.saveBasketToLocalStorage(); // Сохранение корзины
-    AuthStore.saveBasketToUser(); // Синхронизация с пользователем
+   rootStore.AuthStore.saveBasketToUser(); // Синхронизация с пользователем
   }
 
   incrementQuantity(id: string) {
@@ -52,7 +61,7 @@ class BasketStore {
       item.quantity = (item.quantity || 1) + 1;
     }
     this.saveBasketToLocalStorage(); // Сохранение корзины
-    AuthStore.saveBasketToUser(); // Синхронизация с пользователем
+    rootStore.AuthStore.saveBasketToUser(); // Синхронизация с пользователем
   }
 
   decrementQuantity(id: string) {
@@ -61,7 +70,7 @@ class BasketStore {
       item.quantity = Math.max((item.quantity || 1) - 1, 1); // Минимум 1 товар
     }
     this.saveBasketToLocalStorage(); // Сохранение корзины
-    AuthStore.saveBasketToUser(); // Синхронизация с пользователем
+    rootStore.AuthStore.saveBasketToUser(); // Синхронизация с пользователем
   }
 
   removeFromBasket(id: string) {
@@ -72,9 +81,9 @@ class BasketStore {
   clearBasket() {
     this.basketItems = [];
     this.saveBasketToLocalStorage();
-    if (AuthStore.user) {
-      AuthStore.user.basketItems = this.basketItems;
-      AuthStore.saveBasketToUser();
+    if ( rootStore.AuthStore.user) {
+      rootStore.AuthStore.user.basketItems = this.basketItems;
+      rootStore.AuthStore.saveBasketToUser();
     }
   }
   get totalItems() {
@@ -90,5 +99,5 @@ class BasketStore {
   }
 }
 
-const basketStore = new BasketStore();
-export default basketStore;
+
+export default BasketStore;

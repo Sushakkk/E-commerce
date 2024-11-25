@@ -2,7 +2,7 @@ import Button from 'components/Button/Button';
 import styles from './AboutPage.module.scss';
 import ImageCarousel from './components/ImageCarousel/ImageCarousel';
 import { Link, useLocation } from 'react-router-dom';
-import { useCallback,  useEffect,  useRef, useState} from 'react';
+import { useCallback,  useEffect,  useRef} from 'react';
 import Loader from 'components/Loader';
 import { observer, useLocalStore } from 'mobx-react-lite';
 import { toast, ToastContainer } from 'react-toastify';

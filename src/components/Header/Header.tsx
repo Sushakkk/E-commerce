@@ -3,14 +3,12 @@ import { Link,  useLocation, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 import Logo from '../Logo/Logo';
 import Text from '../Text/Text';
-import basketStore from 'stores/BasketStore/BasketStore';
 import Basket from '../Basket/Basket';
 import User from '../User/User';
-import rootStore from 'stores/RootStore';
-import AuthStore from 'stores/AuthStore';
 import { observer} from 'mobx-react-lite';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import rootStore from 'stores/RootStore/instance';
 
 const Header: React.FC = observer(() => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -58,7 +56,7 @@ const Header: React.FC = observer(() => {
   };
 
 
-  const localAuthStore= AuthStore;
+  const localAuthStore= rootStore.AuthStore;
 
 
   const handleLogout = () => {
@@ -108,8 +106,8 @@ const Header: React.FC = observer(() => {
             <Link to="/basket">
               <div className={styles.basketIcon} >
                 <Basket />
-                {basketStore.totalItems > 0 && (
-                  <span className={styles.basketCount}>{basketStore.totalItems}</span>
+                { rootStore.BasketStore.totalItems > 0 && (
+                  <span className={styles.basketCount}>{ rootStore.BasketStore.totalItems}</span>
                 )}
               </div>
             </Link>
