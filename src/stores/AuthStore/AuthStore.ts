@@ -65,9 +65,11 @@ class AuthStore {
   }
 
   saveBasketToUser() {
- 
+    console.log('save', toJS(this.user));
+    console.log('save1111', toJS(this.isAuthenticated));
    
     if (this.user && this.isAuthenticated) {
+      console.log('saveeee');
       const newBasket = rootStore.BasketStore.basketItems;
      
       if (this.user.basketItems) {
@@ -90,6 +92,8 @@ class AuthStore {
     if (!authToken) {
       console.error("Auth token not found");
       return;
+    }else{
+      this.isAuthenticated=true
     }
 
     this.token = String(authToken);
@@ -230,13 +234,16 @@ class AuthStore {
   
 
   logout() {
-    console.log('out',toJS(this.user));
+  
     this.token = null;
     this.user = null;
-    console.log('out',toJS(this.user));
    rootStore.BasketStore.clearBasket();
     this.isAuthenticated = false;
    rootStore.QueryStore.deleteQueryParam('auth');
+
+   console.log('out',
+   localStorage.getItem('users'));
+
     this.filterStoreInstance.reset();
     this.ProductsStoreInstance.reset();
   }

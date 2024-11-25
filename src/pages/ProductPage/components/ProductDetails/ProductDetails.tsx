@@ -4,15 +4,15 @@ import Button from 'components/Button';
 import styles from './ProductDetails.module.scss';
 import { observer } from 'mobx-react-lite';
 import ProductDetailStore from 'stores/ProductDetailsStore';
-import basketStore from 'stores/BasketStore';
+
 import emailjs from '@emailjs/browser';
-import AuthStore from 'stores/AuthStore';
-import rootStore from 'stores/RootStore';
+
 import { decodeJWT } from 'utils/token';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loader from 'components/Loader';
 import { useNavigate } from 'react-router-dom';
+import rootStore from 'stores/RootStore/instance';
 
 interface ProductDetailsProps {
   ProductDetailsStore: ProductDetailStore;
@@ -41,10 +41,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(({ ProductDetails
     const orderSummary = `${orderDetails.name} - ${orderDetails.quantity} x $${orderDetails.price} = $${orderDetails.totalPrice}`;
 
     let userEmail = '';
+    const token = rootStore.QueryStore.getQueryParam('auth');
 
     try {
-      if (AuthStore.setUser()) {
-        const token = rootStore.QueryStore.getQueryParam('auth');
+      if (token) {
+        
         const decoded = decodeJWT(String(token));
         userEmail = decoded.payload.email;
       } else {

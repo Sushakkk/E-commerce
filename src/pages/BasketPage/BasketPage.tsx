@@ -12,9 +12,13 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BasketStore from 'stores/BasketStore/BasketStore';
 import rootStore from 'stores/RootStore/instance';
+import useImageHandler from 'hooks/useImageHandler';
 
 
 const BasketPage: React.FC = observer(() => {
+
+  const { getImage } = useImageHandler();
+
   const { basketItems, totalPrice, totalItems } = rootStore.BasketStore;
   const [isLoading, setIsLoading] = useState(false); 
   const navigate = useNavigate();
@@ -121,7 +125,7 @@ if (isLoading) {
                 {basketItems.map((item) => (
                   <div className={styles.basketItem} key={item.id}>
                     <img
-                      src={item.image}
+                      src={getImage(item.image)}
                       alt={item.name}
                       className={styles.basketItemImage}
                     />
