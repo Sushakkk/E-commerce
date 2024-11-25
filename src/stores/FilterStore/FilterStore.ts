@@ -78,6 +78,11 @@ class FilterStore implements ILocalStore {
   getCategories() {
     return this._categories;
   }
+  reset() {
+    rootStore.QueryStore.deleteQueryParam('search');
+    rootStore.QueryStore.deleteQueryParam('category');
+
+}
 
   handleCategoryChange(category: Option | null) {
     this.setSelectedCategory(category?.key || null);

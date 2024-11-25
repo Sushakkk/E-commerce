@@ -38,27 +38,41 @@ const Pagination: React.FC<PaginationProps> = observer(({ productsStore }) => {
     return range;
   }, [totalPages, currentPage]);
 
-  return (
-    <div className={styles.pagination__container}>
-      <div onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}>
-        <PaginationIcon color={currentPage > 1 ? 'primary' : 'secondary'} />
+
+  if (totalPages > 1) {
+    return (
+      <div className={styles.pagination__container}>
+        <div
+          onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}
+        >
+          <PaginationIcon color={currentPage > 1 ? 'primary' : 'secondary'} />
+        </div>
+        <div className={styles.pagination__buttons}>
+          {getPaginationRange().map((page, index) => (
+            <Button
+              key={index}
+              className={`${styles.pagination__button} ${
+                page === currentPage ? styles.active__page : ''
+              }`}
+              onClick={() => typeof page === 'number' && handlePageChange(page)}
+            >
+              {page}
+            </Button>
+          ))}
+        </div>
+        <div
+          onClick={() =>
+            handlePageChange(currentPage < totalPages ? currentPage + 1 : totalPages)
+          }
+        >
+          <PaginationIcon
+            direction="right"
+            color={currentPage + 1 <= totalPages ? 'primary' : 'secondary'}
+          />
+        </div>
       </div>
-      <div className={styles.pagination__buttons}>
-        {getPaginationRange().map((page, index) => (
-          <Button
-            key={index}
-            className={`${styles.pagination__button} ${page === currentPage ? styles.active__page : ''}`}
-            onClick={() => typeof page === 'number' && handlePageChange(page)}
-          >
-            {page}
-          </Button>
-        ))}
-      </div>
-      <div onClick={() => handlePageChange(currentPage < totalPages ? currentPage + 1 : totalPages)}>
-        <PaginationIcon direction="right" color={currentPage + 1 <= totalPages ? 'primary' : 'secondary'} />
-      </div>
-    </div>
-  );
+    );
+}
 });
 
 export default Pagination;

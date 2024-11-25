@@ -1,25 +1,41 @@
 import Button from 'components/Button/Button';
 import styles from './AboutPage.module.scss';
 import ImageCarousel from './components/ImageCarousel/ImageCarousel';
-import { Link } from 'react-router-dom';
-import { useCallback,  useEffect,  useRef} from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useCallback,  useEffect,  useRef, useState} from 'react';
 import Loader from 'components/Loader';
-import PracticeSection from './components/PracticeSection/PracticeSection';
 import { observer, useLocalStore } from 'mobx-react-lite';
+import { toast, ToastContainer } from 'react-toastify';
 import ProductsStore from 'stores/ProductsStore';
+import PracticeSection from './components/PracticeSection/PracticeSection';
 
 
 const AboutPage = observer(() => {
+  const location = useLocation();
+  const { state } = location;
 
-
-    
   const localProductsStore = useLocalStore(() => new ProductsStore());
 
+ 
+
   useEffect(() => {
+
+ // Проверка на наличие сообщения и статус загрузки
+ if (state?.message && localProductsStore.meta === 'success') {
+  if (state.message === "Logout") {
+    toast.info('Logout', { position: 'top-right', className: 'custom-toast' });
+  } else {
+    toast.success(state.message, { position: 'top-right', className: 'custom-toast' });
+  }
+}
+    
+
+  }, [state, localProductsStore.meta ]);
+
+
+   useEffect(() => {
     localProductsStore.fetchProducts('', 3);
   }, []);
-
-
 
   const familyImages = [
     { src: 'https://avatars.mds.yandex.net/i?id=22968304af6a0670ae5ee025c1e32855_l-5575009-images-thumbs&n=13', alt: 'Training people 1' },
@@ -47,6 +63,7 @@ const AboutPage = observer(() => {
     return (
       <main className="page">
         <div className="page__loader">
+        <ToastContainer />
           <Loader />
         </div>
       </main>
@@ -56,6 +73,7 @@ const AboutPage = observer(() => {
 
   return (
     <main id="main" className="page">
+       <ToastContainer />
       <div className={styles.abut__container}>
         <div className={styles.wall}>
           <div className={styles.row}>

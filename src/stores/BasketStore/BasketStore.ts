@@ -1,23 +1,39 @@
-import { action, makeAutoObservable, observable } from 'mobx';
+import { action, makeAutoObservable, observable, toJS } from 'mobx';
 import { IBasketProduct } from 'modules/types';
 import AuthStore from 'stores/AuthStore';
-
 
 class BasketStore {
   basketItems: IBasketProduct[] = [];
 
   constructor() {
     makeAutoObservable(this, {
-  
-      addToBasket:action,
-      removeFromBasket:action,
-      clearBasket:action, 
-      basketItems: observable
-
+      addToBasket: action,
+      removeFromBasket: action,
+      clearBasket: action,
+      basketItems: observable,
     });
+
+    this.loadBasketFromLocalStorage(); // Загрузка корзины при инициализации
   }
 
+  saveBasketToLocalStorage() {
+    try {
+      localStorage.setItem("basket", JSON.stringify(this.basketItems));
+    } catch (error) {
+      console.error("Error saving basket to localStorage:", error);
+    }
+  }
 
+  loadBasketFromLocalStorage() {
+    try {
+      const storedBasket = localStorage.getItem("basket");
+      if (storedBasket) {
+        this.basketItems = JSON.parse(storedBasket);
+      }
+    } catch (error) {
+      console.error("Error loading basket from localStorage:", error);
+    }
+  }
 
   addToBasket(item: IBasketProduct) {
     const existingItem = this.basketItems.find((product) => product.id === item.id);
@@ -26,23 +42,51 @@ class BasketStore {
     } else {
       this.basketItems.push({ ...item, quantity: 1 });
     }
-    AuthStore.saveBasketToUser();
+    this.saveBasketToLocalStorage(); // Сохранение корзины
+    AuthStore.saveBasketToUser(); // Синхронизация с пользователем
+  }
+
+  incrementQuantity(id: string) {
+    const item = this.basketItems.find((product) => product.id === id);
+    if (item) {
+      item.quantity = (item.quantity || 1) + 1;
+    }
+    this.saveBasketToLocalStorage(); // Сохранение корзины
+    AuthStore.saveBasketToUser(); // Синхронизация с пользователем
+  }
+
+  decrementQuantity(id: string) {
+    const item = this.basketItems.find((product) => product.id === id);
+    if (item) {
+      item.quantity = Math.max((item.quantity || 1) - 1, 1); // Минимум 1 товар
+    }
+    this.saveBasketToLocalStorage(); // Сохранение корзины
+    AuthStore.saveBasketToUser(); // Синхронизация с пользователем
   }
 
   removeFromBasket(id: string) {
     this.basketItems = this.basketItems.filter((item) => item.id !== id);
+    this.saveBasketToLocalStorage(); // Сохранение корзины
   }
 
   clearBasket() {
     this.basketItems = [];
+    this.saveBasketToLocalStorage();
+    if (AuthStore.user) {
+      AuthStore.user.basketItems = this.basketItems;
+      AuthStore.saveBasketToUser();
+    }
   }
-
   get totalItems() {
-    return Array.isArray(this.basketItems) ? this.basketItems.reduce((total, item) => total + (item.quantity || 1), 0) : 0;
+    return Array.isArray(this.basketItems)
+      ? this.basketItems.reduce((total, item) => total + (item.quantity || 1), 0)
+      : 0;
   }
 
   get totalPrice() {
-    return Array.isArray(this.basketItems) ? this.basketItems.reduce((total, item) => total + item.price * (item.quantity || 1), 0) : 0;
+    return Array.isArray(this.basketItems)
+      ? this.basketItems.reduce((total, item) => total + item.price * (item.quantity || 1), 0)
+      : 0;
   }
 }
 

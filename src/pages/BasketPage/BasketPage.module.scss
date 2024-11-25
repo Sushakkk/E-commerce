@@ -71,6 +71,19 @@
   margin: 0;
 }
 
+
+.quantityButton {
+  background-color: #ddd;
+  border: none;
+  padding: 2px 5px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.quantityButton:hover {
+  background-color: #bbb;
+}
 .removeButton {
   background-color: #ff4d4f;
   color: white;

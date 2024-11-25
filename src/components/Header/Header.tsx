@@ -9,6 +9,8 @@ import User from '../User/User';
 import rootStore from 'stores/RootStore';
 import AuthStore from 'stores/AuthStore';
 import { observer} from 'mobx-react-lite';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Header: React.FC = observer(() => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -23,8 +25,12 @@ const Header: React.FC = observer(() => {
       return 'Categories'; 
     } else if (path === '/products') {
       return 'Products';
-    } else {
+    } else if (path === '/') {
       return 'About us'; 
+    }
+    else
+    {
+      return '';
     }
   }, [location.pathname]);
   
@@ -59,7 +65,7 @@ const Header: React.FC = observer(() => {
     localAuthStore.logout();
     console.log(`вышли ${localAuthStore.isAuthenticated}`)
     closeMenu();
-    navigate('/');
+    navigate('/', { state: { message: 'Logout' } });
   };
 
 
@@ -67,6 +73,7 @@ const Header: React.FC = observer(() => {
 
   return (
     <header className={`${styles.header} ${isMenuOpen ? styles.lock : ''}`}>
+      <ToastContainer />
       <div className={styles.header__container}>
         <div className={styles.header__logo}>
           <Link to="/" onClick={handleLogoClick}>
@@ -100,7 +107,7 @@ const Header: React.FC = observer(() => {
         <div className={styles['header__burger-container']}>
           <div className={styles.header__icons}>
             <Link to="/basket">
-              <div className={styles.basketIcon}>
+              <div className={styles.basketIcon} >
                 <Basket />
                 {basketStore.totalItems > 0 && (
                   <span className={styles.basketCount}>{basketStore.totalItems}</span>

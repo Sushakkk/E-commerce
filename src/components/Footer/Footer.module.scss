@@ -59,6 +59,7 @@
 .menu__footer {
 	display: flex;
 	justify-content: space-between;
+	visibility: hidden;
 }
 .menu__footer__list {
 	display: flex;
@@ -143,6 +144,9 @@
 .social {
 	display: flex;
 	align-items: center;
+}
+.social__item{
+	cursor: pointer;
 }
 .social__item:not(:last-child) {
 	margin: 0px 20px 0px 0px;

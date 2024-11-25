@@ -4,8 +4,8 @@ import Button from 'components/Button/Button';
 import { observer} from 'mobx-react-lite';
 import AuthStore from 'stores/AuthStore';
 import { validateEmail } from 'utils/validation';
-import { toast, ToastContainer } from 'react-toastify'; 
-import 'react-toastify/dist/ReactToastify.css'; 
+import { toast, ToastContainer } from 'react-toastify'; // Import Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
 import { useNavigate } from 'react-router-dom';
 
 const AuthorizePage: React.FC = observer(() => {
@@ -27,18 +27,10 @@ const AuthorizePage: React.FC = observer(() => {
 
 
 
-
-
-
-
   const navigate = useNavigate();
   
 
-  const notifySuccess = (message: string) => 
-  toast.success(message, { 
-    position: 'top-right', 
-    className:  `${styles['custom-toast']}`, 
-  });
+ 
   const notifyError = (message: string) => 
   toast.error(message, { 
     position: 'top-right', 
@@ -51,10 +43,7 @@ const AuthorizePage: React.FC = observer(() => {
       const isSuccess = localAuthStore.login(loginData);
   
       if (isSuccess) {
-        notifySuccess('Successful!');
-        setTimeout(() => {
-          navigate('/');
-        }, 3000);
+          navigate('/', { state: { message: 'Login successful!' } });
       } else {
         notifyError('Invalid email or password');
       }
@@ -75,12 +64,7 @@ const handleSignUpSubmit = useCallback(
     const isSignUpSuccess = await localAuthStore.signUp(signUpData);
 
     if (isSignUpSuccess) {
-
-      notifySuccess('Registration successful!');
-
-      setTimeout(() => {
-        navigate('/'); 
-      }, 3000);
+        navigate('/', { state: { message: 'Registration successful!' } }); 
     } else {
 
       if (localAuthStore.signUpErrors.email === 'User with this email already exists') {
@@ -98,8 +82,6 @@ const handleSignUpSubmit = useCallback(
   const handleLoginChange = useCallback(
     (field: 'email' | 'password', value: string) => {
 
-
-      console.log('я сработал')
       setLoginData((prevData) => ({ ...prevData, [field]: value }));
 
       setLoginErrors((prevErrors) => {

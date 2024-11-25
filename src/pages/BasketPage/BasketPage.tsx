@@ -18,19 +18,11 @@ const BasketPage: React.FC = observer(() => {
   const [isLoading, setIsLoading] = useState(false); 
   const navigate = useNavigate();
 
-
-  const notifySuccess = (message: string) => 
-  toast.success(message, { 
-    position: 'top-right', 
-    className:  `${styles['custom-toast']}`, 
-  });
   const notifyError = (message: string) => 
   toast.error(message, { 
     position: 'top-right', 
     className: `${styles['custom-toast']}`, 
   });
-
- 
 
 const handleCompleteOrder = useCallback(async () => {
   setIsLoading(true);
@@ -40,8 +32,8 @@ const handleCompleteOrder = useCallback(async () => {
     quantity: item.quantity ?? 1, 
     image: item.image,
     totalPrice: (item.price * (item.quantity ?? 1)).toFixed(2),
-    
-  }));
+  }
+));
   
 
   const orderSummary = orderDetails
@@ -54,7 +46,7 @@ const handleCompleteOrder = useCallback(async () => {
 
     let userEmail = '';
   
-    if (AuthStore.isAuthenticated) {
+    if (AuthStore.setUser()) {
       const token = rootStore.QueryStore.getQueryParam('auth');
       const decoded = decodeJWT(String(token));
       userEmail = decoded.payload.email;
@@ -85,8 +77,10 @@ const handleCompleteOrder = useCallback(async () => {
     );
 
     if (response.status === 200) {
-      notifySuccess('Your order has been successfully placed!')
       BasketStore.clearBasket();
+      BasketStore.saveBasketToLocalStorage();
+      toast.success("Order successfully Complete! 🎉");
+      toast.success("Check your E-mail");
     } else {
 
       notifyError('Failed to send order email. Please try again.');
@@ -134,9 +128,22 @@ if (isLoading) {
                       <p className={styles.basketItemPrice}>
                         ${item.price.toFixed(2)}
                       </p>
-                      <p className={styles.basketItemQuantity}>
-                        Quantity: {item.quantity}
-                      </p>
+                      <div className={styles.basketItemQuantity}>
+                        <span>Quantity:</span>
+                        <button
+                          className={styles.quantityButton}
+                          onClick={() => basketStore.decrementQuantity(item.id)}
+                        >
+                          -
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button
+                          className={styles.quantityButton}
+                          onClick={() => basketStore.incrementQuantity(item.id)}
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                     <button
                       className={styles.removeButton}

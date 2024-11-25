@@ -1,20 +1,67 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Footer.module.scss';
 import Logo from 'components/Logo/Logo';
 
 import Instagram from './components/social/Instagram/Instagram';
-import Twitter from './components/social/Twitter/Twitter';
-import Youtube from './components/social/Youtube/Youtube';
-import Facebook from './components/social/Facebook';
+import WhatsApp from './components/social/WhatsApp/WhatsApp';
+import Telegram from './components/social/Telegram';
+import VkIcon from './components/social/vk/vk';
+import Modal from './components/Modal/Modal';
+
+interface SocialMediaInfo {
+  name: string;
+  description: string;
+  link: string;
+}
 
 const Footer = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [accountInfo, setAccountInfo] = useState<SocialMediaInfo>({
+    name: '',
+    description: '',
+    link: ''
+  });
+
+  const socialMediaInfo: { [key: string]: SocialMediaInfo } = {
+    instagram: {
+      name: 'Instagram',
+      description: 'Следите за нами в Instagram для получения последних новостей.',
+      link: 'https://www.instagram.com'
+    },
+    telegram: {
+      name: 'Telegram',
+      description: 'Присоединяйтесь к нашему каналу в Telegram.',
+      link: 'https://t.me/sushakk'
+    },
+    whatsapp: {
+      name: 'WhatsApp',
+      description: 'Напишите нам в WhatsApp.',
+      link: 'https://wa.me/79774201895'
+    },
+    vk: {
+      name: 'VK',
+      description: 'Следите за нами в VK.',
+      link: 'https://vk.com/sushaaakkk'
+    }
+  };
+
+  const openModal = (socialMedia: keyof typeof socialMediaInfo) => {
+    setAccountInfo(socialMediaInfo[socialMedia]);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={styles.footer__top}>
         <div className={styles.footer__main}>
           <div className={styles.footer__row}>
             <div className={`${styles.header__logo} ${styles.footer_logo}`}>
-              <Logo/>
+              <Logo />
             </div>
             <nav className={styles.menu__footer}>
               <ul className={styles.menu__footer__list}>
@@ -52,21 +99,23 @@ const Footer = () => {
         <div className={styles.footer__container}>
           <div className="t420__text t-descr t-descr_xxs" >© 2024 - Lalasia</div>
           <div className={styles.footer__social}>
-            <Link to="#" className={styles.social__item}>
-              <Facebook/>
-            </Link>
-            <Link to="#" className={styles.social__item}>
-              <Instagram/>
-            </Link>
-            <Link to="#" className={styles.social__item}>
-              <Twitter/>
-            </Link>
-            <Link to="#" className={styles.social__item}>
-              <Youtube/>
-            </Link>
+            <div className={styles.social__item} onClick={() => openModal('instagram')}>
+              <Instagram />
+            </div>
+            <div className={styles.social__item} onClick={() => openModal('telegram')}>
+              <Telegram />
+            </div>
+            <div className={styles.social__item} onClick={() => openModal('whatsapp')}>
+              <WhatsApp />
+            </div>
+            <div className={styles.social__item} onClick={() => openModal('vk')}>
+              <VkIcon />
+            </div>
           </div>
         </div>
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={closeModal} accountInfo={accountInfo} />
     </footer>
   );
 };
