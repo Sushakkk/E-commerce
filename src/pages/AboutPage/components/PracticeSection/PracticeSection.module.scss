@@ -42,6 +42,7 @@
 }
 .practice__container {
     @include container;
+	margin-top: 50px;
 }
 .practice__header {
 	margin: 0px 0px 45px 0px;
@@ -59,6 +60,7 @@
 }
 .practice__column {
 	padding: 0px 20px;
+
 	margin: 0px 0px 30px 0px;
 	flex: 0 1 25%;
 }
@@ -80,6 +82,7 @@
 	background-color: #fff;
 	display: flex;
 	height: 100%;
+	border: 2px solid $accent;
 	flex-direction: column;
 }
 .item-practice__content {

@@ -2,7 +2,7 @@ import Button from 'components/Button/Button';
 import styles from './AboutPage.module.scss';
 import ImageCarousel from './components/ImageCarousel/ImageCarousel';
 import { Link } from 'react-router-dom';
-import { useCallback,  useEffect,  useRef, useState } from 'react';
+import { useCallback,  useEffect,  useRef} from 'react';
 import Loader from 'components/Loader';
 import PracticeSection from './components/PracticeSection/PracticeSection';
 import { observer, useLocalStore } from 'mobx-react-lite';
@@ -16,7 +16,7 @@ const AboutPage = observer(() => {
   const localProductsStore = useLocalStore(() => new ProductsStore());
 
   useEffect(() => {
-    localProductsStore.fetchProducts('', 2);
+    localProductsStore.fetchProducts('', 3);
   }, []);
 
 
