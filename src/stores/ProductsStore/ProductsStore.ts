@@ -43,12 +43,10 @@ class ProductsStore implements ILocalStore {
   
 
   fetchProducts = async (searchQuery: string, selectedCategoryID: number | undefined, page: number | null) => {
-    if(page){
-      this.currentPage=page
-
-    }
-    else{
-      this.initializeParams()
+    if (page !== null) {
+      this.currentPage = page;
+    } else {
+      this.initializeParams();
     }
     this.meta = Meta.loading;
     

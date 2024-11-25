@@ -4,13 +4,10 @@ import Button from 'components/Button';
 import styles from './ProductDetails.module.scss';
 import { observer } from 'mobx-react-lite';
 import ProductDetailStore from 'stores/ProductDetailsStore';
-
 import emailjs from '@emailjs/browser';
-
 import { decodeJWT } from 'utils/token';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Loader from 'components/Loader';
 import { useNavigate } from 'react-router-dom';
 import rootStore from 'stores/RootStore/instance';
 

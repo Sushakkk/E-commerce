@@ -8,7 +8,7 @@ import Card from 'components/Card';
 import Loader from 'components/Loader';
 import { useNavigate } from 'react-router-dom'; 
 import useImageHandler from 'hooks/useImageHandler';
-import rootStore from 'stores/RootStore/instance';
+
 
 
 const CategoriesPage: React.FC = () => {

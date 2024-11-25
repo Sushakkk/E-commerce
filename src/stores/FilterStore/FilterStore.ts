@@ -92,7 +92,7 @@ class FilterStore implements ILocalStore {
   applySearch() {
     this.setSearchQuery(this.searchValue);
     rootStore.QueryStore.deleteQueryParam('page');
-    this.localProductsStore.fetchProducts(this.searchQuery, this.selectedCategory?.key);
+    this.localProductsStore.fetchProducts(this.searchQuery, this.selectedCategory?.key, null);
     rootStore.QueryStore.updateQueryParams();
   }
 

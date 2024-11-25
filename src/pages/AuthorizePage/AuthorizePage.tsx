@@ -1,18 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback,  useState } from 'react';
 import styles from './AuthorizePage.module.scss';
 import Button from 'components/Button/Button';
 import { observer} from 'mobx-react-lite';
-import AuthStore from 'stores/AuthStore';
+
 import { validateEmail } from 'utils/validation';
 import { toast, ToastContainer } from 'react-toastify'; // Import Toastify
 import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import rootStore from 'stores/RootStore/instance';
 
 
 const AuthorizePage: React.FC = observer(() => {
   const localAuthStore= rootStore.AuthStore;
-  const location = useLocation()
+
 
   const [isLoginActive, setIsLoginActive] = useState(true);
 

@@ -1,16 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import basketStore from 'stores/BasketStore/BasketStore';
 import styles from './BasketPage.module.scss';
 import emailjs from '@emailjs/browser';
-import AuthStore from 'stores/AuthStore';
-
 import { decodeJWT } from 'utils/token';
 import { useNavigate } from 'react-router-dom';
 import Loader from 'components/Loader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import BasketStore from 'stores/BasketStore/BasketStore';
 import rootStore from 'stores/RootStore/instance';
 import useImageHandler from 'hooks/useImageHandler';
 
