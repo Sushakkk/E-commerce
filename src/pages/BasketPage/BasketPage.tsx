@@ -1,18 +1,20 @@
 import React, { useCallback, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import basketStore from 'stores/BasketStore/BasketStore';
 import styles from './BasketPage.module.scss';
 import emailjs from '@emailjs/browser';
+import AuthStore from 'stores/AuthStore';
+
 import { decodeJWT } from 'utils/token';
 import { useNavigate } from 'react-router-dom';
 import Loader from 'components/Loader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import useImageHandler from 'hooks/useImageHandler';
+import BasketStore from 'stores/BasketStore/BasketStore';
 import rootStore from 'stores/RootStore/instance';
 
 
 const BasketPage: React.FC = observer(() => {
-
   const { basketItems, totalPrice, totalItems } = rootStore.BasketStore;
   const [isLoading, setIsLoading] = useState(false); 
   const navigate = useNavigate();
@@ -70,17 +72,15 @@ const handleCompleteOrder = useCallback(async () => {
 
   try {
     const response = await emailjs.send(
-      'service_wb0e44f', 
-      'template_nohzq8l', 
+      'service_wb0e44f',
+      'template_nohzq8l',
       templateParams,
       '8FzihwMy8PxMrMmKe' 
     );
 
     if (response.status === 200) {
-      if (rootStore.AuthStore.user) {
-        rootStore.AuthStore.user.orderCount += 1;
-      }
       rootStore.BasketStore.clearBasket();
+      rootStore.BasketStore.saveBasketToLocalStorage();
       toast.success("Order successfully Complete! 🎉");
       toast.success("Check your E-mail");
     } else {
@@ -106,8 +106,6 @@ if (isLoading) {
 }
 
 
-  const { getImage } = useImageHandler();
-
   return (
     <main id="main" className="page">
       <div className={styles['page__main-block']}>
@@ -123,7 +121,7 @@ if (isLoading) {
                 {basketItems.map((item) => (
                   <div className={styles.basketItem} key={item.id}>
                     <img
-                      src={getImage(item.image)}
+                      src={item.image}
                       alt={item.name}
                       className={styles.basketItemImage}
                     />
@@ -136,14 +134,14 @@ if (isLoading) {
                         <span>Quantity:</span>
                         <button
                           className={styles.quantityButton}
-                          onClick={() => rootStore.BasketStore.decrementQuantity(item.id)}
+                          onClick={() =>  rootStore.BasketStore.decrementQuantity(item.id)}
                         >
                           -
                         </button>
                         <span>{item.quantity}</span>
                         <button
                           className={styles.quantityButton}
-                          onClick={() => rootStore.BasketStore.incrementQuantity(item.id)}
+                          onClick={() =>  rootStore.BasketStore.incrementQuantity(item.id)}
                         >
                           +
                         </button>
@@ -151,7 +149,7 @@ if (isLoading) {
                     </div>
                     <button
                       className={styles.removeButton}
-                      onClick={() => rootStore.BasketStore.removeFromBasket(item.id)}
+                      onClick={() =>  rootStore.BasketStore.removeFromBasket(item.id)}
                     >
                       Remove
                     </button>
@@ -165,7 +163,7 @@ if (isLoading) {
                 <p>Total Price: ${totalPrice.toFixed(2)}</p>
                 <button
                   className={styles.completeButton}
-                  onClick={handleCompleteOrder} 
+                  onClick={handleCompleteOrder}  // Trigger email sending on click
                 >
                   Complete Order
                 </button>

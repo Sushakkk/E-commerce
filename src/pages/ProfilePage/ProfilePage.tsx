@@ -2,24 +2,25 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styles from './ProfilePage.module.scss'; 
 import Button from 'components/Button';
 import { observer } from 'mobx-react-lite';
-import AuthStore from 'stores/AuthStore/AuthStore';
+import rootStore from 'stores/RootStore/instance';
+
 
 const ProfilePage: React.FC = observer(() => {
-  const localAuthStore = AuthStore;
+
 
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
   useEffect(() => {
-    const user = localAuthStore.user; 
+    const user = rootStore.AuthStore.user; 
     console.log(user)
     if (user) {
       setEmail(user.email || ''); 
       setFullName(user.fio || ''); 
       setProfilePicture(user.image || null); 
     }
-  }, [localAuthStore.user]);
+  }, [rootStore.AuthStore.user]);
 
   const handleImageUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -37,9 +38,9 @@ const ProfilePage: React.FC = observer(() => {
       alert('Please fill in all fields.');
       return;
     }
-    localAuthStore.updateUserProfile(email, fullName, profilePicture ? profilePicture : '');
+    rootStore.AuthStore.updateUserProfile(email, fullName, profilePicture ? profilePicture : '');
     alert('Profile updated successfully!');
-  }, [email, fullName, profilePicture, localAuthStore]);
+  }, [email, fullName, profilePicture, rootStore.AuthStore]);
 
   return (
     <main id="main" className="page">
