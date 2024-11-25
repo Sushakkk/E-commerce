@@ -121,6 +121,7 @@ class AuthStore {
   }
 
   signUp(signUpData: CheckData) {
+    this.getUsers();
     const existingUser = this.users.find(user => user.email === signUpData.email);
 
     if (existingUser) {
@@ -136,6 +137,8 @@ class AuthStore {
       this.users.push(this.user);
       localStorage.setItem('users', JSON.stringify(this.users));
       const token = generateJWT(signUpData.email, signUpData.password);
+      rootStore.QueryStore.setQueryParam('auth', token);
+
       this.token = token;
       this.isAuthenticated = true;
 

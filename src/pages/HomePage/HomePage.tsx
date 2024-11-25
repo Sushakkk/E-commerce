@@ -28,7 +28,7 @@ const HomePage: React.FC = observer(() => {
       localFilterStore.selectedCategory=null;
       localFilterStore.searchQuery=''
       localProductsStore.currentPage=1;
-      localProductsStore.fetchProducts(searchQuery, selectedCategory?.key);
+      localProductsStore.fetchProducts(searchQuery, selectedCategory?.key,null);
     }
   }, [queryParams]);
 
@@ -42,7 +42,7 @@ const HomePage: React.FC = observer(() => {
     
     
     if ( rootStore.QueryStore.queryLoaded && localFilterStore.ParamsMeta === 'success') {
-      localProductsStore.fetchProducts(searchQuery, selectedCategory?.key);
+      localProductsStore.fetchProducts(searchQuery, selectedCategory?.key,null);
     }
   }, [ rootStore.QueryStore.queryLoaded, searchQuery, selectedCategory, currentPage, localFilterStore.ParamsMeta]);
 

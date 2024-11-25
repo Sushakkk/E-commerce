@@ -34,7 +34,7 @@ const AboutPage = observer(() => {
 
 
    useEffect(() => {
-    localProductsStore.fetchProducts('', 2);
+    localProductsStore.fetchProducts('', 2,1);
   }, []);
 
   const familyImages = [

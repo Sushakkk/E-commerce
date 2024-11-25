@@ -5,6 +5,7 @@ import styles from './PracticeSection.module.scss';
 import ProductsStore from 'stores/ProductsStore';
 import { useCallback } from 'react';
 import { handleProductClick } from 'utils/navigationUtils';
+import useImageHandler from 'hooks/useImageHandler';
 
 
 
@@ -16,6 +17,7 @@ const PracticeSection: React.FC<ProductsProps> = observer(({localProductsStore})
 
   const navigate = useNavigate();
   const productClickHandler = useCallback(handleProductClick(navigate), [navigate]);
+  const { getImage } = useImageHandler();
 
   
 
@@ -39,7 +41,7 @@ const PracticeSection: React.FC<ProductsProps> = observer(({localProductsStore})
                   <div className={styles['item-practice__text']}>{product.description}</div>
                 </div>
                 <Link to="#" className={`${styles['item-practice__image']} ${styles._ibg}`}>
-                  <img  src={product.images[0]} alt={product.title} />
+                  <img  src={getImage(product.images[0])} alt={product.title} />
                 </Link>
               </article>
             </div>

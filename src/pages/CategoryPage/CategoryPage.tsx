@@ -30,7 +30,7 @@ const CategoryPage: React.FC = observer(() => {
 
 
   useEffect(() => {
-      localProductsStore.fetchProducts(searchQuery, Number(id));
+      localProductsStore.fetchProducts(searchQuery, Number(id),currentPage);
   }, [currentPage]);
 
   if (localProductsStore.meta === 'loading' || localFiltersStore.meta === 'loading') {
