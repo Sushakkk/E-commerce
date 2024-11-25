@@ -1,12 +1,9 @@
 // src/pages/ProductPage/ProductPage.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams} from 'react-router-dom';
-
 import Loader from 'components/Loader';
-
 import RelatedProducts from './components/RelatedProducts';
 import styles from './ProductPage.module.scss';
-
 import ProductDetails from './components/ProductDetails/ProductDetails';
 import ProductDetailsStore from 'stores/ProductDetailsStore/ProductDetailsStore';
 import { useLocalStore } from 'hooks/useLocalStore';
@@ -17,6 +14,7 @@ import BackButton from './../../components/BackButton/BackButton';
 
 const ProductPage: React.FC = observer(() => {
   const { id } = useParams<{ id: string }>();
+  const [isLoading, setIsLoading] = useState(false);
 
 
 
@@ -33,7 +31,7 @@ const ProductPage: React.FC = observer(() => {
     }
   }, [id]);
 
-  if (productMeta==='loading') {
+  if (productMeta==='loading' || isLoading) {
     return (
       <main className="page">
         <div className="page__loader">
@@ -54,7 +52,7 @@ const ProductPage: React.FC = observer(() => {
         <div className={styles.product__content}>
           <div className={styles.product__wrapper}>
             <ImageSlider ProductDetailsStore={localProductDetailsStore} />
-            <ProductDetails  ProductDetailsStore={localProductDetailsStore}/>
+            <ProductDetails  ProductDetailsStore={localProductDetailsStore} setIsLoading={setIsLoading}/>
           </div>
           <RelatedProducts ProductDetailsStore={localProductDetailsStore}/>
         </div>

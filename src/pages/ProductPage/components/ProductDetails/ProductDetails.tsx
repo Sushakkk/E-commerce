@@ -16,11 +16,12 @@ import rootStore from 'stores/RootStore/instance';
 
 interface ProductDetailsProps {
   ProductDetailsStore: ProductDetailStore;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ProductDetails: React.FC<ProductDetailsProps> = observer(({ ProductDetailsStore }) => {
+const ProductDetails: React.FC<ProductDetailsProps> = observer(({ ProductDetailsStore, setIsLoading }) => {
   const { product } = ProductDetailsStore;
-  const [isLoading, setIsLoading] = useState(false);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate= useNavigate()
@@ -78,6 +79,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(({ ProductDetails
       if (response.status === 200) {
         toast.success("Order successfully completed! 🎉");
         toast.success("Check your email.");
+        
       } else {
         toast.error("Failed to send order email. Please try again.");
       }
@@ -109,13 +111,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(({ ProductDetails
     return <div>Товар не найден</div>;
   }
 
-  if (isLoading) {
-    return (
-      <div className="page__loader">
-        <Loader />
-      </div>
-    );
-  }
+
 
   return (
     <div className={styles['product__text-container']}>
