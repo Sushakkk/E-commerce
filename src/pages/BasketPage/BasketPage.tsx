@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import styles from './BasketPage.module.scss';
 import emailjs from '@emailjs/browser';
@@ -11,16 +11,20 @@ import rootStore from 'stores/RootStore/instance';
 import useImageHandler from 'hooks/useImageHandler';
 import { toJS } from 'mobx';
 import Button from 'components/Button';
-
+import confetti from 'canvas-confetti';
 import Wheel from 'components/Wheel/Wheel';
 
 
 const BasketPage: React.FC = observer(() => {
   const { getImage } = useImageHandler();
   const { basketItems, totalPrice, totalItems } = rootStore.BasketStore;
+  const [isWinModalOpen, setIsWinModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false); 
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [prize, setPrize] = useState<string | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const winModalRef = useRef<HTMLDivElement>(null);
 
   const notifyError = (message: string) => 
     toast.error(message, { 
@@ -111,6 +115,25 @@ const BasketPage: React.FC = observer(() => {
       setIsLoading(false);
     }
   }, [basketItems, totalPrice, totalItems, calculateDiscountedPrice, navigate, notifyError]);
+
+
+  const handleWin = (prize: string) => {
+    setPrize(prize);
+    setIsWinModalOpen(true);
+  };
+
+
+
+  useEffect(() => {
+    if (isWinModalOpen) {
+      confetti({
+        particleCount: 500, // Количество частиц
+        spread: 70, // Угол разлёта
+        origin: { x: 0.5, y: 0.5 }, // Центр экрана
+        colors: ['#405641', '#837983', '#cccbcb', '#94c2fe', '#c50200'], // Цвета конфетти
+      });
+    }
+  }, [isWinModalOpen]);
 
   if (isLoading) {
     return (
@@ -223,11 +246,24 @@ return (
           <div className={styles.modalContent}>
             <p className={styles.modalTitle}>Spin the wheel!</p>
           
-             <Wheel setIsModalOpen={setIsModalOpen}/>
+             <Wheel setIsModalOpen={setIsModalOpen} onWin={handleWin} />
         
           </div>
         </div>
       )}
+
+{isWinModalOpen && (
+            <div className={styles.modalOverlay}>
+              <div className={styles.modalContent}>
+                <div className={styles.modalText}>
+                <p className={styles.modalTitle}>🎉 Congratulations! 🎉</p>
+                <p className={styles.modalTitle}>🎊 You won discount! 🎊</p>
+                <p className={styles.modalDiscount}>{prize}</p>
+                </div>
+                <Button onClick={() => setIsWinModalOpen(false)}>Close</Button>
+              </div>
+            </div>
+          )}
       </div>
     </div>
   </main>

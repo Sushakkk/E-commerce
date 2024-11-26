@@ -4,9 +4,10 @@ import rootStore from 'stores/RootStore/instance';
 
 interface WheelOfFortuneProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onWin: (prize: string) => void;
 }
 
-const WheelOfFortune: React.FC<WheelOfFortuneProps> = React.memo(({ setIsModalOpen }) => {
+const WheelOfFortune: React.FC<WheelOfFortuneProps> = React.memo(({ setIsModalOpen, onWin }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isSpinning, setIsSpinning] = useState(false);
 
@@ -20,7 +21,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = React.memo(({ setIsModalOp
       setTimeout(() => {
         const finalAngle = number % 360;
         const winningSegment = getWinningSegment(finalAngle);
-        alert(`Поздравляем! Вы выиграли: ${winningSegment}%`);
+        onWin(`${winningSegment}%`);
 
         setIsModalOpen(false);
 

@@ -1,14 +1,6 @@
 
-  
-  // body {
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //   // overflow: hidden;
-  //   min-height: 100vh;
-  //   background: #fafafa;
-  // }
-  
+@use 'styles/variables' as *;
+
   .wheel-container {
     position: relative;
   }
@@ -16,7 +8,7 @@
   .wheel {
     height: 350px;
     width: 350px;
-    background: #4ed4c6;
+    background: $wheel1;
     position: relative;
     border-radius: 50%;
     overflow: hidden;
@@ -38,37 +30,37 @@
     font-size: 20px;
     font-family: monospace;
     font-weight: 1000;
-    color: #008276;
+    color: #ffffff;
     writing-mode: vertical-rl;
   }
   
   .wheel .one {
-    background: #baf4ee;
+    background: $wheel1;
     left: 50%;
   }
   
   .wheel .two {
-    background: #4ed4c6;
+    background: $wheel2;
     transform: rotate(60deg);
   }
   
   .wheel .three {
-    background: #baf4ee;
+    background: $wheel1;
     transform: rotate(120deg);
   }
   
   .wheel .four {
-    background: #4ed4c6;
+    background: $wheel2;
     transform: rotate(180deg);
   }
   
   .wheel .five {
-    background: #baf4ee;
+    background: $wheel1;
     transform: rotate(240deg);
   }
   
   .wheel .six {
-    background: #4ed4c6;
+    background: $wheel2;
     transform: rotate(300deg);
   }
   
@@ -77,13 +69,13 @@
     width: 25px;
     border-radius: 50%;
     position: absolute;
-    background: #008276;
+    background: $wheel2;
   }
   
   .spin-button {
     height: 60px;
     width: 200px;
-    background: #4ed4c6;
+    background: $wheel2;
     position: absolute;
     margin-top: 400px;
     font-size: 30px;
@@ -118,7 +110,7 @@
   .additional-spin-button {
   height: 50px;
   width: 150px;
-  background: #008276;
+  background: $wheel1;
   color: white;
   font-size: 20px;
   font-weight: bold;
@@ -129,14 +121,14 @@
   transition: 0.3s ease;
 }
 .additional-spin-button:disabled {
-    background: #baf4ee; /* Серый цвет */
+    background: $wheel2; /* Серый цвет */
     cursor:default; /* Курсор "запрещено" */
     transform: none; /* Убираем анимацию при наведении */
     box-shadow: none;
   }
   
 .additional-spin-button:hover {
-  background: #00a392;
+  background: $wheel2;
   transform: scale(1.05);
 }
 
