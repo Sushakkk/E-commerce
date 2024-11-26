@@ -23,6 +23,7 @@ interface Profile {
   fio: string | null;
   image: string | null;
   orderCount: number| 0;
+  discount: number| 0;
   basketItems: IBasketProduct[];  
 }
 
@@ -135,7 +136,7 @@ class AuthStore {
     this.signUpErrors = errors;
 
     if (isValid) {
-      this.user = { email: signUpData.email, password: signUpData.password, fio: '', image: null, basketItems:  rootStore.BasketStore.basketItems, orderCount: 0};
+      this.user = { email: signUpData.email, password: signUpData.password, fio: '', image: null, basketItems:  rootStore.BasketStore.basketItems, orderCount: 0, discount: 0};
       this.users.push(this.user);
       localStorage.setItem('users', JSON.stringify(this.users));
       const token = generateJWT(signUpData.email, signUpData.password);
