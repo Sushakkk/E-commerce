@@ -27,25 +27,7 @@ const AuthorizePage: React.FC = observer(() => {
     confirmPassword: '',
   });
 
-  // useEffect(()=>{
-  //   rootStore.AuthStore.setUser(); 
-  //   console.log('главная', rootStore.AuthStore.user)
-  //   console.log('главная', rootStore.AuthStore.users)
-  // }, [rootStore.AuthStore.isAuthenticated])
-  
 
-  // const { state } = location;
-
-
- 
-
-  // useEffect(() => {
-  //   if (state?.message) {
-  //     notifyError(state.message)
-  //  }
-       
-   
-  //    }, [state]);
 
 
   const navigate = useNavigate();
@@ -55,7 +37,7 @@ const AuthorizePage: React.FC = observer(() => {
   const notifyError = (message: string) => 
   toast.error(message, { 
     position: 'top-right', 
-    className: `${styles['custom-toast']}`, 
+    className: 'custom-toast', 
   });
 
   const handleLoginSubmit = useCallback(
@@ -178,7 +160,7 @@ const handleSignUpSubmit = useCallback(
 
   return (
     <main className={styles.page}>
-      <ToastContainer /> 
+      <ToastContainer className='custom-toast'  /> 
       <section className={styles.formsSection}>
         <div className={styles.tabs}>
           <button

@@ -1,6 +1,5 @@
 
 import { Route, Routes, useLocation } from 'react-router-dom';
-
 import Header from './components/Header/Header';
 import './styles/null.scss'
 import './styles/styles.scss'
@@ -16,7 +15,7 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import rootStore from 'stores/RootStore';
 import BasketPage from './pages/BasketPage/BasketPage';
 import Footer from 'components/Footer/Footer';
-import SalutPage from './pages/SalutPage/SalutPage';
+
 
 
 
@@ -63,7 +62,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage/>} />
           <Route path="/" element={<AboutPage/>} />
           <Route path="/basket" element={<BasketPage />} />
-          <Route path="/salut" element={<SalutPage/>} />
+    
         </Routes>
         <Footer/>
 

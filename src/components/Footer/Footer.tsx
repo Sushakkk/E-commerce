@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Footer.module.scss';
 import Logo from 'components/Logo/Logo';
@@ -46,14 +46,24 @@ const Footer = () => {
     }
   };
 
-  const openModal = (socialMedia: keyof typeof socialMediaInfo) => {
+ 
+  const openModal = useCallback((socialMedia: keyof typeof socialMediaInfo) => {
     setAccountInfo(socialMediaInfo[socialMedia]);
     setIsModalOpen(true);
-  };
+  }, [socialMediaInfo]);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsModalOpen(false);
-  };
+  }, []);
+
+  const address = "4517 Washington Ave, Manchester, Kentucky 39495";  
+
+  const handleLinkClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault(); 
+    const yandexMapsUrl = `https://yandex.ru/maps/?text=${encodeURIComponent(address)}`;
+    window.open(yandexMapsUrl, '_blank'); 
+  }, [address]);
+
 
   return (
     <footer className={styles.footer}>
@@ -81,14 +91,18 @@ const Footer = () => {
             </nav>
             <div className={styles.footer__column}>
               <div className={styles.contacts__footer}>
-                <Link to="tel:4805550103" className={`${styles.contacts__footer__item} ${styles.contacts__footer__item__phone}`}>
-                  (480) 555-0103
+                <Link to="tel:+79774201895" className={`${styles.contacts__footer__item} ${styles.contacts__footer__item__phone}`}>
+                  +7 (977) 420-1895
                 </Link>
-                <Link to="#" className={`${styles.contacts__footer__item} ${styles.contacts__footer__item__map}`}>
-                  4517 Washington Ave. Manchester, Kentucky 39495
-                </Link>
-                <Link to="mailto:debra.holt@example.com" className={`${styles.contacts__footer__item} ${styles.contacts__footer__item__email}`}>
-                  debra.holt@example.com
+                <Link
+        to="#"
+        onClick={handleLinkClick}
+        className={`${styles.contacts__footer__item} ${styles.contacts__footer__item__map}`}
+      >
+        {address}
+      </Link>
+                <Link to="mailto:kkkeyesmakeup@mail.ru" className={`${styles.contacts__footer__item} ${styles.contacts__footer__item__email}`}>
+                  kkkeyesmakeup@mail.ru
                 </Link>
               </div>
             </div>

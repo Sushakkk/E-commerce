@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect,  useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import styles from './BasketPage.module.scss';
 import emailjs from '@emailjs/browser';
 import { decodeJWT } from 'utils/token';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Loader from 'components/Loader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -23,8 +23,7 @@ const BasketPage: React.FC = observer(() => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [prize, setPrize] = useState<string | null>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const winModalRef = useRef<HTMLDivElement>(null);
+
 
   const notifyError = (message: string) => 
     toast.error(message, { 
@@ -153,7 +152,7 @@ const BasketPage: React.FC = observer(() => {
 return (
   <main id="main" className="page">
     <div className={styles['page__main-block']}>
-      <ToastContainer />
+      <ToastContainer className='custom-toast'  />
       <div className={styles.basketContainer}>
         <h1 className={styles.basketTitle}>Your Cart</h1>
 

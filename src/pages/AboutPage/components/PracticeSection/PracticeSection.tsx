@@ -47,18 +47,22 @@ const PracticeSection = observer(() => {
           </div>
         </div>
         <div className={styles.practice__body}>
-          {furnitureProducts.map((product) => (
-            <div key={product.id}  className={styles.practice__column}>
+          {furnitureProducts.map((product, index) => (
+            <div
+              key={product.id}
+              className={`${styles.practice__column} wow animate__animated 
+                ${index === 0 || index === 1 ? 'animate__fadeInLeft' : 'animate__fadeInRight'}`}
+            >
               <article className={`${styles.practice__item} ${styles['item-practice']}`}>
                 <div className={styles['item-practice__content']}>
-                  <Link to="#" className={styles['item-practice__link']}>
+                  <div  className={styles['item-practice__link']}>
                     <h4 className={styles['item-practice__title']}>{product.title}</h4>
-                  </Link>
+                  </div>
                   <div className={styles['item-practice__text']}>{product.description}</div>
                 </div>
-                <Link to="#" className={`${styles['item-practice__image']} ${styles._ibg}`}>
+                <div className={`${styles['item-practice__image']} ${styles._ibg}`}>
                   <img src={getImage(product.imageUrl)} alt={product.title} />
-                </Link>
+                </div>
               </article>
             </div>
           ))}

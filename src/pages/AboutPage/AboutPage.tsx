@@ -20,12 +20,11 @@ const AboutPage = observer(() => {
 
   useEffect(() => {
 
- // Проверка на наличие сообщения и статус загрузки
  if (state?.message && localProductsStore.meta === 'success') {
   if (state.message === "Logout") {
-    toast.info('Logout', { position: 'top-right', className: 'custom-toast' });
+    toast.info('Logout', { position: 'top-right',  });
   } else {
-    toast.success(state.message, { position: 'top-right', className: 'custom-toast' });
+    toast.success(state.message, { position: 'top-right', });
   }
 }
     
@@ -73,7 +72,7 @@ const AboutPage = observer(() => {
 
   return (
     <main id="main" className="page">
-       <ToastContainer />
+       <ToastContainer className='custom-toast' />
       <div className={styles.abut__container}>
         <div className={styles.wall}>
           <div className={styles.row}>
@@ -145,19 +144,19 @@ const AboutPage = observer(() => {
         <div className={styles.container}>
           <div className={styles.hero}>
             <div className={styles.hero__tagline}>#AllYouNeed #EverythingInOnePlace</div>
-            <div className={styles.hero__title}>
+            <div className={`${styles.hero__title} animate__animated animate__fadeInDown`}>
               <span>Lalasia</span>
             </div>
             <div className={styles.hero__subtitle}>
               Discover everything you need, all in one place.
             </div>
             <div  className={styles.hero__buttons}>
-            <Link to='/products'><Button className={styles.hero__button}>Products</Button></Link>
-            <Link  to="/categories"><Button className={styles.hero__button}>Categories</Button></Link>
+            <Link to='/products'><Button className={`${styles.hero__button}  wow animate__animated animate__fadeInLeftBig`}>Products</Button></Link>
+            <Link  to="/categories"><Button className={`${styles.hero__button} wow  animate__animated animate__fadeInRightBig `}>Categories</Button></Link>
             </div>
           </div>
         </div>
-        {/* Стрелка вниз */}
+    
         <div className={styles.scrollDown}>
           <button onClick={scrollToFamilySection} className={styles.arrow}></button>
         </div>
@@ -165,7 +164,7 @@ const AboutPage = observer(() => {
 
       <section id="family-section" ref={familySectionRef} className={styles.family}>
           <header className={styles['family-header']}>
-            <h2 className={`${styles['family-title']} ${styles['title-big']} ${styles['backdrop-title']} ${styles['centered']}`} data-title="Part">
+            <h2 className={`${styles['family-title']} ${styles['title-big']} ${styles['backdrop-title']} ${styles['centered']} `} data-title="Part">
               Be a part of our family
             </h2>
             <div className={styles['family-description']}>

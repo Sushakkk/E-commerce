@@ -70,7 +70,7 @@ const Header: React.FC = observer(() => {
 
   return (
     <header className={`${styles.header} ${isMenuOpen ? styles.lock : ''}`}>
-      <ToastContainer />
+
       <div className={styles.header__container}>
         <div className={styles.header__logo}>
           <Link to="/" onClick={handleLogoClick}>

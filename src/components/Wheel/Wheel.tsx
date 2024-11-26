@@ -63,7 +63,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = React.memo(({ setIsModalOp
         onClick={handleSpin}
         disabled={isSpinning}
       >
-        {isSpinning ? 'Spinning...' : 'Spin Again'}
+        {isSpinning ? 'Spinning...' : 'Spin'}
       </button>
     </div>
   );
