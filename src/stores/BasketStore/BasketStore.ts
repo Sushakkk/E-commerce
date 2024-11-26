@@ -76,6 +76,7 @@ class BasketStore {
   removeFromBasket(id: string) {
     this.basketItems = this.basketItems.filter((item) => item.id !== id);
     this.saveBasketToLocalStorage(); // Сохранение корзины
+    rootStore.AuthStore.saveBasketToUser();
   }
 
   clearBasket() {

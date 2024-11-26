@@ -174,7 +174,7 @@ const AboutPage = observer(() => {
           </header>
         <ImageCarousel images={familyImages} />
         </section>
-        <PracticeSection  localProductsStore={localProductsStore}/>
+        <PracticeSection  />
     </main>
   );
 });

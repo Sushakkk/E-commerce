@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import styles from './PracticeSection.module.scss';
-import { useCallback } from 'react';
+
 import useImageHandler from 'hooks/useImageHandler';
 
 const furnitureProducts = [
@@ -32,7 +32,7 @@ const furnitureProducts = [
 ];
 
 const PracticeSection = observer(() => {
-  const navigate = useNavigate();
+
   const { getImage } = useImageHandler();
 
 

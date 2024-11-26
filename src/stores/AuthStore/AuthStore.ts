@@ -120,6 +120,8 @@ class AuthStore {
     return user || null;
   }
 
+ 
+
   signUp(signUpData: CheckData) {
     this.getUsers();
     const existingUser = this.users.find(user => user.email === signUpData.email);
@@ -153,7 +155,6 @@ class AuthStore {
 
   login(loginData: Data) {
     this.getUsers();
-   
     
     const { errors, isValid } = validateLoginData(loginData);
     this.loginErrors = errors;
@@ -164,15 +165,19 @@ class AuthStore {
         if (userFromStore.password === loginData.password) {
           const userBasketItems = Array.isArray(userFromStore.basketItems) ? userFromStore.basketItems : [];
           const basketItems = rootStore.BasketStore.basketItems;
+  
+          const mergedBasket = this.mergeBaskets(userBasketItems, basketItems);
+          console.log('go', toJS(mergedBasket));
+          
           const updatedUser = {
             ...userFromStore,
-            basketItems: [...userBasketItems, ...basketItems] 
+            basketItems: mergedBasket
           };
-
+  
           this.token = generateJWT(loginData.email, loginData.password);
           this.isAuthenticated = true;
           this.user = updatedUser;  
-         rootStore.BasketStore.basketItems=[...userBasketItems, ...basketItems];
+          rootStore.BasketStore.basketItems = mergedBasket;
           localStorage.setItem('token', this.token);
           rootStore.QueryStore.setQueryParam('auth', this.token);
           this.filterStoreInstance.reset();
@@ -184,6 +189,22 @@ class AuthStore {
   
     return false;
   }
+  
+  mergeBaskets(userBasket: IBasketProduct[], localBasket: IBasketProduct[]) {
+    const mergedBasket = [...userBasket];
+  
+    for (const localItem of localBasket) {
+      const existingItem = mergedBasket.find(item => item.id === localItem.id);
+      if (existingItem) {
+        existingItem.quantity = (existingItem.quantity || 1) + (localItem.quantity || 1);
+      } else {
+        mergedBasket.push({ ...localItem });
+      }
+    }
+  
+    return mergedBasket;
+  }
+  
   
 
   updateUserProfile(email: string, fio: string, image: string) {
@@ -218,7 +239,7 @@ class AuthStore {
   
 
   logout() {
-  
+    this.saveBasketToUser()
     this.token = null;
     this.user = null;
    rootStore.BasketStore.clearBasket();
