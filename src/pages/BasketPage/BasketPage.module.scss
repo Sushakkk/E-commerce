@@ -173,6 +173,22 @@ $second-color: rgb(250, 219, 42);
   margin: 5px 0;
 }
 
+.oldPrice {
+  font-size: 18px;
+  color: #888; /* Цвет для зачеркивания */
+  text-decoration: line-through;
+}
+.discount{
+  color: rgb(185, 185, 17);
+}
+
+.newPrice {
+  font-size: 18px;
+  color: rgb(32, 122, 14); /* Желтый цвет для новой цены */
+  font-weight: bold;
+}
+
+
 
 .custom-toast{
   margin-top: 100px;

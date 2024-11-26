@@ -16,116 +16,117 @@ import Wheel from 'components/Wheel/Wheel';
 
 
 const BasketPage: React.FC = observer(() => {
+
   const { getImage } = useImageHandler();
-  const { basketItems, totalPrice, totalItems } = rootStore.BasketStore;
+
+  const { basketItems, totalPrice, totalItems, } = rootStore.BasketStore;
   const [isLoading, setIsLoading] = useState(false); 
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const notifyError = (message: string) => 
-    toast.error(message, { 
-      position: 'top-right', 
-      className: `${styles['custom-toast']}`, 
-    });
+  toast.error(message, { 
+    position: 'top-right', 
+    className: `${styles['custom-toast']}`, 
+  });
 
-  const calculateDiscountedPrice = useCallback((price: number) => {
-    const discount = rootStore.AuthStore.user?.discount || 0;
-    return price - (price * discount) / 100;
-  }, [rootStore.AuthStore.user?.discount]);
+const handleCompleteOrder = useCallback(async () => {
+  setIsLoading(true);
+  const orderDetails = basketItems.map((item) => ({
+    name: item.name,
+    price: item.price.toFixed(2),
+    quantity: item.quantity ?? 1, 
+    image: item.image,
+    totalPrice: calculateDiscountedPrice(item.price * (item.quantity ?? 1)).toFixed(2),
+  }
+));
+  
 
-  const handleCompleteOrder = useCallback(async () => {
-    setIsLoading(true);
-    const orderDetails = basketItems.map((item) => ({
-      name: item.name,
-      price: item.price.toFixed(2),
-      quantity: item.quantity ?? 1, 
-      image: item.image,
-      totalPrice: (item.price * (item.quantity ?? 1)).toFixed(2),
-    }));
+  const orderSummary = orderDetails
+    .map(
+      (item) =>
+        ` ${item.name} - ${item.quantity} x $${item.price} = $${item.totalPrice}`
+    )
+    .join('\n\n');
 
-    const orderSummary = orderDetails
-      .map(
-        (item) =>
-          ` ${item.name} - ${item.quantity} x $${item.price} = $${item.totalPrice}`
-      )
-      .join('\n\n');
 
     let userEmail = '';
-    let userDiscount =''
     const token = rootStore.QueryStore.getQueryParam('auth');
-    if (rootStore.AuthStore.user) {
-      if (rootStore.AuthStore.user.discount !== 0) {
-        userDiscount = `Discount ${rootStore.AuthStore.user.discount}%`;
-      }
-    }
   
     if (token) {
+      const token = rootStore.QueryStore.getQueryParam('auth');
       const decoded = decodeJWT(String(token));
       userEmail = decoded.payload.email;
-
     } else {
       navigate('/auth');
     }
 
-    const templateParams = {
-      email: userEmail,
-      discount: userDiscount,
-      to_name: 'Customer', 
-      from_name: 'Lalasia Store', 
-      totalItems: totalItems,
-      totalPrice: calculateDiscountedPrice(totalPrice).toFixed(2),
-      items: orderDetails,
-      message: `
-        Order Details:
-        ${orderSummary}
-      `,
-    };
 
-    try {
-      const response = await emailjs.send(
-        'service_wb0e44f',
-        'template_nohzq8l',
-        templateParams,
-        '8FzihwMy8PxMrMmKe' 
-      );
+  const templateParams = {
+    email: userEmail,
+    to_name: 'Customer', 
+    from_name: 'Lalasia Store', 
+    totalItems: totalItems,
+    totalPrice:totalPrice.toFixed(2),
+    items: orderDetails,
+    message: `
+      Order Details:
+      ${orderSummary}
+    `,
+  };
 
-      if (response.status === 200) {
-        if (rootStore.AuthStore.user) {
-          rootStore.AuthStore.user.discount = 0;
-          if (rootStore.AuthStore.user.orderCount === undefined) {
-            rootStore.AuthStore.user.orderCount = 1;
-          } else {
-            rootStore.AuthStore.user.orderCount += 1;
-          }
-        }
-        rootStore.BasketStore.clearBasket();
-        rootStore.BasketStore.saveBasketToLocalStorage();
-        toast.success("Order successfully Complete! 🎉");
-        toast.success("Check your E-mail");
-      } else {
-        notifyError('Failed to send order email. Please try again.');
-      }
-    } catch (error) {
-      notifyError('Sign up or log in to your account!');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [basketItems, totalPrice, totalItems, calculateDiscountedPrice, navigate, notifyError]);
-
-  if (isLoading) {
-    return (
-      <main className="page">
-        <div className="page__loader">
-          <Loader /> 
-        </div>
-      </main>
+  try {
+    const response = await emailjs.send(
+      'service_wb0e44f',
+      'template_nohzq8l',
+      templateParams,
+      '8FzihwMy8PxMrMmKe' 
     );
+
+    if (response.status === 200) {
+
+      if (rootStore.AuthStore.user) {
+        rootStore.AuthStore.user.discount=0
+        if (rootStore.AuthStore.user.orderCount === undefined) {
+          rootStore.AuthStore.user.orderCount = 1;
+        } else {
+         
+          rootStore.AuthStore.user.orderCount += 1;
+        }
+      }
+      rootStore.BasketStore.clearBasket();
+      rootStore.BasketStore.saveBasketToLocalStorage();
+      toast.success("Order successfully Complete! 🎉");
+      toast.success("Check your E-mail");
+    } else {
+
+      notifyError('Failed to send order email. Please try again.');
+    }
+  } catch (error) {
+
+    notifyError('Sign up or log in to your account!');
+  } finally {
+    setIsLoading(false);
   }
-  
+}, [basketItems, totalPrice, totalItems]);
+
+if (isLoading) {
+  return (
+    <main className="page">
+      <div className="page__loader">
+        <Loader /> 
+      </div>
+    </main>
+  );
+}
+console.log('user', toJS(rootStore.AuthStore.user))
 
 
 
-  console.log('user', toJS(rootStore.AuthStore.user));
+const calculateDiscountedPrice = useCallback((price: number) => {
+  const discount = rootStore.AuthStore.user?.discount || 0;
+  return price - (price * discount) / 100;
+}, [rootStore.AuthStore.user?.discount]); 
 
 return (
   <main id="main" className="page">
