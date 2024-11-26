@@ -28,7 +28,7 @@ function App() {
   const location = useLocation(); 
 
   useEffect(() => {
-    console.log('chf,jnfh')
+
     window.scrollTo(0, 0);
   }, [location]);
 

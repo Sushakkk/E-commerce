@@ -43,7 +43,7 @@ class BasketStore {
   }
 
   addToBasket(item: IBasketProduct) {
-    console.log(item);
+
     
     const existingItem = this.basketItems.find((product) => product.id === item.id);
     if (existingItem) {

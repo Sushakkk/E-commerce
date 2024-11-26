@@ -1,5 +1,4 @@
 import { observer } from 'mobx-react-lite';
-import { Link} from 'react-router-dom';
 import styles from './PracticeSection.module.scss';
 
 import useImageHandler from 'hooks/useImageHandler';

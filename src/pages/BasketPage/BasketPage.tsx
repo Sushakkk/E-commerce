@@ -147,7 +147,6 @@ const BasketPage: React.FC = observer(() => {
 
 
 
-  console.log('user', toJS(rootStore.AuthStore.user));
 
 return (
   <main id="main" className="page">

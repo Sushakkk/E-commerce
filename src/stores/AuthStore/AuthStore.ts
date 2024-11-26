@@ -74,7 +74,7 @@ class AuthStore {
         this.user.basketItems = [...newBasket];
       }
       this.saveUsersToLocalStorage(this.user.email ? this.user.email : '');
-      console.log('save', toJS(this.user));
+
   
     } 
   }
@@ -168,7 +168,7 @@ class AuthStore {
           const basketItems = rootStore.BasketStore.basketItems;
   
           const mergedBasket = this.mergeBaskets(userBasketItems, basketItems);
-          console.log('go', toJS(mergedBasket));
+      
           
           const updatedUser = {
             ...userFromStore,
