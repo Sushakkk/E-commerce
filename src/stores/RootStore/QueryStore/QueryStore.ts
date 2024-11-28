@@ -1,4 +1,4 @@
-import { makeAutoObservable, action, observable, toJS} from 'mobx';
+import { makeAutoObservable, action, observable} from 'mobx';
 
 class QueryStore {
   private _queryParams: { [key: string]: string | number | null } = {};
@@ -72,7 +72,6 @@ class QueryStore {
   public addQueryParam(key: string, value: string | number) {
     const params = new URLSearchParams(window.location.search);
     params.set(key, String(value));
-    console.log(toJS(params));
     
     window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
   }

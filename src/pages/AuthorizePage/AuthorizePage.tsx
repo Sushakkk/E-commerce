@@ -37,7 +37,6 @@ const AuthorizePage: React.FC = observer(() => {
   const notifyError = (message: string) => 
   toast.error(message, { 
     position: 'top-right', 
-    className: 'custom-toast', 
   });
 
   const handleLoginSubmit = useCallback(

@@ -42,9 +42,9 @@ function App() {
   useEffect(() => {
     rootStore.QueryStore.setQueryParam('auth', token);
     rootStore.AuthStore.setUser()
-  //  if( rootStore.AuthStore.user){
-  //   rootStore.AuthStore.user.orderCount=0
-  //  }
+   if( rootStore.AuthStore.user){
+    rootStore.AuthStore.user.orderCount=0
+   }
   }, []);
 
 

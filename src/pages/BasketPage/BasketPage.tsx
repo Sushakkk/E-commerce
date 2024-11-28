@@ -9,7 +9,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import rootStore from 'stores/RootStore/instance';
 import useImageHandler from 'hooks/useImageHandler';
-import { toJS } from 'mobx';
 import Button from 'components/Button';
 import confetti from 'canvas-confetti';
 import Wheel from 'components/Wheel/Wheel';
@@ -28,7 +27,6 @@ const BasketPage: React.FC = observer(() => {
   const notifyError = (message: string) => 
     toast.error(message, { 
       position: 'top-right', 
-      className: `${styles['custom-toast']}`, 
     });
 
   const calculateDiscountedPrice = useCallback((price: number) => {
@@ -55,10 +53,14 @@ const BasketPage: React.FC = observer(() => {
 
     let userEmail = '';
     let userDiscount =''
+    let name='Customer'
     const token = rootStore.QueryStore.getQueryParam('auth');
     if (rootStore.AuthStore.user) {
       if (rootStore.AuthStore.user.discount !== 0) {
         userDiscount = `Discount ${rootStore.AuthStore.user.discount}%`;
+      }
+      if(rootStore.AuthStore.user.fio){
+        name=rootStore.AuthStore.user.fio;
       }
     }
   
@@ -73,7 +75,7 @@ const BasketPage: React.FC = observer(() => {
     const templateParams = {
       email: userEmail,
       discount: userDiscount,
-      to_name: 'Customer', 
+      to_name: name, 
       from_name: 'Lalasia Store', 
       totalItems: totalItems,
       totalPrice: calculateDiscountedPrice(totalPrice).toFixed(2),

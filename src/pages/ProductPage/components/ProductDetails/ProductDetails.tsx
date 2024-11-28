@@ -41,6 +41,14 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(({ ProductDetails
     let userEmail = '';
     const token = rootStore.QueryStore.getQueryParam('auth');
 
+    let name='Customer'
+    if (rootStore.AuthStore.user) {
+      if(rootStore.AuthStore.user.fio){
+        name=rootStore.AuthStore.user.fio;
+      }
+    }
+  
+
     try {
       if (token) {
         
@@ -55,7 +63,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(({ ProductDetails
 
       const templateParams = {
         email: userEmail,
-        to_name: 'Customer',
+        to_name: name,
         from_name: 'Lalasia Store',
         totalItems: 1,
         totalPrice: orderDetails.totalPrice,
@@ -76,6 +84,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(({ ProductDetails
       if (response.status === 200) {
         toast.success("Order successfully completed! 🎉");
         toast.success("Check your email.");
+        if (rootStore.AuthStore.user) {
+          if (rootStore.AuthStore.user.orderCount === undefined) {
+            rootStore.AuthStore.user.orderCount = 1;
+          } else {
+            rootStore.AuthStore.user.orderCount += 1;
+          }
+        }
         
       } else {
         toast.error("Failed to send order email. Please try again.");
@@ -112,7 +127,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(({ ProductDetails
 
   return (
     <div className={styles['product__text-container']}>
-      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+      <ToastContainer className='custom-toast' position="top-right" autoClose={5000} hideProgressBar={false} />
 
       <div className={styles.product__text_title}>
         <Text view="title" weight="bold">

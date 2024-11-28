@@ -20,7 +20,7 @@ const AboutPage = observer(() => {
 
   useEffect(() => {
 
- if (state?.message && localProductsStore.meta === 'success') {
+ if (state?.message ) {
   if (state.message === "Logout") {
     toast.info('Logout', { position: 'top-right',  });
   } else {
@@ -32,9 +32,7 @@ const AboutPage = observer(() => {
   }, [state, localProductsStore.meta ]);
 
 
-   useEffect(() => {
-    localProductsStore.fetchProducts('', 2,1);
-  }, []);
+
 
   const familyImages = [
     { src: 'https://avatars.mds.yandex.net/i?id=22968304af6a0670ae5ee025c1e32855_l-5575009-images-thumbs&n=13', alt: 'Training people 1' },

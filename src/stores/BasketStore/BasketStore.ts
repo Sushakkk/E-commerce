@@ -24,7 +24,6 @@ class BasketStore {
   saveBasketToLocalStorage() {
     try {
       localStorage.setItem("basket", JSON.stringify(this.basketItems));
-      console.log('basket',localStorage.getItem("basket"));
       
     } catch (error) {
       console.error("Error saving basket to localStorage:", error);

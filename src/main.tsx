@@ -9,3 +9,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </BrowserRouter>
 )
 
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function() {
+      navigator.serviceWorker
+        .register("/E-commerce/serviceWorker.js")
+    })
+}

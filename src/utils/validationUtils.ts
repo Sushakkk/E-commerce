@@ -5,7 +5,7 @@ import { validateEmail } from './validation';
 interface CheckData {
     email: string;
     password: string;
-    confirmPassword: string;  // Не должно быть 'string | undefined'
+    confirmPassword: string;  
   }
   
 
