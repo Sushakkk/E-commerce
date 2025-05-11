@@ -1,50 +1,94 @@
-# React + TypeScript + Vite
+# 🛒 E-commerce Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Современное e-commerce веб-приложение, разработанное с использованием **React**, **MobX**, **Vite/Webpack**, **CSS Modules** и других инструментов. Поддерживает адаптивный интерфейс, офлайн-доступ через PWA и интерактивный функционал, включая бонусную механику при заказе.
 
-Currently, two official plugins are available:
+## 🔗 Приложение
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+👉 [Открыть демо](https://sushakkk.github.io/E-commerce)
 
-## Expanding the ESLint configuration
+## 🔧 Стек технологий
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Frontend:** React, MobX, React Router
+- **Сборка:** Vite → Webpack + Babel
+- **Стилизация:** CSS Modules
+- **Хранилище:** MobX stores
+- **Интеграции:** Email.js
+- **PWA:** Установка как приложение
+- **Кроссбраузерность:** BrowserStack
 
-- Configure the top-level `parserOptions` property like this:
+## 🚀 Возможности
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- Адаптивный дизайн
+- Авторизация и регистрация
+- Личный кабинет с редактированием профиля
+- Работа с корзиной и локальным хранилищем
+- Управление товарами: фильтрация, поиск, пагинация
+- Система бонусов и скидок при покупке
+- Email-уведомление о заказе
+- Интеграция с API
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## 🏗️ Структура MobX-сторов
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- **AuthStore** – управление данными пользователя, авторизация
+- **BasketStore** – корзина с синхронизацией с LocalStorage
+- **ProductsStore** – загрузка и обновление товаров
+- **ProductDetailsStore** – детали конкретного товара
+- **FilterStore** – фильтрация и сортировка
+- **QueryStore** – управление URL-параметрами
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+## 📸 Скриншоты
+
+### 🏠 Главная страница
+<img src="./screenshots/home.png" width="600"/>
+<br/>
+<img src="./screenshots/home_2.png" width="600"/>
+<hr/>
+
+### 🔐 Авторизация
+<img src="./screenshots/login.png" width="500"/>
+<hr/>
+
+### 🛍️ Список товаров
+<img src="./screenshots/products.png" width="600"/>
+<hr/>
+
+### 🧾 Детальная карточка товара
+<img src="./screenshots/product_details.png" width="600"/>
+<hr/>
+
+### 👤 Личный кабинет
+<img src="./screenshots/user.png" width="500"/>
+<hr/>
+
+### 🎁 Бонусная механика
+<img src="./screenshots/fortune.png" width="500"/>
+<br/>
+<img src="./screenshots/bonus.png" width="500"/>
+<br/>
+<img src="./screenshots/discount.png" width="500"/>
+<br/>
+<img src="./screenshots/discount_2.png" width="500"/>
+<hr/>
+
+### 📧 Email-уведомление
+<img src="./screenshots/email.png" width="500"/>
+<hr/>
+
+### 📘 Уведомления
+<img src="./screenshots/notion.png" width="600"/>
+<hr/>
+
+## 📦 Установка
+
+```bash
+git clone https://github.com/Sushakkk/E-commerce.git
+cd E-commerce
+yarn install
+yarn dev
+````
+
+## 🧪 Сборка продакшена
+
+```bash
+yarn build
 ```
